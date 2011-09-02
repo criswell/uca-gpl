@@ -1,0 +1,9 @@
+syntax: glob
+
+*~
+~*
+*.bak
+.~lock*
+*.swp
+*.kate-swp
+tags
