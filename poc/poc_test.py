@@ -15,6 +15,13 @@ if IS_WINDOWS:
     import win32security
     from ntsecuritycon import *
 
+# SUDs
+from suds.client import Client
+
+# UGLY HARDCODED POC GARBAGE
+CCMS_WSDL = 'http://172.16.3.10/CCMS/EILClientOperationsService.svc?wsdl'
+MY_HWADDR = '00:1B:78:C3:08:D6' # HP7700-DESK13
+
 def AdjustPrivilege(priv, enable=True):
     '''
     Adjusts the privileges on Windows systems
@@ -61,6 +68,6 @@ def Reboot(message='Rebooting', timeout=5):
         LinuxReboot(message, timeout)
 
 if __name__ == "__main__":
-    Reboot()
+    client = Client(CCMS_WSDL)
 
 # vim:set ai et sts=4 sw=4 tw=80:
