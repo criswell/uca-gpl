@@ -60,6 +60,6 @@ def Reboot(message='Rebooting', timeout=5):
         LinuxReboot(message, timeout)
 
 if __name__ == "__main__":
-    Reboot
+    Reboot()
 
 # vim:set ai et sts=4 sw=4 tw=80:
