@@ -48,7 +48,7 @@ def LinuxReboot(message='Rebooting', timeout=5):
     '''
     Reboots a Linux system
     '''
-    os.system("shutdown -r %i '%s'" % (timeout, message)
+    os.system("shutdown -r %i '%s'" % (timeout, message))
 
 def Reboot(message='Rebooting', timeout=5):
     '''
