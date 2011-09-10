@@ -15,7 +15,7 @@ if IS_WINDOWS:
     import win32security
     from ntsecuritycon import *
 
-def AdjustPrivilege(priv, enable=1):
+def AdjustPrivilege(priv, enable=True):
     '''
     Adjusts the privileges on Windows systems
     '''
@@ -32,5 +32,34 @@ def AdjustPrivilege(priv, enable=1):
         newPrivileges = [(idd, 0)]
     # and make the adjustment
     win32security.AdjustTokenPrivileges(htoken, 0, newPrivileges)
+
+def Win32Reboot(message='Rebooting', timeout=5, bForce=True, bReboot=True):
+    '''
+    Reboots a Windows system
+    '''
+    AdjustPrivilege(SE_SHUTDOWN_NAME)
+    try:
+        win32api.InitiateSystemShutdown(None, message, timeout, bForce, bReboot)
+    finally:
+        # Now we remove the privilege we just added.
+        AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
+
+def LinuxReboot(message='Rebooting', timeout=5):
+    '''
+    Reboots a Linux system
+    '''
+    os.system("shutdown -r %i '%s'" % (timeout, message)
+
+def Reboot(message='Rebooting', timeout=5):
+    '''
+    Generic reboot wrapper
+    '''
+    if IS_WINDOWS:
+        Win32Reboot(message, timeout, True, True)
+    elif IS_LINUX:
+        LinuxReboot(message, timeout)
+
+if __name__ == "__main__":
+    Reboot
 
 # vim:set ai et sts=4 sw=4 tw=80:
