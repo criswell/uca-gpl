@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+'''
+This is a simple POC of a very basic cross-platform reboot CCMS command
+'''
+
 import os
 
 # Platform determination
@@ -67,7 +71,15 @@ def Reboot(message='Rebooting', timeout=5):
     elif IS_LINUX:
         LinuxReboot(message, timeout)
 
+# NASTY XML/SOAP STUFF (if we wind up using this, all of this must be revised.
+def setHeaders(client):
+    '''
+    Sets the headers for the next exchange. Should be called every time we start
+    a new exchange
+    '''
+
 if __name__ == "__main__":
-    client = Client(CCMS_WSDL)
+    headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
+    client = Client(CCMS_WSDL, headers=headers)
 
 # vim:set ai et sts=4 sw=4 tw=80:
