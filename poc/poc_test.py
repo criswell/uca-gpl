@@ -77,6 +77,7 @@ def setHeaders(client):
     Sets the headers for the next exchange. Should be called every time we start
     a new exchange
     '''
+    wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
 
 if __name__ == "__main__":
     headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
