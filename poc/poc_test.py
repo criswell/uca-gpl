@@ -19,8 +19,12 @@ if IS_WINDOWS:
     import win32security
     from ntsecuritycon import *
 
+import random
+
 # SUDs
 from suds.client import Client
+from suds.sax.element import Element
+from suds.sax.attribute import Attribute
 
 # UGLY HARDCODED POC GARBAGE
 CCMS_WSDL = 'http://172.16.3.10/CCMS/EILClientOperationsService.svc?wsdl'
@@ -72,12 +76,35 @@ def Reboot(message='Rebooting', timeout=5):
         LinuxReboot(message, timeout)
 
 # NASTY XML/SOAP STUFF (if we wind up using this, all of this must be revised.
+def newMessageID():
+    '''
+    Obtains a new message ID from random sources
+    '''
+    source_string = '0123456789ABCDEFGHIJKLMNOPQRSTWXYZ'
+    message_id = 'urn:uuid:'
+    # Divide into seven stanzas
+    for s in range(7):
+        # and have five chars per stanza
+        for c in range(5):
+            message_id += source_string[random.randint(0,len(source_string)-1)]
+        if s < 6:
+            # Append a dash if not at end
+            message_id += "-"
+    return message_id
+
 def setHeaders(client):
     '''
     Sets the headers for the next exchange. Should be called every time we start
     a new exchange
     '''
     wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
+    mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
+    messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID)
+    master_header_list = [
+        messageID_header,
+    ]
+    client.set_options(soapheaders=master_header_list)
+    return client
 
 if __name__ == "__main__":
     headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
