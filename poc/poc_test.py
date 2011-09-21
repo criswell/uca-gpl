@@ -99,10 +99,24 @@ def setHeaders(client):
     '''
     wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
     mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
+
     messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID)
+
+    replyTo_address = Element('Address',
+        ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
+    replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
+    replyTo_header.append(mustAttribute)
+
+    to_header = Element('Action',
+        ns=wsa_ns).setText('http://172.16.3.10/CCMS/EILClientOperationsService.svc')
+    to_header.append(mustAttribute)
+
     master_header_list = [
         messageID_header,
+        replyTo_header,
+        to_header
     ]
+
     client.set_options(soapheaders=master_header_list)
     return client
 
