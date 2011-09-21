@@ -107,14 +107,19 @@ def setHeaders(client):
     replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
     replyTo_header.append(mustAttribute)
 
-    to_header = Element('Action',
+    to_header = Element('To',
         ns=wsa_ns).setText('http://172.16.3.10/CCMS/EILClientOperationsService.svc')
     to_header.append(mustAttribute)
+
+    action_header = Element('Action',
+        ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/GetCommandToExecute')
+    action_header.append(mustAttribute)
 
     master_header_list = [
         messageID_header,
         replyTo_header,
-        to_header
+        to_header,
+        action_header
     ]
 
     client.set_options(soapheaders=master_header_list)
