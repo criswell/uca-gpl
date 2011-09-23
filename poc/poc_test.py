@@ -99,29 +99,23 @@ def setHeaders(client):
     '''
     wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
     mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
-
     messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
-
     replyTo_address = Element('Address',
         ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
     replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
     replyTo_header.append(mustAttribute)
-
     to_header = Element('To',
         ns=wsa_ns).setText('http://172.16.3.10/CCMS/EILClientOperationsService.svc')
     to_header.append(mustAttribute)
-
     action_header = Element('Action',
         ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/GetCommandToExecute')
     action_header.append(mustAttribute)
-
     master_header_list = [
         messageID_header,
         replyTo_header,
         to_header,
         action_header
     ]
-
     client.set_options(soapheaders=master_header_list)
     return client
 
@@ -139,22 +133,35 @@ def generateContext(client):
     #params.KeyValueOfstringstring.append({'KEY': 'MAC_ADDR'})
     #params.KeyValueOfstringstring.append({'VALUE': MY_HWADDR})
     #ctx.mParams = params
-    ctx = Element('ctx')
-    params = Element('mParams')
-    hwaddr = Element('KeyValueOfstringstring')
-    hwaddr.append(Element('KEY').setText('MAC_ADDR'))
-    hwaddr.append(Element('VALUE').setText(MY_HWADDR))
-    ordernum = Element('KeyValueOfstringstring')
-    ordernum.append(Element('KEY').setText('ORDER_NUM'))
-    ordernum.append(Element('VALUE').setText('1'))
-    params.append(ordernum)
-    params.append(hwaddr)
-    mType = Element('mType').setText('HOST')
+    #ctx = Element('ctx')
+    #params = Element('mParams')
+    #hwaddr = Element('KeyValueOfstringstring')
+    #hwaddr.append(Element('KEY').setText('MAC_ADDR'))
+    #hwaddr.append(Element('VALUE').setText(MY_HWADDR))
+    #ordernum = Element('KeyValueOfstringstring')
+    #ordernum.append(Element('KEY').setText('ORDER_NUM'))
+    #ordernum.append(Element('VALUE').setText('1'))
+    #params.append(ordernum)
+    #params.append(hwaddr)
+    #mType = Element('mType').setText('HOST')
     # Build up the type
     #mType = client.factory.create('ns0:MachineType')
     #ctx.mType = mType.HOST
-    ctx.append(params)
-    ctx.append(mType)
+    #ctx.append(params)
+    #ctx.append(mType)
+    ctx = client.factory.create('ns0:MachineContext')
+    mParams = client.factory.create('ns2:ArrayOfKeyValueOfstringstring')
+    order_num = client.factory.create('ns2:KeyValueOfstringstring')
+    order_num.Key = 'ORDER_NUM'
+    order_num.Value = '1'
+    hwaddr = client.factory.create('ns2:KeyValueOfstringstring')
+    hwaddr.Key = 'MAC_ADDR'
+    hwaddr.Value = MY_HWADDR
+    mParams.KeyValueOfstringstring.append(order_num)
+    mParams.KeyValueOfstringstring.append(hwaddr)
+    ctx.mParams = mParams
+    mType = client.factory.create('ns0:MachineType')
+    ctx.mType = mType.HOST
     return ctx
 
 if __name__ == "__main__":
