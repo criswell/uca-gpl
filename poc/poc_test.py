@@ -100,7 +100,7 @@ def setHeaders(client):
     wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
     mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
 
-    messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID)
+    messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
 
     replyTo_address = Element('Address',
         ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
@@ -125,8 +125,46 @@ def setHeaders(client):
     client.set_options(soapheaders=master_header_list)
     return client
 
+def generateContext(client):
+    '''
+    Generate our command request, this is rather hackish, and lifted almost
+    verbatim from the Linux client agent code. If this becomes the norm, we
+    should rewrite this more pythonically.
+    '''
+    #ctx = client.factory.create('ns0:MachineContext')
+    # Build up the params
+    #params = client.factory.create('ns2:ArrayOfKeyValueOfstringstring')
+    #params.KeyValueOfstringstring.append({'KEY': 'ORDER_NUM'})
+    #params.KeyValueOfstringstring.append({'VALUE': '1'})
+    #params.KeyValueOfstringstring.append({'KEY': 'MAC_ADDR'})
+    #params.KeyValueOfstringstring.append({'VALUE': MY_HWADDR})
+    #ctx.mParams = params
+    ctx = Element('ctx')
+    params = Element('mParams')
+    hwaddr = Element('KeyValueOfstringstring')
+    hwaddr.append(Element('KEY').setText('MAC_ADDR'))
+    hwaddr.append(Element('VALUE').setText(MY_HWADDR))
+    ordernum = Element('KeyValueOfstringstring')
+    ordernum.append(Element('KEY').setText('ORDER_NUM'))
+    ordernum.append(Element('VALUE').setText('1'))
+    params.append(ordernum)
+    params.append(hwaddr)
+    mType = Element('mType').setText('HOST')
+    # Build up the type
+    #mType = client.factory.create('ns0:MachineType')
+    #ctx.mType = mType.HOST
+    ctx.append(params)
+    ctx.append(mType)
+    return ctx
+
 if __name__ == "__main__":
     headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
     client = Client(CCMS_WSDL, headers=headers)
+
+    while True:
+        # Our poll loop.
+        client = setHeaders(client)
+        ctx = generateContext(client)
+        client.service.GetCommandToExecute(ctx)
 
 # vim:set ai et sts=4 sw=4 tw=80:
