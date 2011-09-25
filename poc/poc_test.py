@@ -125,30 +125,6 @@ def generateContext(client):
     verbatim from the Linux client agent code. If this becomes the norm, we
     should rewrite this more pythonically.
     '''
-    #ctx = client.factory.create('ns0:MachineContext')
-    # Build up the params
-    #params = client.factory.create('ns2:ArrayOfKeyValueOfstringstring')
-    #params.KeyValueOfstringstring.append({'KEY': 'ORDER_NUM'})
-    #params.KeyValueOfstringstring.append({'VALUE': '1'})
-    #params.KeyValueOfstringstring.append({'KEY': 'MAC_ADDR'})
-    #params.KeyValueOfstringstring.append({'VALUE': MY_HWADDR})
-    #ctx.mParams = params
-    #ctx = Element('ctx')
-    #params = Element('mParams')
-    #hwaddr = Element('KeyValueOfstringstring')
-    #hwaddr.append(Element('KEY').setText('MAC_ADDR'))
-    #hwaddr.append(Element('VALUE').setText(MY_HWADDR))
-    #ordernum = Element('KeyValueOfstringstring')
-    #ordernum.append(Element('KEY').setText('ORDER_NUM'))
-    #ordernum.append(Element('VALUE').setText('1'))
-    #params.append(ordernum)
-    #params.append(hwaddr)
-    #mType = Element('mType').setText('HOST')
-    # Build up the type
-    #mType = client.factory.create('ns0:MachineType')
-    #ctx.mType = mType.HOST
-    #ctx.append(params)
-    #ctx.append(mType)
     ctx = client.factory.create('ns0:MachineContext')
     mParams = client.factory.create('ns2:ArrayOfKeyValueOfstringstring')
     order_num = client.factory.create('ns2:KeyValueOfstringstring')
@@ -157,21 +133,28 @@ def generateContext(client):
     hwaddr = client.factory.create('ns2:KeyValueOfstringstring')
     hwaddr.Key = 'MAC_ADDR'
     hwaddr.Value = MY_HWADDR
+    host = client.factory.create('ns2:KeyValueOfstringstring')
+    host.Key = 'HOST_NAME'
+    host.Value = 'HP7700-DESK14'
     mParams.KeyValueOfstringstring.append(order_num)
     mParams.KeyValueOfstringstring.append(hwaddr)
+    mParams.KeyValueOfstringstring.append(host)
     ctx.mParams = mParams
     mType = client.factory.create('ns0:MachineType')
     ctx.mType = mType.HOST
     return ctx
 
-if __name__ == "__main__":
-    headers = {'Content-Type': 'application/soap+xml; charset=utf-8'}
+def runMe():
+    # Content-Type: application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"\r\n
+    headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
     client = Client(CCMS_WSDL, headers=headers)
-
     while True:
         # Our poll loop.
         client = setHeaders(client)
         ctx = generateContext(client)
         client.service.GetCommandToExecute(ctx)
+
+if __name__ == "__main__":
+    runMe()
 
 # vim:set ai et sts=4 sw=4 tw=80:
