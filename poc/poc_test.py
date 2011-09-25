@@ -5,6 +5,8 @@ This is a simple POC of a very basic cross-platform reboot CCMS command
 '''
 
 import os
+import sys
+import time
 
 # Platform determination
 if os.name == 'nt':
@@ -158,7 +160,19 @@ def runMe():
         # Our poll loop.
         client = setHeaders(client)
         ctx = generateContext(client)
-        client.service.GetCommandToExecute(ctx)
+        try:
+            print "---> Looking for command from CCMS"
+            result = client.service.GetCommandToExecute(ctx)
+            print "---> CCMS Result:"
+            print result
+            if result.CommandName = "reboot":
+                print "!!!!!!!!!!! REBOOT"
+                Reboot("CCMS Rebooot", 10)
+        except:
+            print "---> Manual help required, restart the network on PXE move"
+            sys.exit('Would you kindly restart the network?')
+
+        sleep(30)
 
 if __name__ == "__main__":
     runMe()
