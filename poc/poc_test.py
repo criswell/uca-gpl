@@ -30,6 +30,12 @@ from suds.sax.attribute import Attribute
 CCMS_WSDL = 'http://172.16.3.10/CCMS/EILClientOperationsService.svc?wsdl'
 MY_HWADDR = '00:1B:78:C3:08:D6' # HP7700-DESK13
 
+# Be sure to set
+# envns = ('SOAP-ENV', 'http://www.w3.org/2003/05/soap-envelope')
+# in suds/bindings/binding.py
+# Probably better way to fix this with import doctor, but in 2 weeks I couldn't
+# figure it out
+
 def AdjustPrivilege(priv, enable=True):
     '''
     Adjusts the privileges on Windows systems
