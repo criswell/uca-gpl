@@ -91,11 +91,14 @@ def runMe():
                 Reboot("CCMS Rebooot", 10)
             else:
                 print "None"
+            time.sleep(30)
         except:
+            f = open(dummy_file, 'w')
+            f.write('foo')
+            f.close()
             print "---> Manual help required, restart the network on PXE move"
             sys.exit('Would you kindly restart the network?')
 
-        sleep(30)
 
 if __name__ == "__main__":
     runMe()
