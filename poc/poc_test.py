@@ -31,6 +31,7 @@ from suds.sax.attribute import Attribute
 # UGLY HARDCODED POC GARBAGE
 CCMS_WSDL = 'http://172.16.3.10/CCMS/EILClientOperationsService.svc?wsdl'
 MY_HWADDR = '00:1B:78:C3:08:D6' # HP7700-DESK13
+MY_HOST = 'HP7700-DESK14'
 
 # Be sure to set
 # envns = ('SOAP-ENV', 'http://www.w3.org/2003/05/soap-envelope')
@@ -143,7 +144,7 @@ def generateContext(client):
     hwaddr.Value = MY_HWADDR
     host = client.factory.create('ns2:KeyValueOfstringstring')
     host.Key = 'HOST_NAME'
-    host.Value = 'HP7700-DESK14'
+    host.Value = MY_HOST
     mParams.KeyValueOfstringstring.append(order_num)
     mParams.KeyValueOfstringstring.append(hwaddr)
     mParams.KeyValueOfstringstring.append(host)
@@ -160,19 +161,21 @@ def runMe():
         # Our poll loop.
         client = setHeaders(client)
         ctx = generateContext(client)
+        #client.service.GetCommandToExecute(ctx)
         try:
             print "---> Looking for command from CCMS"
             result = client.service.GetCommandToExecute(ctx)
             print "---> CCMS Result:"
             print result
-            if result.CommandName = "reboot":
-                print "!!!!!!!!!!! REBOOT"
-                Reboot("CCMS Rebooot", 10)
+            if result != None:
+                if result.CommandName == "reboot":
+                    print "!!!!!!!!!!! REBOOT"
+                    Reboot("CCMS Rebooot", 10)
         except:
             print "---> Manual help required, restart the network on PXE move"
             sys.exit('Would you kindly restart the network?')
 
-        sleep(30)
+        time.sleep(30)
 
 if __name__ == "__main__":
     runMe()
