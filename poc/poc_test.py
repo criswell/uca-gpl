@@ -20,6 +20,9 @@ if IS_WINDOWS:
     import win32api
     import win32security
     from ntsecuritycon import *
+    from netbios import *
+else:
+    import fcntl, socket, struct
 
 import random
 
@@ -38,6 +41,38 @@ MY_HOST = 'HP7700-DESK14'
 # in suds/bindings/binding.py
 # Probably better way to fix this with import doctor, but in 2 weeks I couldn't
 # figure it out
+
+def getIfInfo():
+    '''
+    Obtains the first MAC address, cross-platform
+    '''
+    if IS_LINUX:
+        ifnum = 0
+        ifname = "eth%s" % ifnum
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        hwinfo = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', ifname[:15]))
+        return (''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1], os.uname()[1])
+    else:
+        ncb = NCB()
+        ncb.Command = NCBENUM
+        la_enum = LANA_ENUM()
+        ncb.Buffer = la_enum
+        rc = Netbios(ncb)
+        if rc != 0: raise RuntimeError, "Unexpected result %d" % (rc,)
+        # Grab the first one
+        ncb.Reset()
+        ncb.Command = NCBRESET
+        ncb.Lana_num = ord(la_enum.lana[0])
+        rc = Netbios(ncb)
+        if rc != 0: raise RuntimeError, "Unexpected result %d" % (rc,)
+        ncb.Reset()
+        ncb.Command = NCBASTAT
+        ncb.Lana_num = ord(la_enum.lana[i])
+        ncb.Callname = "*               "
+        adapter = ADAPTER_STATUS()
+        ncb.Buffer = adapter
+        Netbios(ncb)
+        return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address, os.uname()[1])
 
 def AdjustPrivilege(priv, enable=True):
     '''
@@ -157,6 +192,9 @@ def runMe():
     # Content-Type: application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"\r\n
     headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
     client = Client(CCMS_WSDL, headers=headers)
+    (MY_HWADDR, MY_HOST) = getIfInfo()
+    print ">>> Hostname: %s" % MY_HOST
+    print ">>> HW_ADDR: %s" % MY_HWADDR
     while True:
         # Our poll loop.
         client = setHeaders(client)
