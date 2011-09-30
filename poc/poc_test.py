@@ -21,6 +21,7 @@ if IS_WINDOWS:
     import win32security
     from ntsecuritycon import *
     from netbios import *
+    from socket import gethostname
 else:
     import fcntl, socket, struct
 
@@ -67,12 +68,12 @@ def getIfInfo():
         if rc != 0: raise RuntimeError, "Unexpected result %d" % (rc,)
         ncb.Reset()
         ncb.Command = NCBASTAT
-        ncb.Lana_num = ord(la_enum.lana[i])
+        ncb.Lana_num = ord(la_enum.lana[0])
         ncb.Callname = "*               "
         adapter = ADAPTER_STATUS()
         ncb.Buffer = adapter
         Netbios(ncb)
-        return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address]), os.uname()[1])
+        return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address])[:-1], gethostname())
 
 def AdjustPrivilege(priv, enable=True):
     '''
