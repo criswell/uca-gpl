@@ -72,7 +72,7 @@ def getIfInfo():
         adapter = ADAPTER_STATUS()
         ncb.Buffer = adapter
         Netbios(ncb)
-        return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address, os.uname()[1])
+        return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address]), os.uname()[1])
 
 def AdjustPrivilege(priv, enable=True):
     '''
@@ -190,11 +190,11 @@ def generateContext(client):
 
 def runMe():
     # Content-Type: application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"\r\n
-    headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
-    client = Client(CCMS_WSDL, headers=headers)
     (MY_HWADDR, MY_HOST) = getIfInfo()
     print ">>> Hostname: %s" % MY_HOST
     print ">>> HW_ADDR: %s" % MY_HWADDR
+    headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
+    client = Client(CCMS_WSDL, headers=headers)
     while True:
         # Our poll loop.
         client = setHeaders(client)
