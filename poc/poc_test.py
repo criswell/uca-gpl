@@ -34,8 +34,6 @@ from suds.sax.attribute import Attribute
 
 # UGLY HARDCODED POC GARBAGE
 CCMS_WSDL = 'http://172.16.3.10/CCMS/EILClientOperationsService.svc?wsdl'
-MY_HWADDR = '00:1B:78:C3:08:D6' # HP7700-DESK13
-MY_HOST = 'HP7700-DESK14'
 
 # Be sure to set
 # envns = ('SOAP-ENV', 'http://www.w3.org/2003/05/soap-envelope')
@@ -175,7 +173,7 @@ def setHeaders(client):
     client.set_options(soapheaders=master_header_list)
     return client
 
-def generateContext(client):
+def generateContext(client, MY_HOST, MY_HWADDR):
     '''
     Generate our command request, this is rather hackish, and lifted almost
     verbatim from the Linux client agent code. If this becomes the norm, we
@@ -210,7 +208,7 @@ def runMe():
     while True:
         # Our poll loop.
         client = setHeaders(client)
-        ctx = generateContext(client)
+        ctx = generateContext(client, MY_HOST, MY_HWADDR)
         #client.service.GetCommandToExecute(ctx)
         try:
             print "---> Looking for command from CCMS"
