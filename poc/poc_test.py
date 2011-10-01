@@ -120,6 +120,17 @@ def Reboot(message='Rebooting', timeout=5):
     elif IS_LINUX:
         LinuxReboot(message, timeout)
 
+def tcpDiag():
+    '''
+    Performs basic, platform specific tcp diagnostics and pumping for when we
+    switch to PXE or GHOST vlans
+    '''
+    if IS_WINDOWS:
+        print os.system('ipconfig /release')
+        print os.system('ipconfig /renew')
+    else:
+        print os.system('/opt/intel/eil/clientagent/scripts/tcp_diag-full')
+
 # NASTY XML/SOAP STUFF (if we wind up using this, all of this must be revised.
 def newMessageID():
     '''
@@ -211,9 +222,12 @@ def runMe():
                     print "!!!!!!!!!!! REBOOT"
                     Reboot("CCMS Rebooot", 10)
         except:
-            print "---> Manual help required, restart the network on PXE move"
-            sys.exit('Would you kindly restart the network?')
+            #print "---> Manual help required, restart the network on PXE move"
+            #sys.exit('Would you kindly restart the network?')
+            print "---> VLAN switch, running TCP diagnostics to pump interface"
+            tcpDiag()
 
+        print ">>> Sleeping for 30 seconds"
         time.sleep(30)
 
 if __name__ == "__main__":
