@@ -1,0 +1,13 @@
+reboot
+update client agent
+asset info
+domain join
+domain unjoin
+
+in 6 weeks,
+
+* reboot (windows, Linux)
+* identify the platform it's on
+* run a service as Windows, and daemon as Linux
+* PXE/Ghost VLAN diagnostic
+* try for join/unjoin
