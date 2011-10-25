@@ -38,7 +38,9 @@ from copy import deepcopy
 
 log = getLogger(__name__)
 
-envns = ('SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/')
+# FIXME - Terrible hack, we need to do this with import doctor, Sam
+#envns = ('SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/')
+envns = ('SOAP-ENV', 'http://www.w3.org/2003/05/soap-envelope')
 
 
 class Binding:
