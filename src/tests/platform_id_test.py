@@ -11,7 +11,7 @@ import unittest
 
 class TestPlatformID(unittest.TestCase):
 
-    def setUP(self):
+    def setUp(self):
         self.platformID = PlatformID()
 
     def test_correctIsWindows(self):
