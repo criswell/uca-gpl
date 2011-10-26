@@ -32,7 +32,7 @@ class TestPlatformID(unittest.TestCase):
 
         self.assertEqual(self.platformID.IS_LINUX, isLinux)
 
-    def test_SysID(self):
+    def test_sysID(self):
         sysID = None
         try:
             stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --sysid')
@@ -46,7 +46,7 @@ class TestPlatformID(unittest.TestCase):
 
         self.assertEqual(self.platformID.VARIANT.SYSID, sysID)
 
-    def test_Platform(self):
+    def test_platform(self):
         platform = None
         try:
             stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --platform')
