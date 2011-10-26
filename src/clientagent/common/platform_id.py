@@ -7,7 +7,6 @@ determine the platform as well as any platform variants that matter.
 '''
 
 import os
-import sys
 
 class PlatformID:
     '''
@@ -60,23 +59,28 @@ class PlatformID:
             else:
                 # Linux variation can be a nightmare, for now we just call on
                 # the external and existing client agent helper script
-                stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --sysid')
-                output = stream.readlines()
-                stream.close()
+                # FIXME - Can we use with here? Need to double check RHEL python
+                # version
+                try:
+                    stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --sysid')
+                    output = stream.readlines()
+                    stream.close()
 
-                if len(output) == 1:
-                    # in the event that the client agent helper is non-
-                    # functional, we want to fail gracefully
-                    self.SYSID = output[1]
+                    if len(output) == 1:
+                        # in the event that the client agent helper is non-
+                        # functional, we want to fail gracefully
+                        self.SYSID = output[1]
 
-                stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --platform')
-                output = stream.readlines()
-                stream.close()
+                    stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --platform')
+                    output = stream.readlines()
+                    stream.close()
 
-                if len(output) == 1:
-                    # in the event that the client agent helper is non-
-                    # functional, we want to fail gracefully
-                    self.PLATFORM = output[1]
+                    if len(output) == 1:
+                        # in the event that the client agent helper is non-
+                        # functional, we want to fail gracefully
+                        self.PLATFORM = output[1]
+                finally:
+                    stream.close()
 
     __Variant = None
 
