@@ -60,6 +60,15 @@ class TestPlatformID(unittest.TestCase):
 
         self.assertEqual(self.platformID.VARIANT.PLATFORM, platform)
 
+    def test_isNotSingleton(self):
+        dupID = PlatformID()
+
+        self.assertNotEqual(dupID, self.platformID)
+
+    def test_hasSameState(self):
+        dupID = PlatformID()
+
+        self.assertEqual(dupID.__dict__, self.platformID.__dict__)
 
 if __name__ == '__main__':
     unittest.main()
