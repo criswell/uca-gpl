@@ -91,7 +91,7 @@ class PlatformID:
             # This should only happen on initial creation
             self.IS_WINDOWS = self.__IS_WINDOWS
             self.IS_LINUX = self.__IS_LINUX
-            self.__Variant = __PlatformVariant(self)
+            self.__Variant = self.__PlatformVariant(self)
             self.VARIANT = self.__Variant
 
 # vim:set ai et sts=4 sw=4 tw=80:
