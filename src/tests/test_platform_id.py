@@ -5,7 +5,9 @@ test_platform_id.py
 Tests the platform identification class from clientagent.common.platform_id
 '''
 
-import os
+import os, sys
+if __name__ == '__main__':
+    sys.path.insert(0, "%s/../" % os.path.dirname(__file__))
 from clientagent.common.platform_id import PlatformID
 import unittest
 

@@ -2,8 +2,7 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-ALL_TESTS =
-    [
+ALL_TESTS = [
         'test_platform_id.py',
     ]
 
