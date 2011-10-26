@@ -69,7 +69,7 @@ class PlatformID:
                     if len(output) == 1:
                         # in the event that the client agent helper is non-
                         # functional, we want to fail gracefully
-                        self.SYSID = output[1]
+                        self.SYSID = output[0]
 
                     stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --platform')
                     output = stream.readlines()
@@ -78,7 +78,7 @@ class PlatformID:
                     if len(output) == 1:
                         # in the event that the client agent helper is non-
                         # functional, we want to fail gracefully
-                        self.PLATFORM = output[1]
+                        self.PLATFORM = output[0]
                 finally:
                     stream.close()
 
