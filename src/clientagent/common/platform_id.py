@@ -19,7 +19,7 @@ class PlatformID:
     # General platform determination
     __IS_WINDOWS = False
     __IS_LINUX = True
-    if os.name === 'nt':
+    if os.name == 'nt':
         __IS_LINUX = False
         __IS_WINDOWS = True
 
