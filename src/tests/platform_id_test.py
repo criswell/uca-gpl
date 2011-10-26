@@ -1,5 +1,5 @@
 '''
-platform_id_test.py
+test_platform_id.py
 -------------------
 
 Tests the platform identification class from clientagent.common.platform_id
