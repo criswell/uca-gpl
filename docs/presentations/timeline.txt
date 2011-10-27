@@ -11,3 +11,5 @@ in 6 weeks,
 * run a service as Windows, and daemon as Linux
 * PXE/Ghost VLAN diagnostic
 * try for join/unjoin
+* UI tweaks?
+
