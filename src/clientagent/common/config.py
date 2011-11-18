@@ -45,6 +45,8 @@ class Config:
         Back up the existing config
         '''
         # Our config file is fubar, we'll nuke it after backing it up
+        # FIXME - Might want to verify this will work as expected under Windows
+        # where file extensions matter
         backup_config = "%s.backup-%i" % (self._configFile % int(time.time()))
         os.rename(self._configFile, backup_config)
 
