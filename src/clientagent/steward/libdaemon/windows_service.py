@@ -32,6 +32,25 @@ class Service(win32serviceutil.ServiceFramework):
         self.local_init()
         self.run()
 
+    def start(self):
+        """
+        Starts the Windows service
+        """
+        self.SvcDoRun()
+
+    def stop(self):
+        """
+        Stops the Windows service
+        """
+        self.SvcStop()
+
+    def restart(self):
+        """
+        Restart the windows service
+        """
+        self.SvcStop()
+        self.SvcDoRun()
+
     def run(self):
         """
         You should override this method when you subclass Daemon.
