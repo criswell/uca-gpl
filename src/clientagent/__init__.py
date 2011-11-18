@@ -1,6 +1,7 @@
 import logging
 import os
 from clientagent.common.platform_id import PlatformID
+from clientagent.common.config import Config
 
 class ClientAgentState:
     '''
@@ -36,12 +37,14 @@ if not ClientAgentState.INIT_SETUP:
 
         logging.basicConfig(filename=fn)
 
+    ClientAgentState.CONFIG = Config()
+
     ClientAgentState.INIT_SETUP = True
 
 def get_config():
     '''
     Returns the config instance
     '''
-    return ClientAgentState.CONFIG
+    return ClientAgentState.CONFIG.C
 
 # vim:set ai et sts=4 sw=4 tw=80:
