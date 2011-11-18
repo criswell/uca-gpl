@@ -8,6 +8,7 @@ class ClientAgentState:
     '''
     INIT_SETUP = False
     CLIENTAGENT_ROOT = ""
+    CONFIG = None
 
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
@@ -36,5 +37,11 @@ if not ClientAgentState.INIT_SETUP:
         logging.basicConfig(filename=fn)
 
     ClientAgentState.INIT_SETUP = True
+
+def get_config():
+    '''
+    Returns the config instance
+    '''
+    return ClientAgentState.CONFIG
 
 # vim:set ai et sts=4 sw=4 tw=80:
