@@ -11,6 +11,10 @@ class ClientAgentState:
     INIT_SETUP = False
     CLIENTAGENT_ROOT = ""
     CONFIG = None
+    # The following are largely used in the Win32 service APIs, but provided
+    # in case we find a use for them elsewhere
+    SRV_NAME = "EILClientAgent"
+    SRV_DISPLAY_NAME = "EIL Client Agent"
 
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
