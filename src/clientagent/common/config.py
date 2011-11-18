@@ -59,11 +59,26 @@ class Config:
         '''
         Creates a default config file
         '''
-        if(not self.C.has_section('main')):
+        if not self.C.has_section('main'):
             self.C.add_section('main')
+
+        if not self.C.has_section('linux'):
+            self.C.add_section('linux')
+
+        if not self.C.has_section('windows'):
+            self.C.add_section('windows')
 
         # Our default is to enabled ERROR and above
         self.C.set('main', 'debug', 2)
+
+        # Default Linux settings
+        self.C.set('linux', 'daemon_stdin', '/dev/null')
+        self.C.set('linux', 'daemon_stdout', '/dev/null')
+        self.C.set('linux', 'daemon_stderr', '/dev/null')
+        self.C.set('linux', 'pidfile', "%s/clientagent.pid" % self._root)
+
+        # Default Windows settings
+        # TODO
 
         try:
             # It really is horrible we don't have the 'with' statement on

@@ -21,7 +21,8 @@ if not ClientAgentState.INIT_SETUP:
     if platformID.IS_WINDOWS:
         # FIXME - Will want this to be the same log we have used previously
         ClientAgentState.CLIENTAGENT_ROOT = 'C:\\eil'
-        logging.basicConfig(filename='%s\\clienagent.log' % ClientAgentState.CLIENTAGENT_ROOT)
+        logging.basicConfig(filename='%s\\clienagent.log' % ClientAgentState.CLIENTAGENT_ROOT,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
         # Our root will be defined by previously issued LANANA/LSB requirements
         CLIENTAGENT_ROOT = '/opt/intel/eil/clientagent/'
@@ -36,7 +37,8 @@ if not ClientAgentState.INIT_SETUP:
         finally:
             stream.close()
 
-        logging.basicConfig(filename=fn)
+        logging.basicConfig(filename=fn,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
     debug_level = 2
