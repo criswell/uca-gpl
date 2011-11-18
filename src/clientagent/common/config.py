@@ -28,6 +28,11 @@ class Config:
                 # Attempt to load it
                 try:
                     self._C.readfp(open(self._configFile))
+                    if(self._C.has_option('main', 'debug')):
+                        pass
+                    else:
+                        self._backup_config()
+                        self._create_config()
                 except (configparser.MissingSectionHeaderError,
                         configparser.ParsingError):
                     self._backup_config()
@@ -49,5 +54,24 @@ class Config:
         # where file extensions matter
         backup_config = "%s.backup-%i" % (self._configFile % int(time.time()))
         os.rename(self._configFile, backup_config)
+
+    def _create_config(self):
+        '''
+        Creates a default config file
+        '''
+        if(not self._C.has_section('main')):
+            self._C.add_section('main')
+
+        # Our default is to enabled ERROR and above
+        self._C.set('main', 'debug', 2)
+
+        try:
+            # It really is horrible we don't have the 'with' statement on
+            # CentOS
+            configfile = open(self._configFile, 'wb')
+            self._C.write(configfile)
+            configfile.close()
+        except:
+            raise
 
 # vim:set ai et sts=4 sw=4 tw=80:
