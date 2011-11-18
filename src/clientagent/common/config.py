@@ -15,9 +15,9 @@ class Config:
     The unified client agent's configuration system.
     '''
 
-    def __init__(self):
+    def __init__(self, rootDir):
         self._platformID = PlatformID()
-        self._root = "%s/home" % clientagent.ClientAgentState.CLIENTAGENT_ROOT
+        self._root = "%s/home" % rootDir
         self._configFile = "%s/clientagent.cfg" % self._root
         self.C = configparser.SafeConfigParser()
         self._load_config()
