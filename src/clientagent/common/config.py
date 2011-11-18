@@ -28,7 +28,7 @@ class Config:
                 # Attempt to load it
                 try:
                     self.C.readfp(open(self._configFile))
-                    if(self.C.has_option('main', 'debug')):
+                    if(self.C.has_option('main', 'log_level')):
                         pass
                     else:
                         self._backup_config()
@@ -69,7 +69,7 @@ class Config:
             self.C.add_section('windows')
 
         # Our default is to enabled ERROR and above
-        self.C.set('main', 'debug', 2)
+        self.C.set('main', 'log_level', 2)
 
         # Default Linux settings
         self.C.set('linux', 'daemon_stdin', '/dev/null')

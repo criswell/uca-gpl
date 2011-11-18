@@ -46,8 +46,8 @@ if not ClientAgentState.INIT_SETUP:
 
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
     debug_level = 2
-    if(ClientAgentState.CONFIG.C.has_option('main', 'debug')):
-        _debug_level = ClientAgentState.CONFIG.C.get('main', 'debug')
+    if(ClientAgentState.CONFIG.C.has_option('main', 'log_level')):
+        _debug_level = ClientAgentState.CONFIG.C.get('main', 'log_level')
         try:
             debug_level = int(_debug_level)
         except:
@@ -58,7 +58,7 @@ if not ClientAgentState.INIT_SETUP:
     elif debug_level = 1:
         logging.setLevel(logging.ERROR)
     elif debug_level = 2:
-        logging.setLevel(logging.WARN)
+        logging.setLevel(logging.WARNING)
     elif debug_level = 3:
         logging.setLevel(logging.INFO)
     else:
