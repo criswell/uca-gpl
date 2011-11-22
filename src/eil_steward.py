@@ -33,7 +33,7 @@ class StewardHandler(Daemon):
         self.logger.info("EIL Unified Client Agent");
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
         self.logger.info("Startup daemon/service");
-        while.True:
+        while True:
             self.logger.debug('Starting client agent activity')
             time.sleep(self.__sleep_timer)
 
