@@ -56,16 +56,16 @@ if not ClientAgentState.INIT_SETUP:
             pass
 
     if debug_level < 1:
-        logging.setLevel(logging.CRITICAL)
+        logging.Logger.setLevel(logging.CRITICAL)
     elif debug_level == 1:
-        logging.setLevel(logging.ERROR)
+        logging.Logger.setLevel(logging.ERROR)
     elif debug_level == 2:
-        logging.setLevel(logging.WARNING)
+        logging.Logger.setLevel(logging.WARNING)
     elif debug_level == 3:
-        logging.setLevel(logging.INFO)
+        logging.Logger.setLevel(logging.INFO)
     else:
         # Anything higher will be debug to full
-        logging.setLevel(logging.DEBUG)
+        logging.Logger.setLevel(logging.DEBUG)
 
     ClientAgentState.INIT_SETUP = True
 
