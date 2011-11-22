@@ -69,7 +69,7 @@ class Config:
             self.C.add_section('windows')
 
         # Our default is to enabled ERROR and above
-        self.C.set('main', 'log_level', 2)
+        self.C.set('main', 'log_level', '2')
 
         # Default Linux settings
         self.C.set('linux', 'daemon_stdin', '/dev/null')
