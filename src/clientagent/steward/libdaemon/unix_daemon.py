@@ -132,20 +132,20 @@ class Daemon:
         It will be called after the process has been daemonized by start() or
         restart().
         """
-        raise exceptions.NotImplementedError
+        raise exceptions.NotImplementedError()
 
     def local_init(self):
         """
         Override this method for additional items to be initialized during
         daemonization, after the fork but before the main .run(..) call.
         """
-        raise exceptions.NotImplementedError
+        raise exceptions.NotImplementedError()
 
     def local_shutdown(self):
         """
         Override this method for any functionality you need executed during
         shutdown of this daemon or service.
         """
-        raise exceptions.NotImplementedError
+        raise exceptions.NotImplementedError()
 
 # vim:set ai et sts=4 sw=4 tw=80:
