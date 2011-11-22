@@ -11,14 +11,13 @@ between the client agent and CCMS.
 import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
-import clientagent.steward as steward
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
-    from steward.libdaemon.windows_service import Service as Daemon
+    from clientagent.steward.libdaemon.windows_service import Service as Daemon
 else:
     # Linux
-    from steward.libdaemon.unix_daemon import Daemon
+    from clientagent.steward.libdaemon.unix_daemon import Daemon
 
 class StewardHandler(Daemon):
     __sleep_timer = 30
