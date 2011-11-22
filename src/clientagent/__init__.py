@@ -15,6 +15,8 @@ class ClientAgentState:
     # in case we find a use for them elsewhere
     SRV_NAME = "EILClientAgent"
     SRV_DISPLAY_NAME = "EIL Client Agent"
+    # Version information FIXME would be nice to generate programatically
+    VERSION = "4.3.0.1.d20111011"
 
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()

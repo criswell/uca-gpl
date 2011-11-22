@@ -8,6 +8,7 @@ The steward is the main control daemon that acts as the communicator link
 between the client agent and CCMS.
 '''
 
+import sys, logging
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
 
@@ -19,15 +20,22 @@ else:
     from steward.libdaemon.unix_daemon import Daemon
 
 class StewardHandler(Daemon):
+    __sleep_timer = 30
 
     def local_init(self):
-        pass
+        self.logger = logging.getLogger()
 
     def local_shutdown(self):
         pass
 
     def run(self):
-        pass
+        self.logger.info("-----------------------------------");
+        self.logger.info("EIL Unified Client Agent");
+        self.logger.info("Version: %s" % ClientAgentState.VERSION);
+        self.logger.info("Startup daemon/service");
+        while.True:
+            self.logger.debug('Starting client agent activity')
+            time.sleep(self.__sleep_timer)
 
 def usage():
     print "Usage:\n"
