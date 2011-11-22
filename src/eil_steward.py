@@ -48,7 +48,7 @@ def usage():
     print "\trestart\t\tRestart the daemon/service"
 
 if __name__ == "__main__":
-    daemon = Daemon()
+    daemon = StewardHandler()
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()
