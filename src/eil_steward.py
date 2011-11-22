@@ -25,14 +25,15 @@ class StewardHandler(Daemon):
 
     def local_init(self):
         self.logger = logging.getLogger()
+        self.logger.info("-----------------------------------");
+        self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
+        self.logger.info("Version: %s" % ClientAgentState.VERSION);
+
 
     def local_shutdown(self):
         pass
 
     def run(self):
-        self.logger.info("-----------------------------------");
-        self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
-        self.logger.info("Version: %s" % ClientAgentState.VERSION);
         self.logger.info("Startup daemon/service");
         while True:
             self.logger.debug('Starting client agent activity')
