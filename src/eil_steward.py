@@ -11,7 +11,7 @@ between the client agent and CCMS.
 import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
-from clientagent import steward
+import clientagent.steward as steward
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
