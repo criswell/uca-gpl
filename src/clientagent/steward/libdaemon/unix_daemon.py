@@ -1,6 +1,7 @@
 import sys, os, time, atexit
 from signal import SIGTERM
 import logging
+import exceptions
 from clientagent import get_config
 
 class Daemon:
@@ -131,20 +132,20 @@ class Daemon:
         It will be called after the process has been daemonized by start() or
         restart().
         """
-        pass
+        raise exceptions.NotImplementedError
 
     def local_init(self):
         """
         Override this method for additional items to be initialized during
         daemonization, after the fork but before the main .run(..) call.
         """
-        pass
+        raise exceptions.NotImplementedError
 
     def local_shutdown(self):
         """
         Override this method for any functionality you need executed during
         shutdown of this daemon or service.
         """
-        pass
+        raise exceptions.NotImplementedError
 
 # vim:set ai et sts=4 sw=4 tw=80:
