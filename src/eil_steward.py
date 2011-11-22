@@ -8,7 +8,7 @@ The steward is the main control daemon that acts as the communicator link
 between the client agent and CCMS.
 '''
 
-import sys, logging
+import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
 
