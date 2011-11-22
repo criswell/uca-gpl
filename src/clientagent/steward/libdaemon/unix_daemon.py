@@ -10,7 +10,7 @@ class Daemon:
     Usage: subclass the Daemon class and override the run() method
     """
     def __init__(self):
-        self._config = get_config()
+        self.config = get_config()
         self.stdin = self.config.C.get('linux', 'daemon_stdin')
         self.stdout = self.config.C.get('linux', 'daemon_stdout')
         self.stderr = self.config.C.get('linux', 'daemon_stderr')
