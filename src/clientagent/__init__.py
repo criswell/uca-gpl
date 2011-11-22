@@ -31,7 +31,7 @@ if not ClientAgentState.INIT_SETUP:
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
         # Our root will be defined by previously issued LANANA/LSB requirements
-        CLIENTAGENT_ROOT = '/opt/intel/eil/clientagent/'
+        ClientAgentState.CLIENTAGENT_ROOT = '/opt/intel/eil/clientagent/'
         fn = '%s/home/client-agent-base.log' % ClientAgentState.CLIENTAGENT_ROOT
         try:
             stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --stdlog')

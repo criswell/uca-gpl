@@ -20,6 +20,7 @@ else:
     from clientagent.steward.libdaemon.unix_daemon import Daemon
 
 class StewardHandler(Daemon):
+    # TODO - determine if we want this to be variable based upon config
     __sleep_timer = 30
 
     def local_init(self):
