@@ -14,6 +14,7 @@ from clientagent import ClientAgentState
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
+    import win32serviceutil
     from clientagent.steward.libdaemon.windows_service import Service as Daemon
 else:
     # Linux
@@ -52,7 +53,7 @@ def usage_win():
 if __name__ == "__main__":
     daemon = StewardHandler()
     if platformId.IS_WINDOWS:
-        pass
+         win32serviceutil.HandleCommandLine(daemon)
     else:
         # Linux
         if len(sys.argv) == 2:
