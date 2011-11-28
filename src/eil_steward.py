@@ -50,6 +50,7 @@ def usage_linux():
 
 def usage_win():
     pass
+
 if __name__ == "__main__":
     daemon = StewardHandler()
     if platformId.IS_WINDOWS:
