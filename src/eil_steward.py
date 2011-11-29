@@ -29,6 +29,8 @@ class StewardHandler(Daemon):
         self.logger.info("-----------------------------------");
         self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
+        # Setup the atom queue
+        self.atoms = [] # FIXME TODO
 
 
     def local_shutdown(self):
@@ -36,8 +38,14 @@ class StewardHandler(Daemon):
 
     def run(self):
         self.logger.info("Startup daemon/service");
+        timeDelta = self.__sleep_timer
         while True:
             self.logger.debug('Starting client agent activity')
+            for a in atoms:
+                a.update(timeDelta)
+
+            # Update timeDelta
+            # FIXME TODO
             time.sleep(self.__sleep_timer)
 
 def usage_linux():

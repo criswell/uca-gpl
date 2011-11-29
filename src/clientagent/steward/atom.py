@@ -26,7 +26,7 @@ class Atom:
     def __init__(self):
         raise exceptions.NotImplementedError()
 
-    def Update(self, timeDelta):
+    def update(self, timeDelta):
         '''
         Called a minimum of every 30 seconds with the current timeDelta since
         the last time the update loop was begun.

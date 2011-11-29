@@ -10,7 +10,7 @@ class CCMS_Update(Atom):
     def __init__(self):
         pass
 
-    def Update(self, timeDelta):
+    def update(self, timeDelta):
         pass
 
 # vim:set ai et sts=4 sw=4 tw=80:
