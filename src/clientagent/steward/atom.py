@@ -4,6 +4,8 @@ atom.py
 Base-class from which other steward sub-classes are derived.
 '''
 
+import exceptions
+
 class Atom:
     '''
     All atomic steward sub-classes must be derived from this base class.
