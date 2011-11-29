@@ -23,6 +23,7 @@ else:
 class StewardHandler(Daemon):
     # TODO - determine if we want this to be variable based upon config
     __sleep_timer = 30
+    __min_time_resolution = 15
 
     def local_init(self):
         self.logger = logging.getLogger()
@@ -40,13 +41,20 @@ class StewardHandler(Daemon):
         self.logger.info("Startup daemon/service");
         timeDelta = self.__sleep_timer
         while True:
+            start_time = time.time()
             self.logger.debug('Starting client agent activity')
             for a in atoms:
                 a.update(timeDelta)
 
-            # Update timeDelta
-            # FIXME TODO
-            time.sleep(self.__sleep_timer)
+            wait_time = self.__sleep_timer - (time.time() - start_time)
+
+            if wait_time < self.__min_time_resolution:
+                wait_time = self.__min_time_resolution
+
+            time.sleep(wait_time)
+            timeDelta = time.time() - start_time
+            if timeDelta < self.__sleep_timer:
+                timeDelta = self.__sleep_timer
 
 def usage_linux():
     print "Usage:\n"
