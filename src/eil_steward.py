@@ -68,11 +68,12 @@ def usage_win():
     pass
 
 if __name__ == "__main__":
-    daemon = StewardHandler()
     if platformId.IS_WINDOWS:
+         daemon = StewardHandler(sys.argv)
          win32serviceutil.HandleCommandLine(daemon)
     else:
         # Linux
+        daemon = StewardHandler()
         if len(sys.argv) == 2:
             if 'start' == sys.argv[1]:
                 daemon.start()

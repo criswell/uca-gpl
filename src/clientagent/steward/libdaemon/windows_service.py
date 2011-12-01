@@ -4,7 +4,7 @@ import win32service
 import win32event
 import servicemanager
 import socket
-import clientagent.common.ClientAgentState as ClientAgentState
+from clientagent import ClientAgentState
 
 class Service(win32serviceutil.ServiceFramework):
     """
