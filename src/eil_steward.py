@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 '''
 steward.py
 ----------
@@ -43,7 +42,7 @@ class StewardHandler(Daemon):
         while True:
             start_time = time.time()
             self.logger.debug('Starting client agent activity')
-            for a in atoms:
+            for a in self.atoms:
                 a.update(timeDelta)
 
             wait_time = self.__sleep_timer - (time.time() - start_time)
