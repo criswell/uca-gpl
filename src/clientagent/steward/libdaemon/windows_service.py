@@ -12,45 +12,63 @@ class Service(win32serviceutil.ServiceFramework):
     daemon class.
     """
 
-    _svc_name_ = ClientAgentState.SRV_NAME
-    _svc_display_name_ = ClientAgentState.SRV_DISPLAY_NAME
+    _svc_name_ = "UnifiedClientAgt"
+    _svc_display_name_ = "UnifiedClientAgt" 
+    _svc_description_ = "EIL Portal Unified Client Service (Python) - resides on client - interfaces with CCMS"
 
-    def __init__(self,args):
-        win32serviceutil.ServiceFramework.__init__(self,args)
+    ##logging.debug("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
+    servicemanager.LogInfoMsg("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
+    def __init__(self, args):
+        win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None,0,0,None)
-        socket.setdefaulttimeout(60)
+        ##socket.setdefaulttimeout(60)
 
     def SvcStop(self):
-        self.local_shutdown()
+        global EndServ
+        ##servicemanager.LogInfoMsg("******** Entering  SvcStop: " + EndServ + "    ****")
+        EndServ = "Y"
+        ##servicemanager.LogInfoMsg("******** Value of EndServ (should be Y): " + EndServ + "    ****")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-        win32event.SetEvent(self.hWaitStop)
+        win32event.SetEvent(self.hWaitStop)      
 
     def SvcDoRun(self):
-        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
-                              servicemanager.PYS_SERVICE_STARTED,
-                              (self._svc_name_,''))
-        self.local_init()
-        self.run()
+        import servicemanager
+        import win32api
+        import win32event
+        servicemanager.LogInfoMsg("We are inside SvcDoRun - before LOGMSG call")
+        ##logging.debug("***********---> We are inside SvcDoRun - prior to LOGMSG call    RC 12-5-2011  *******")
+        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTED, (self._svc_name_, ''))
+        ##logging.debug("***********---> We are inside SvcDoRun - after LOGMSG call    RC 12-5-2011  *******")
+        self.timeout = 3000       ## this sets a 50 minute timeout  3000 seconds = 50 minutes
+                                  ## but acts more like a 3 second timer - RC
+                                  ## CHGD FROM 3000 TO 30000 rc 12/6/11 and back again 12-7
+        ##while 1:
+        while win32event.WaitForSingleObject(self.hWaitStop, self.timeout) == win32event.WAIT_TIMEOUT:
+            ##   wait for service stop signal, if 1 timeout, loop again ##
+            ##logging.debug("***********---> We are inside SvcDoRun - after LOGMSG call    RC 12-5-2011  *******")
+            servicemanager.LogInfoMsg("We are inside SvcDoRun - after LOGMSG call")
+            rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
+            ##  check to see if self.hWaitStop happened
+            if rc == win32event.WAIT_OBJECT_0:
+                ## stop signal encountered
+                servicemanager.LogInfoMsg("UnifiedClientAgt - Stopped")
+                ##global EndServ
+                ##EndServ = "Y"
+                ##logging.debug("***********---> We are inside SvcDoRun - stopped     RC 12-5-2011  *******")
+                break
+            else:
+                servicemanager.LogInfoMsg("UnifiedClientAgt - running and healthy")
+                ##logging.debug("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
+                ##logging.info("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
+                self.main()
+                
+       
+    def ctrlHandler(ctrlType):
+        return True
 
-    def start(self):
-        """
-        Starts the Windows service
-        """
-        self.SvcDoRun()
-
-    def stop(self):
-        """
-        Stops the Windows service
-        """
-        self.SvcStop()
-
-    def restart(self):
-        """
-        Restart the windows service
-        """
-        self.SvcStop()
-        self.SvcDoRun()
-
+    def main(self):
+                     servicemanager.LogInfoMsg("We are inside in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")             
+                     run()
     def run(self):
         """
         You should override this method when you subclass Daemon.

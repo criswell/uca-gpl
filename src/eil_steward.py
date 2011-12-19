@@ -39,21 +39,20 @@ class StewardHandler(Daemon):
     def run(self):
         self.logger.info("Startup daemon/service");
         timeDelta = self.__sleep_timer
-        while True:
-            start_time = time.time()
-            self.logger.debug('Starting client agent activity')
-            for a in self.atoms:
-                a.update(timeDelta)
+        ##while True:
+        start_time = time.time()
+        self.logger.debug('Starting client agent activity')
+        for a in self.atoms:
+            a.update(timeDelta)
 
-            wait_time = self.__sleep_timer - (time.time() - start_time)
+        wait_time = self.__sleep_timer - (time.time() - start_time)
 
-            if wait_time < self.__min_time_resolution:
-                wait_time = self.__min_time_resolution
-
-            time.sleep(wait_time)
-            timeDelta = time.time() - start_time
-            if timeDelta < self.__sleep_timer:
-                timeDelta = self.__sleep_timer
+        if wait_time < self.__min_time_resolution:
+           wait_time = self.__min_time_resolution
+        time.sleep(wait_time)
+        timeDelta = time.time() - start_time
+        if timeDelta < self.__sleep_timer:
+           timeDelta = self.__sleep_timer
 
 def usage_linux():
     print "Usage:\n"
@@ -68,8 +67,8 @@ def usage_win():
 
 if __name__ == "__main__":
     if platformId.IS_WINDOWS:
-         daemon = StewardHandler(sys.argv)
-         win32serviceutil.HandleCommandLine(daemon)
+         ##daemon = StewardHandler(sys.argv)
+         win32serviceutil.HandleCommandLine(StewardHandler)
     else:
         # Linux
         daemon = StewardHandler()
