@@ -44,6 +44,7 @@ class Service(win32serviceutil.ServiceFramework):
                                   ## but acts more like a 3 second timer - RC
                                   ## CHGD FROM 3000 TO 30000 rc 12/6/11 and back again 12-7
         ##while 1:
+        self.local_init()
         while win32event.WaitForSingleObject(self.hWaitStop, self.timeout) == win32event.WAIT_TIMEOUT:
             ##   wait for service stop signal, if 1 timeout, loop again ##
             ##logging.debug("***********---> We are inside SvcDoRun - after LOGMSG call    RC 12-5-2011  *******")
