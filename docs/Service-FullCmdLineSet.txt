@@ -1,0 +1,42 @@
+C:\home\rfchauvx\IronPythonApplication2r\IronPythonApplication2r>
+python EILUNifiedClientAgent.py --username localsystem --startup auto install
+
+
+sc failure UnifiedClientAgt reset= 30 actions= restart/5000
+
+sc start UnifiedClientAgt
+
+sc stop UnifiedClientAgt
+
+sc delete UnifiedClientAgt
+
+sc queryex UnifiedClientAgt
+
+taskkill /PID2996 /F
+
+taskkill /F /FI "SERVICES eq UnifiedClientAgt"                <== very good works w/o PID
+
+
+sc failure UnifiedClientAgt reset= 30 actions= restart/5000
+
+http://technet.microsoft.com/en-us/library/cc742019(ws.10).aspx
+
+	URL above gives full SC commands and options 
+
+
+
+sc failure UnifiedClientAgt reset= 100807 actions= restart/10000
+
+cmd above sets 1 day for length to reset to 0 errors. 
+cmd above sets 10 seconds delay before restart of the failed service 
+
+
+Deployment source scripts:   
+
+\\epi-san\EPI\docs-eil-infra.com\OS Prov WDS
+
+________________________ Code for the Python Steward (it will run it in scripts) ______
+
+net start | FIND "UnifiedClientAgt" > nul
+IF errorlevel 1 echo "the service is not running"
+IF errorlevel 0 echo "the service is running"
