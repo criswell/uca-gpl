@@ -119,6 +119,10 @@ class Daemon:
                 print str(err)
                 sys.exit(1)
 
+    def main(self):
+        while True:
+            run()
+
     def restart(self):
         """
         Restart the daemon
