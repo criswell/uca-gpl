@@ -27,7 +27,7 @@ class Service(win32serviceutil.ServiceFramework):
 
     def SvcStop(self):
         ##servicemanager.LogInfoMsg("******** Entering  SvcStop: " + EndServ + "    ****")
-        EndServ = True
+        self.EndServ = True
         ##servicemanager.LogInfoMsg("******** Value of EndServ (should be Y): " + EndServ + "    ****")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)      
@@ -69,7 +69,7 @@ class Service(win32serviceutil.ServiceFramework):
 
     def main(self):
                      servicemanager.LogInfoMsg("We are inside in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")             
-                     run()
+                     self.run()
     def run(self):
         """
         You should override this method when you subclass Daemon.
