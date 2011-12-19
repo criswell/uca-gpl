@@ -84,7 +84,7 @@ class Daemon:
         # Start the daemon
         self.daemonize()
         self.local_init()
-        self.run()
+        self.main()
 
     def stop(self):
         """
