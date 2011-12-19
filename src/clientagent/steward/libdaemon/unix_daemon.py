@@ -121,7 +121,7 @@ class Daemon:
 
     def main(self):
         while True:
-            run()
+            self.run()
 
     def restart(self):
         """
