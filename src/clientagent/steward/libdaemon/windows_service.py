@@ -12,9 +12,11 @@ class Service(win32serviceutil.ServiceFramework):
     daemon class.
     """
 
-    _svc_name_ = "UnifiedClientAgt"
-    _svc_display_name_ = "UnifiedClientAgt" 
-    _svc_description_ = "EIL Portal Unified Client Service (Python) - resides on client - interfaces with CCMS"
+    _svc_name_ = ClientAgentState.SRV_NAME
+    _svc_display_name_ = ClientAgentState.SRV_DISPLAY_NAME
+    _svc_description_ = ClientAgentState.SRV_DESCRIPTION
+
+    EndServ = False
 
     ##logging.debug("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
     servicemanager.LogInfoMsg("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
@@ -24,9 +26,8 @@ class Service(win32serviceutil.ServiceFramework):
         ##socket.setdefaulttimeout(60)
 
     def SvcStop(self):
-        global EndServ
         ##servicemanager.LogInfoMsg("******** Entering  SvcStop: " + EndServ + "    ****")
-        EndServ = "Y"
+        EndServ = True
         ##servicemanager.LogInfoMsg("******** Value of EndServ (should be Y): " + EndServ + "    ****")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)      
@@ -61,8 +62,8 @@ class Service(win32serviceutil.ServiceFramework):
                 ##logging.debug("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
                 ##logging.info("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
                 self.main()
-                
-       
+
+
     def ctrlHandler(ctrlType):
         return True
 

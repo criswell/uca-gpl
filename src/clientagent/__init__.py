@@ -15,6 +15,7 @@ class ClientAgentState:
     # in case we find a use for them elsewhere
     SRV_NAME = "EILClientAgent"
     SRV_DISPLAY_NAME = "EIL Client Agent"
+    SRV_DESCRIPTION = "EIL Portal Unified Client Service (Python) - resides on client - interfaces with CCMS"
     # Version information FIXME would be nice to generate programatically
     VERSION = "4.3.0.1.d20111011"
 
