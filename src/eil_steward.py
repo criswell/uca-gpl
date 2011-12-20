@@ -26,7 +26,7 @@ class StewardHandler(Daemon):
     __min_time_resolution = 15
 
     def local_init(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('steward')
         self.logger.info("-----------------------------------");
         self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
         self.logger.info("Version: %s" % ClientAgentState.VERSION);

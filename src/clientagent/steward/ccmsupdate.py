@@ -26,7 +26,7 @@ class CCMS_Update(Atom):
         self.config = get_config()
         self.FIRST_PASS = True
 
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('clientagent.steward.ccmsupdate')
         self.logger.info("CCMS Update atom startup");
         self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.config.C.get('main', 'CCMS')
 
