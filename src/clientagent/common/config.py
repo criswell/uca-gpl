@@ -71,6 +71,11 @@ class Config:
         # Our default is to enabled ERROR and above
         self.C.set('main', 'log_level', '2')
 
+        # Set some reasonable defaults for the servers we have to work with
+        self.C.set('main', 'RMS', 'rmssrvr01.eil-infra.com rmssvr01')
+        self.C.set('main', 'CCMS', 'eilauto01.eil-infra.com eilauto01')
+        self.C.set('main', 'NMSA', 'nmsa01')
+
         # Default Linux settings
         self.C.set('linux', 'daemon_stdin', '/dev/null')
         self.C.set('linux', 'daemon_stdout', '/dev/null')

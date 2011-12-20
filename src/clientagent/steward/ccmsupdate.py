@@ -4,6 +4,8 @@ ccmsupdate.py
 Main atomic operator class for the CCMS updates.
 '''
 
+import logging, time
+
 from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
 from clientagent.common.utility import getIfInfo
@@ -16,7 +18,8 @@ class CCMS_Update(Atom):
     '''
     def __init__(self):
         (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
-        
+        self.logger = logging.getLogger()
+        self.logger.info("CCMS Update atom startup");
 
     def update(self, timeDelta):
         pass
