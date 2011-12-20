@@ -48,6 +48,8 @@ class CCMS_Update(Atom):
         else:
             self.ACTIVE = True
             self.logger.debug('Creating SUDS SOAP client...')
+            # FIXME - We're still not caching the WSDL, before production, we
+            # really need to address this!
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
             self.client = Client(self.CCMS_WSDL, headers=headers)
 

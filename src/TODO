@@ -1,0 +1,6 @@
+* clientagent/steward/ccmsupdate.py, inside the CCMS_Update constructor there is
+  a FIXME which points out that we still haven't solved the WDSL caching problem
+  in the client agent. This means that the unified agent will not cache the WSDL
+  from CCMS, and that if we proceed into production as-is we very likely will
+  overwhelm (DoS) the CCMS server with our requests. There is a way to turn on
+  caching in SUDS, but we do not yet have that enabled.
