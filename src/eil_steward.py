@@ -10,6 +10,7 @@ between the client agent and CCMS.
 import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
+from clientagent.steward.ccmsupdate import CCMS_Update
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
@@ -30,7 +31,10 @@ class StewardHandler(Daemon):
         self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
         # Setup the atom queue
-        self.atoms = [] # FIXME TODO
+        self.atoms =
+            [
+                CCMS_Update(),
+            ]
 
 
     def local_shutdown(self):
