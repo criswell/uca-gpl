@@ -19,7 +19,7 @@ class Service(win32serviceutil.ServiceFramework):
     EndServ = False
 
     ##logging.debug("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
-    servicemanager.LogInfoMsg("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
+    servicemanager.LogInfoMsg("***********---> We are inside windows_service.py - we are beginning    RC 12-5-2011  *******")
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None,0,0,None)
@@ -36,7 +36,7 @@ class Service(win32serviceutil.ServiceFramework):
         import servicemanager
         import win32api
         import win32event
-        servicemanager.LogInfoMsg("We are inside SvcDoRun - before LOGMSG call")
+        servicemanager.LogInfoMsg("We are inside windows_service SvcDoRun - before LOGMSG call")
         ##logging.debug("***********---> We are inside SvcDoRun - prior to LOGMSG call    RC 12-5-2011  *******")
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTED, (self._svc_name_, ''))
         ##logging.debug("***********---> We are inside SvcDoRun - after LOGMSG call    RC 12-5-2011  *******")
@@ -48,18 +48,18 @@ class Service(win32serviceutil.ServiceFramework):
         while win32event.WaitForSingleObject(self.hWaitStop, self.timeout) == win32event.WAIT_TIMEOUT:
             ##   wait for service stop signal, if 1 timeout, loop again ##
             ##logging.debug("***********---> We are inside SvcDoRun - after LOGMSG call    RC 12-5-2011  *******")
-            servicemanager.LogInfoMsg("We are inside SvcDoRun - after LOGMSG call")
+            servicemanager.LogInfoMsg("We are inside windows_service SvcDoRun - after LOGMSG call")
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
             ##  check to see if self.hWaitStop happened
             if rc == win32event.WAIT_OBJECT_0:
                 ## stop signal encountered
-                servicemanager.LogInfoMsg("UnifiedClientAgt - Stopped")
+                servicemanager.LogInfoMsg("windows_service EILClientAgt - Stopped")
                 ##global EndServ
                 ##EndServ = "Y"
                 ##logging.debug("***********---> We are inside SvcDoRun - stopped     RC 12-5-2011  *******")
                 break
             else:
-                servicemanager.LogInfoMsg("UnifiedClientAgt - running and healthy")
+                servicemanager.LogInfoMsg("windows_service EILClientAgt - running and healthy")
                 ##logging.debug("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
                 ##logging.info("***********---> We are inside SvcDoRun - running     RC 12-5-2011  *******")
                 self.main()
@@ -69,7 +69,7 @@ class Service(win32serviceutil.ServiceFramework):
         return True
 
     def main(self):
-                     servicemanager.LogInfoMsg("We are inside in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")             
+                     servicemanager.LogInfoMsg("We are inside windows_service in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")             
                      self.run()
     def run(self):
         """
