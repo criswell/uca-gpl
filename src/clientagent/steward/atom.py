@@ -26,7 +26,7 @@ class Atom:
     '''
     Determines whether this atom is active or not.
     '''
-    self.ACTIVE = False
+    ACTIVE = False
 
     def __init__(self):
         raise exceptions.NotImplementedError()
