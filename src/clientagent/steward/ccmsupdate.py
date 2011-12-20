@@ -50,7 +50,14 @@ class CCMS_Update(Atom):
             # FIXME - We're still not caching the WSDL, before production, we
             # really need to address this!
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
-            self.client = Client(self.CCMS_WSDL, headers=headers)
+            try:
+                self.client = Client(self.CCMS_WSDL, headers=headers)
+            except:
+                # FIXME we will need better error checking here, but for now,
+                # we use a catch-all
+                self.logger.critical('Unknown error trying to contact CCMS!')
+                self.logger.critical('Bailing on CCMS operations!')
+                self.ACTIVE = False
 
     def shutdown(self):
         pass
