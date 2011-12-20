@@ -4,7 +4,6 @@ Basic utilities which we may need multiple times
 
 import os
 from clientagent.common.platform_id import PlatformID
-from clientagent import ClientAgentState
 
 _platformId = PlatformID()
 if _platformId.IS_WINDOWS:
