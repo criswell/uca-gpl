@@ -10,6 +10,7 @@ between the client agent and CCMS.
 import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
+from clientagent.steward.ccmsupdate import CCMS_Update
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
@@ -25,16 +26,20 @@ class StewardHandler(Daemon):
     __min_time_resolution = 15
 
     def local_init(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('steward')
         self.logger.info("-----------------------------------");
         self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
         # Setup the atom queue
-        self.atoms = [] # FIXME TODO
-
+        self.atoms = [
+            CCMS_Update(),
+        ]
 
     def local_shutdown(self):
-        pass
+        self.logger.info("Shutting down");
+        for a in self.atoms:
+            if a.ACTIVE:
+                a.shutdown()
 
     def run(self):
         self.logger.info("Startup daemon/service");
@@ -42,17 +47,26 @@ class StewardHandler(Daemon):
         ##while True:
         start_time = time.time()
         self.logger.debug('Starting client agent activity')
+
+        aliveCount = 0
         for a in self.atoms:
-            a.update(timeDelta)
+            if a.ACTIVE:
+                a.update(timeDelta)
+                aliveCount = aliveCount + 1
 
-        wait_time = self.__sleep_timer - (time.time() - start_time)
+        if aliveCount > 0:
+            wait_time = self.__sleep_timer - (time.time() - start_time)
 
-        if wait_time < self.__min_time_resolution:
-           wait_time = self.__min_time_resolution
-        time.sleep(wait_time)
-        timeDelta = time.time() - start_time
-        if timeDelta < self.__sleep_timer:
-           timeDelta = self.__sleep_timer
+            if wait_time < self.__min_time_resolution:
+                wait_time = self.__min_time_resolution
+            time.sleep(wait_time)
+            timeDelta = time.time() - start_time
+            if timeDelta < self.__sleep_timer:
+                timeDelta = self.__sleep_timer
+            return True
+        else:
+            self.logger.info('No more active process atoms. Agent exit.')
+            return False
 
 def usage_linux():
     print "Usage:\n"

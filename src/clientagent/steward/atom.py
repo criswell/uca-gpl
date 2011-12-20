@@ -23,6 +23,11 @@ class Atom:
     classes thread-safe if this is a concern.
     '''
 
+    '''
+    Determines whether this atom is active or not.
+    '''
+    ACTIVE = False
+
     def __init__(self):
         raise exceptions.NotImplementedError()
 
@@ -30,6 +35,12 @@ class Atom:
         '''
         Called a minimum of every 30 seconds with the current timeDelta since
         the last time the update loop was begun.
+        '''
+        raise exceptions.NotImplementedError()
+
+    def shutdown(self):
+        '''
+        Called at the end of the process- when the agent exits gracefully.
         '''
         raise exceptions.NotImplementedError()
 
