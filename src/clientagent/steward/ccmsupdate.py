@@ -28,7 +28,7 @@ class CCMS_Update(Atom):
 
         self.logger = logging.getLogger()
         self.logger.info("CCMS Update atom startup");
-        self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.stdin = self.config.C.get('main', 'CCMS')
+        self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.config.C.get('main', 'CCMS')
 
         (self.MY_HWADDR, self.MY_HOST) = (None, None)
         try:
