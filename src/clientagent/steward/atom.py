@@ -23,6 +23,11 @@ class Atom:
     classes thread-safe if this is a concern.
     '''
 
+    '''
+    Determines whether this atom is active or not.
+    '''
+    self.ACTIVE = False
+
     def __init__(self):
         raise exceptions.NotImplementedError()
 
