@@ -59,21 +59,21 @@ class CCMS_Update(Atom):
                 self.logger.critical('Bailing on CCMS operations!')
                 self.ACTIVE = False
 
-    def newMessageID():
-    '''
-    Obtains a new message ID from random sources
-    '''
-    source_string = '0123456789ABCDEFGHIJKLMNOPQRSTWXYZ'
-    message_id = 'urn:uuid:'
-    # Divide into seven stanzas
-    for s in range(7):
-        # and have five chars per stanza
-        for c in range(5):
-            message_id += source_string[random.randint(0,len(source_string)-1)]
-        if s < 6:
-            # Append a dash if not at end
-            message_id += "-"
-    return message_id
+    def newMessageID(self):
+        '''
+        Obtains a new message ID from random sources
+        '''
+        source_string = '0123456789ABCDEFGHIJKLMNOPQRSTWXYZ'
+        message_id = 'urn:uuid:'
+        # Divide into seven stanzas
+        for s in range(7):
+            # and have five chars per stanza
+            for c in range(5):
+                message_id += source_string[random.randint(0,len(source_string)-1)]
+            if s < 6:
+                # Append a dash if not at end
+                message_id += "-"
+        return message_id
 
     def setHeaders(self, client):
         '''
