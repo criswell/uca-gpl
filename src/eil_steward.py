@@ -42,17 +42,26 @@ class StewardHandler(Daemon):
         ##while True:
         start_time = time.time()
         self.logger.debug('Starting client agent activity')
+
+        aliveCount = 0
         for a in self.atoms:
-            a.update(timeDelta)
+            if a.ACTIVE:
+                a.update(timeDelta)
+                aliveCount = aliveCount + 1
 
-        wait_time = self.__sleep_timer - (time.time() - start_time)
+        if aliveCount > 0:
+            wait_time = self.__sleep_timer - (time.time() - start_time)
 
-        if wait_time < self.__min_time_resolution:
-           wait_time = self.__min_time_resolution
-        time.sleep(wait_time)
-        timeDelta = time.time() - start_time
-        if timeDelta < self.__sleep_timer:
-           timeDelta = self.__sleep_timer
+            if wait_time < self.__min_time_resolution:
+                wait_time = self.__min_time_resolution
+            time.sleep(wait_time)
+            timeDelta = time.time() - start_time
+            if timeDelta < self.__sleep_timer:
+                timeDelta = self.__sleep_timer
+            return True
+        else:
+            self.logger.info('No more active process atoms. Agent exit.')
+            return False
 
 def usage_linux():
     print "Usage:\n"

@@ -85,6 +85,7 @@ class Daemon:
         self.daemonize()
         self.local_init()
         self.main()
+        self.stop()
 
     def stop(self):
         """
@@ -120,8 +121,8 @@ class Daemon:
                 sys.exit(1)
 
     def main(self):
-        while True:
-            self.run()
+        while self.run():
+            pass
 
     def restart(self):
         """
