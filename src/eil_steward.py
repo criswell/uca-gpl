@@ -31,10 +31,9 @@ class StewardHandler(Daemon):
         self.logger.info(ClientAgentState.SRV_DISPLAY_NAME);
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
         # Setup the atom queue
-        self.atoms =
-            [
-                CCMS_Update(),
-            ]
+        self.atoms = [
+            CCMS_Update(),
+        ]
 
 
     def local_shutdown(self):
