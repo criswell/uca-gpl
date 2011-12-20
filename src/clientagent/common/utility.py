@@ -33,6 +33,9 @@ def getIfInfo():
 
     Obtains the hardware address from the first network interface on the
     machine.
+
+    Returns:
+        A tuple containing the (HW_ADDRESS, HOSTNAME)
     '''
     if _platformId.IS_LINUX:
         ifnum = 0
