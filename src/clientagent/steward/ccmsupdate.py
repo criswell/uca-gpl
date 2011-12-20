@@ -59,10 +59,95 @@ class CCMS_Update(Atom):
                 self.logger.critical('Bailing on CCMS operations!')
                 self.ACTIVE = False
 
+    def newMessageID():
+    '''
+    Obtains a new message ID from random sources
+    '''
+    source_string = '0123456789ABCDEFGHIJKLMNOPQRSTWXYZ'
+    message_id = 'urn:uuid:'
+    # Divide into seven stanzas
+    for s in range(7):
+        # and have five chars per stanza
+        for c in range(5):
+            message_id += source_string[random.randint(0,len(source_string)-1)]
+        if s < 6:
+            # Append a dash if not at end
+            message_id += "-"
+    return message_id
+
+    def setHeaders(self, client):
+        '''
+        Sets the headers for the next exchange. Should be called every time we start
+        a new exchange
+        '''
+        wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
+        mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
+        messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
+        replyTo_address = Element('Address',
+            ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
+        replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
+        replyTo_header.append(mustAttribute)
+        # FIXME hard-coded
+        to_header = Element('To',
+            ns=wsa_ns).setText('http://172.16.3.10/CCMS/EILClientOperationsService.svc')
+        to_header.append(mustAttribute)
+        action_header = Element('Action',
+            ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/GetCommandToExecute')
+        action_header.append(mustAttribute)
+        master_header_list = [
+            messageID_header,
+            replyTo_header,
+            to_header,
+            action_header
+        ]
+        client.set_options(soapheaders=master_header_list)
+        return client
+
+    def generateContext(self, client, MY_HOST, MY_HWADDR):
+        '''
+        Generate our command request, this is rather hackish, and lifted almost
+        verbatim from the Linux client agent code. If this becomes the norm, we
+        should rewrite this more pythonically.
+        '''
+        ctx = client.factory.create('ns0:MachineContext')
+        mParams = client.factory.create('ns2:ArrayOfKeyValueOfstringstring')
+        order_num = client.factory.create('ns2:KeyValueOfstringstring')
+        order_num.Key = 'ORDER_NUM'
+        order_num.Value = '1'
+        hwaddr = client.factory.create('ns2:KeyValueOfstringstring')
+        hwaddr.Key = 'MAC_ADDR'
+        hwaddr.Value = MY_HWADDR
+        host = client.factory.create('ns2:KeyValueOfstringstring')
+        host.Key = 'HOST_NAME'
+        host.Value = MY_HOST
+        mParams.KeyValueOfstringstring.append(order_num)
+        mParams.KeyValueOfstringstring.append(hwaddr)
+        mParams.KeyValueOfstringstring.append(host)
+        ctx.mParams = mParams
+        mType = client.factory.create('ns0:MachineType')
+        ctx.mType = mType.HOST
+        return ctx
+
     def shutdown(self):
         pass
 
     def update(self, timeDelta):
-        pass
+        client = setHeaders(client)
+        ctx = generateContext(client, MY_HOST, MY_HWADDR)
+        #client.service.GetCommandToExecute(ctx)
+        try:
+            print "---> Looking for command from CCMS"
+            result = client.service.GetCommandToExecute(ctx)
+            print "---> CCMS Result:"
+            print result
+            if result != None:
+                if result.CommandName == "reboot":
+                    print "!!!!!!!!!!! REBOOT"
+                    Reboot("CCMS Rebooot", 10)
+        except:
+            #print "---> Manual help required, restart the network on PXE move"
+            #sys.exit('Would you kindly restart the network?')
+            print "---> VLAN switch, running TCP diagnostics to pump interface"
+            tcpDiag()
 
 # vim:set ai et sts=4 sw=4 tw=80:
