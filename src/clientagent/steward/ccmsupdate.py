@@ -24,6 +24,7 @@ class CCMS_Update(Atom):
     '''
     def __init__(self):
         self.config = get_config()
+        self.FIRST_PASS = True
 
         self.logger = logging.getLogger()
         self.logger.info("CCMS Update atom startup");
@@ -32,6 +33,7 @@ class CCMS_Update(Atom):
 
         (self.MY_HWADDR, self.MY_HOST) = (None, None)
         try:
+            self.logger.debug('Obtaining HWADDR and HOSTNAME')
             (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
         except RuntimeError:
             # Well, this is unfortunate, we cannot run. Log an error and bail
@@ -45,7 +47,9 @@ class CCMS_Update(Atom):
             self.ACTIVE = False
         else:
             self.ACTIVE = True
-
+            self.logger.debug('Creating SUDS SOAP client...')
+            headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
+            self.client = Client(self.CCMS_WSDL, headers=headers)
 
     def update(self, timeDelta):
         pass
