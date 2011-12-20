@@ -35,9 +35,11 @@ class StewardHandler(Daemon):
             CCMS_Update(),
         ]
 
-
     def local_shutdown(self):
-        pass
+        self.logger.info("Shutting down");
+        for a in self.atoms:
+            if a.ACTIVE:
+                a.shutdown()
 
     def run(self):
         self.logger.info("Startup daemon/service");

@@ -38,4 +38,10 @@ class Atom:
         '''
         raise exceptions.NotImplementedError()
 
+    def shutdown(self):
+        '''
+        Called at the end of the process- when the agent exits gracefully.
+        '''
+        raise exceptions.NotImplementedError()
+
 # vim:set ai et sts=4 sw=4 tw=80:

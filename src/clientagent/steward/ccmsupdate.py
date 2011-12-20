@@ -52,6 +52,9 @@ class CCMS_Update(Atom):
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
             self.client = Client(self.CCMS_WSDL, headers=headers)
 
+    def shutdown(self):
+        pass
+
     def update(self, timeDelta):
         pass
 
