@@ -164,18 +164,24 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
-        client = setHeaders(client, newMessageID())
+        txID = newMessageID()
+        client = setHeaders(client, txID)
         ctx = generateContext(client, MY_HOST, MY_HWADDR)
 
         try:
-            print "---> Looking for command from CCMS"
+            self.logger.info('Checking for command from CCMS')
+            # FIXME - How do we handle situations where there is no
+            # hostname set? See TODO
             result = client.service.GetCommandToExecute(ctx)
-            print "---> CCMS Result:"
-            print result
-            if result != None:
-                if result.CommandName == "reboot":
-                    print "!!!!!!!!!!! REBOOT"
-                    Reboot("CCMS Rebooot", 10)
+            self.logger.debug('CCMS Result:')
+            self.logger.debug(result)
+
+            if not result:
+                # FIXME TODO
+                pass
+            else:
+                # FIXME TODO
+                pass
         except:
             #print "---> Manual help required, restart the network on PXE move"
             #sys.exit('Would you kindly restart the network?')
