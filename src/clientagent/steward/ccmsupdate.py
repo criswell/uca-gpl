@@ -78,14 +78,14 @@ class CCMS_Update(Atom):
                 message_id += "-"
         return message_id
 
-    def setHeaders(self, client):
+    def setHeaders(self, client, messageID):
         '''
         Sets the headers for the next exchange. Should be called every time we start
         a new exchange
         '''
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
-        messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
+        messageID_header = Element('MessageID', ns=wsa_ns).setText(messageID)
         replyTo_address = Element('Address',
             ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
         replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
@@ -106,7 +106,7 @@ class CCMS_Update(Atom):
         client.set_options(soapheaders=master_header_list)
         return client
 
-    def setStatusUpdateHeaders(ACKclient):
+    def setStatusUpdateHeaders(ACKclient, messageID):
         '''
         Sets the headers for the handshake ACK exchange. Should be called every time we finish
         an exchange
@@ -114,7 +114,7 @@ class CCMS_Update(Atom):
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
         # FIXME - this shouldn't be a new ID!
-        messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
+        messageID_header = Element('MessageID', ns=wsa_ns).setText(messageID)
         replyTo_address = Element('Address',
             ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
         replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
@@ -164,9 +164,9 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
-        client = setHeaders(client)
+        client = setHeaders(client, newMessageID())
         ctx = generateContext(client, MY_HOST, MY_HWADDR)
-        #client.service.GetCommandToExecute(ctx)
+
         try:
             print "---> Looking for command from CCMS"
             result = client.service.GetCommandToExecute(ctx)
