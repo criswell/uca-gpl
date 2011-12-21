@@ -28,7 +28,8 @@ class CCMS_Update(Atom):
 
         self.logger = logging.getLogger('clientagent.steward.ccmsupdate')
         self.logger.info("CCMS Update atom startup");
-        self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.config.C.get('main', 'CCMS')
+        self.CCMS_IP = self.config.C.get('main', 'CCMS')
+        self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
 
         (self.MY_HWADDR, self.MY_HOST) = (None, None)
         try:
@@ -50,8 +51,10 @@ class CCMS_Update(Atom):
             # FIXME - We're still not caching the WSDL, before production, we
             # really need to address this!
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
+            ACKheaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateCommandStatus"'}
             try:
                 self.client = Client(self.CCMS_WSDL, headers=headers)
+                self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
             except:
                 # FIXME we will need better error checking here, but for now,
                 # we use a catch-all
@@ -89,7 +92,7 @@ class CCMS_Update(Atom):
         replyTo_header.append(mustAttribute)
         # FIXME hard-coded
         to_header = Element('To',
-            ns=wsa_ns).setText('http://172.16.3.10/CCMS/EILClientOperationsService.svc')
+            ns=wsa_ns).setText('http://%s/CCMS/EILClientOperationsService.svc' % self.CCMS_IP)
         to_header.append(mustAttribute)
         action_header = Element('Action',
             ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/GetCommandToExecute')
@@ -102,6 +105,34 @@ class CCMS_Update(Atom):
         ]
         client.set_options(soapheaders=master_header_list)
         return client
+
+    def setStatusUpdateHeaders(ACKclient):
+        '''
+        Sets the headers for the handshake ACK exchange. Should be called every time we finish
+        an exchange
+        '''
+        wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
+        mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
+        messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
+        replyTo_address = Element('Address',
+            ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
+        replyTo_header = Element('ReplyTo', ns=wsa_ns).insert(replyTo_address)
+        replyTo_header.append(mustAttribute)
+        # FIXME hard-coded
+        to_header = Element('To',
+            ns=wsa_ns).setText('http://%s/CCMS/EILClientOperationsService.svc' % self.CCMS_IP)
+        to_header.append(mustAttribute)
+        action_header = Element('Action',
+            ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/UpdateCommandStatus')
+        action_header.append(mustAttribute)
+        master_header_list = [
+            messageID_header,
+            replyTo_header,
+            to_header,
+            action_header
+        ]
+        ACKclient.set_options(soapheaders=master_header_list)
+        return ACKclient
 
     def generateContext(self, client, MY_HOST, MY_HWADDR):
         '''
