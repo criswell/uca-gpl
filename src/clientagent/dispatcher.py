@@ -34,7 +34,7 @@ class Dispatcher:
         self.logger = logging.getLogger('dispatcher')
 
     # The following methods are the platform-agnostic abstractions
-    def Reboot(self, message='Rebooting', timeout=5):
+    def reboot(self, message='Rebooting', timeout=5):
         '''
         Generic reboot wrapper
         '''

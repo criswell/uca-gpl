@@ -10,6 +10,7 @@ from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
 from clientagent.common.utility import getIfInfo
 from clientagent import get_config
+from clientagent.dispatcher import Dispatcher
 
 # SUDs
 from suds.client import Client
@@ -23,6 +24,7 @@ class CCMS_Update(Atom):
     commands to platform-specific implimentations.
     '''
     def __init__(self):
+        self.dispatcher = Dispatcher()
         self.config = get_config()
         self.FIRST_PASS = True
 
@@ -160,6 +162,21 @@ class CCMS_Update(Atom):
         ctx.mType = mType.HOST
         return ctx
 
+    def generateAckCommand(self, client, cNam, CStat, cSucc, cResult, cErr, cExTime, cOID, cMT):
+        '''
+        Generates an acknowledgement command.
+        '''
+        ack = client.factory.create('ns0:EILCommand')
+        ack.CommandName = cNam
+        ack.CommandStatus = CStat
+        ack.CommandResult = cResult
+        ack.CommandSuccessful = cSucc
+        ack.ErrorCode = cErr
+        ack.OperationID = cOID
+        ack.SetMachineType = cMT
+
+        return ack
+
     def shutdown(self):
         pass
 
@@ -176,9 +193,31 @@ class CCMS_Update(Atom):
             self.logger.debug('CCMS Result:')
             self.logger.debug(result)
 
-            if not result:
-                # FIXME TODO
-                pass
+            if result == None:
+                self.logger.info('No CCMS command found to execute')
+            elif result.CommandName == "reboot":
+                rebcode = self.dispatcher.reboot('CCMS Reboot', 10)
+                ACKclient = setStatusUpdateHeaders(ACKclient, txID)
+                if rebcode == 0:
+                    rstat = 'COMMAND_EXECUTION_COMPLETE'
+                    rsuc = True
+                    rresult = 0
+                    rerr = result.ErrorCode
+                    rtime = result.ExpectedTimeOut
+                    rOID = result.OperationID
+                    rmt= result.SetMachineType
+                    cACK = self.generateAckCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+                else:
+                    rstat = 'COMMAND_FAILED'
+                    rsuc = False
+                    rresult = None
+                    rerr = 'reboot failed'
+                    rtime = result.ExpectedTimeOut
+                    rOID = result.OperationID
+                    rmt= result.SetMachineType
+                    cACK = self.generateAckCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+
+                ACKresult = ACKclient.service.UpdateCommandStatus(ctx, cACK)
             else:
                 # FIXME TODO
                 pass
