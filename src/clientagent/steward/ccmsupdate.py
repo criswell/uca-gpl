@@ -197,6 +197,10 @@ class CCMS_Update(Atom):
                 self.logger.info('No CCMS command found to execute')
             elif result.CommandName == "reboot":
                 rebcode = self.dispatcher.reboot('CCMS Reboot', 10)
+                # FIXME, under Linux these ACK headers must be sent back
+                # BEFORE we call the dispatcher with reboot. Simply-put, it
+                # cannot fail under Linux, and we will never come back from
+                # the dispatcher.reboot call
                 ACKclient = setStatusUpdateHeaders(ACKclient, txID)
                 if rebcode == 0:
                     rstat = 'COMMAND_EXECUTION_COMPLETE'
