@@ -113,6 +113,7 @@ class CCMS_Update(Atom):
         '''
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
+        # FIXME - this shouldn't be a new ID!
         messageID_header = Element('MessageID', ns=wsa_ns).setText(newMessageID())
         replyTo_address = Element('Address',
             ns=wsa_ns).setText('http://www.w3.org/2005/08/addressing/anonymous')
