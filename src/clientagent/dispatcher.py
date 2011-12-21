@@ -38,6 +38,7 @@ class Dispatcher:
         '''
         Generic reboot wrapper
         '''
+        rbrtncode = 0
         if IS_WINDOWS:
             rbrtncode = self.__Win32Reboot(message, timeout, True, True)
         elif IS_LINUX:
