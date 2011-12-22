@@ -108,7 +108,7 @@ class CCMS_Update(Atom):
         client.set_options(soapheaders=master_header_list)
         return client
 
-    def setStatusUpdateHeaders(ACKclient, messageID):
+    def setStatusUpdateHeaders(self, ACKclient, messageID):
         '''
         Sets the headers for the handshake ACK exchange. Should be called every time we finish
         an exchange
@@ -181,9 +181,9 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
-        txID = newMessageID()
-        client = setHeaders(client, txID)
-        ctx = generateContext(client, MY_HOST, MY_HWADDR)
+        txID = self.newMessageID()
+        client = self.setHeaders(client, txID)
+        ctx = self.generateContext(client, MY_HOST, MY_HWADDR)
 
         try:
             self.logger.info('Checking for command from CCMS')
