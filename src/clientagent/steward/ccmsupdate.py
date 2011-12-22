@@ -182,7 +182,7 @@ class CCMS_Update(Atom):
 
     def update(self, timeDelta):
         txID = self.newMessageID()
-        client = self.setHeaders(client, txID)
+        self.client = self.setHeaders(self.client, txID)
         ctx = self.generateContext(client, MY_HOST, MY_HWADDR)
 
         try:
