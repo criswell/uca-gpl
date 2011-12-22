@@ -30,7 +30,7 @@ class Dispatcher:
     '''
 
     def __init__(self):
-        self.platformID = platformID
+        self.platformID = platformId
         self.logger = logging.getLogger('dispatcher')
 
     # The following methods are the platform-agnostic abstractions
