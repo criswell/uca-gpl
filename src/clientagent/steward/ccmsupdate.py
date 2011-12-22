@@ -189,7 +189,7 @@ class CCMS_Update(Atom):
             self.logger.info('Checking for command from CCMS')
             # FIXME - How do we handle situations where there is no
             # hostname set? See TODO
-            result = client.service.GetCommandToExecute(ctx)
+            result = self.client.service.GetCommandToExecute(ctx)
             self.logger.debug('CCMS Result:')
             self.logger.debug(result)
 
@@ -201,7 +201,7 @@ class CCMS_Update(Atom):
                 # BEFORE we call the dispatcher with reboot. Simply-put, it
                 # cannot fail under Linux, and we will never come back from
                 # the dispatcher.reboot call
-                ACKclient = setStatusUpdateHeaders(ACKclient, txID)
+                self.ACKclient = self.setStatusUpdateHeaders(self.ACKclient, txID)
                 if rebcode == 0:
                     rstat = 'COMMAND_EXECUTION_COMPLETE'
                     rsuc = True
@@ -210,7 +210,7 @@ class CCMS_Update(Atom):
                     rtime = result.ExpectedTimeOut
                     rOID = result.OperationID
                     rmt= result.SetMachineType
-                    cACK = self.generateAckCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+                    cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
                 else:
                     rstat = 'COMMAND_FAILED'
                     rsuc = False
@@ -219,9 +219,9 @@ class CCMS_Update(Atom):
                     rtime = result.ExpectedTimeOut
                     rOID = result.OperationID
                     rmt= result.SetMachineType
-                    cACK = self.generateAckCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+                    cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
 
-                ACKresult = ACKclient.service.UpdateCommandStatus(ctx, cACK)
+                ACKresult = self.ACKclient.service.UpdateCommandStatus(ctx, cACK)
             else:
                 # FIXME TODO
                 pass
