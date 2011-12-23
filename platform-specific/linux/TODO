@@ -1,3 +1,7 @@
 * The build environment needs MASSIVE re-working here. It currently builds a
   lot we do not need. For example, it has the build deps and source for gsoap.
   Basically, a re-write using virtual-env would be the way to go.
+
+* The makefiles will need to be fixed. Currently they depend on a lot of
+  things specific to the LCA, but if all we need is the script elevator, those
+  dependencies drop to practically nothing.
