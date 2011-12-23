@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# TCP diagnostic tool for the client agent (Xen version)
+
+# This tool is to be called when the steward has detected a TCP error from a
+# SOAP connection (e.g., it has tried to connect to CCMS, and a general TCP
+# error was the result). This tool well determine what the problem was, and try
+# to fix it. This is the Xen-specific version
+
+# Number of times we try pinging
+NUM_PINGS=5
+
+# The minimum percentage we require
+MIN_PERCENTAGE=50
+
+# The error we expect to get from ping on network unreachable
+UNREACHABLE_ERROR="connect: Network is unreachable"
+
+# Load our libraries
+. /opt/intel/eil/clientagent/lib/helper.sh
+. /opt/intel/eil/clientagent/lib/globals.sh
+
+trace "TCP diagnostic tool (Xen version) running..."
+
+# For convenience, we set a variable to the full path of the xe command
+XE="/opt/xensource/bin/xe"
+
+PIF_LIST=$(${XE} pif-list | grep "^uuid" | cut -d ":" -f 2 | cut -d " " -f 2 )
+
+re_up() {
+    trace "Attempting to bring up interface '${UUID}'..."
+    ${XE} pif-unplug uuid=${*}
+    ${XE} pif-plug uuid=${*}
+}
+
+# Start, by turning off the management console, unfortunately
+${XE} host-management-disable
+
+# loop through the PIF list
+for UUID in $PIF_LIST
+do
+    trace "Running against PIF resource '${UUID}'..."
+
+    HOST_IP=$(${XE} pif-param-get uuid="${UUID}" param-name="IP")
+
+    GATEWAY=$(echo $HOST_IP | cut -d. -f1-3)
+    GATEWAY=${GATEWAY}.1
+
+    # Xen is all manner of messed up, we actually perform TWO checks because
+    # depending on how quickly the steward catches this ping will either act
+    # like other Linux/Unix pings, or it will report the UNREACHABLE_ERROR
+    # above.
+    PING_CHECK=$(ping -q -c ${NUM_PINGS} ${GATEWAY})
+    PERCENTAGE=$(ping -q -c ${NUM_PINGS} ${GATEWAY} | \
+        grep "${NUM_PINGS} packets transmitted" | \
+        sed -f ${LIB_DIR}/comma_split.sed | grep "packet loss" | cut -d% -f1)
+
+    if [ "$PING_CHECK" == "$UNREACHABLE_ERROR" ]; then
+        re_up "${UUID}"
+    elif [ "$PERCENTAGE" -gt "$MIN_PERCENTAGE" ]; then
+        re_up "${UUID}"
+    fi
+done
+
+# vim:set ai et sts=4 sw=4 tw=80:

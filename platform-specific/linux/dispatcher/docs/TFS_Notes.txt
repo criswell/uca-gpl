@@ -1,0 +1,63 @@
+                                TFS Notes
+------------------------------------------------------------------------------
+
+Table of Contents
+1) Overview
+2) History, git/tfs bridge
+3) Hg/tfs bridge
+4) Conclusion
+------------------------------------------------------------------------------
+
+1) Overview
+
+    This document describes the attempts to make various cross-platform version
+control systems work with the existing TFS install utilized by the EIL team. It
+explains what was tried, what worked, what did not work, why it did not work,
+and why we ultimately could not integrate Linux with TFS.
+
+2) History, git/tfs bridge
+
+    In October 2010, one of the first tasks of the Linux Client agent port was
+to set up some sort of bridge between the Linux development environment and the
+Windows TFS codebase which contained all of the existing C#/.NET/Windows-centric
+project code to date.
+
+    The first, and most actively maintained, project which was found that seemed
+to provide a way for us to build this bridge was the git/tfs project on github:
+
+        * https://github.com/spraints/git-tfs
+
+    The following set-up was built:
+
+    [ Original Windows TFS ] --> [ Windows Cygwin/SSH git/tfs gateway ] --> ..
+
+    .. --> [ Linux git repo ] --> [ Linux dev environment ]
+
+    This worked for files already *in* TFS, but new files could not be added
+without TFS reporting an error.
+
+3) Hg/tfs bridge
+
+    In November 2010, hg (Mercurial, see README) was chosen due to its cross-
+platform nature and the fact that it integrated with Windows shell (TortoiseHg).
+Effort was made to integrate hg with TFS. The hgtfshook was found and used:
+
+        * http://hgtfshook.codeplex.com/
+
+    A setup similar to the above was built (except no Cygwin gateway, and
+replace git with hg), however, the same problems were encountered.
+
+4) Conclusion
+
+    The problem with TFS is that it is designed to work with integrated
+development environments such as Visual Studio. Because we are not using a
+Windows-centric IDE (Visual Studio) we are working outside of the design
+specifications of TFS. Thus, we do not have permission to add files to the
+repository and our changes must be made in highly convoluted ways.
+
+    At this time, there does not seem any way to integrate the Linux Client
+agent development with TFS.
+
+    It is worth noting, however, that there are many new hg/tfs projects popping
+up on various Open Source hosting sites every day and that the issues we've
+encountered may be resolved by another clever developer given time.

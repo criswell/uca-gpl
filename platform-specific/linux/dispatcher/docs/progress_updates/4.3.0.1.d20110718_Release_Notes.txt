@@ -1,0 +1,78 @@
+EIL Linux Client Agent 4.3.0.1.d20110718 Release
+------------------------------------------------
+
+The Linux Client Agent version 4.3.0.1 (d20110718) is now in production. This
+release includes Node Manager support (via NMSA), machine asset collection, and
+other improvements.
+
+New OS provisions of currently supported Linux distros will automatically get
+this version. Existing Linux provisions can be upgraded manually via a number
+of ways:
+
+        *) Running the update check script (as root) at
+        /opt/intel/eil/clientagent/tools/update-checker.sh
+
+        *) Having the Portal issue an upgrade command (I am not certain if
+        the current production release of the Portal has this option integrated
+        yet. If it does, the Linux Client Agent will accept it.)
+
+** NODE MANAGER SUPPORT
+
+The Linux client agent can now interact with the EIL Test Automation Framework
+(NMSA Server) on platforms that are Node Manager enabled. During installation,
+the Linux Client Agent performs tests to determine if the system is NM capable,
+and sets up a "NMSA Handler" daemon which manages local test workloads and
+NMSA interaction.
+
+You can view the installation log at
+
+    /opt/intel/eil/clientagent/home/client-agent-base.log
+
+to determine if the NMSA Handler was setup properly by looking for entries
+similar to the following:
+
+    2011-07-20 02:04:41 PDT : laf_test: Checking program requirements...
+    2011-07-20 02:04:41 PDT : laf_test: Found '/usr/bin/wget'....
+    2011-07-20 02:04:41 PDT : laf_test: Checking for proper init scripts...
+    2011-07-20 02:04:41 PDT : laf_test: detected an RHEL or SLES derived distro...
+    2011-07-20 02:04:41 PDT : laf_test: ipmi init found, starting
+    2011-07-20 02:04:42 PDT : laf_test: Checking for device requirements...
+    2011-07-20 02:04:42 PDT : laf_test: Found device '/dev/ipmi0'...
+    2011-07-20 02:04:42 PDT : laf_test: System capable of LAF/NMSA, setting up...
+
+The handler itself can be controlled via the nmsa_handler init script:
+
+    Usage: /etc/init.d/nmsa_handler.sh {start|stop|status|restart}
+
+It can be configured by editing the following file and restarting the handler,
+
+    /opt/intel/eil/clientagent/home/nmsa_handler.cfg
+
+and its activity can be viewed via the NMSA Handler log found at
+
+    /opt/intel/eil/clientagent/home/nmsa_handler.log
+
+** EXISTING CCMS SUPPORT
+
+The existing "Steward" daemon for interfacing with CCMS/RMS has had minor
+performance and reliability tweaks related to the NMSA and Asset work. It can
+still be interacted with via the eil_steward.sh init script
+
+    Usage: /etc/init.d/eil_steward.sh {start|stop|status|restart|asset}
+
+and its logs can still be viewed via syslog as well as the following sub-system
+specific logs:
+    /opt/intel/eil/clientagent/home/ccms-agent.log
+    /opt/intel/eil/clientagent/home/client-agent-base.log
+    /opt/intel/eil/clientagent/home/client-agent-error.log
+
+** ASSET COLLECTION
+
+This functionality was available previously, however manual installation of the
+asset collection script was required. The asset collection script has now been
+added to the install process so it will be included automatically on systems
+that support it.
+
+The asset collection happens automatically at boot, but you can force a fresh
+re-collection at any time by using the eil_steward.sh init script with the
+"asset" option.

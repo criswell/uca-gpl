@@ -1,0 +1,91 @@
+#!/usr/bin/env sh
+
+# TCP diagnostic tool for the client agent (light version)
+
+# This tool is to be called when the steward has detected a TCP error from a
+# SOAP connection (e.g., it has tried to connect to CCMS, and a general TCP
+# error was the result). This is the "light" version of the tool, it assumes
+# the problem is solveable with a simple re-up of the network interfaces, and
+# cannot do much additional logic to determine if previous attempts were
+# successful or not. This is unfortunate, but due to the nature of the platforms
+# on which it is used, that is a limitation.
+
+# Load our libraries
+. /opt/intel/eil/clientagent/lib/helper.sh
+. /opt/intel/eil/clientagent/lib/globals.sh
+
+# The setward binary
+BIN_STEWARD="/opt/intel/eil/clientagent/bin/eil_steward"
+
+# Number of times we try pinging
+NUM_PINGS=5
+
+# The minimum percentage we require
+MIN_PERCENTAGE=50
+
+# The time for the agent to restart (in minutes)
+RESTART_TIME_MINUTES=15
+
+if [ -n "$IS_ESX" ]; then
+    # ESX is very peculiar
+    ROUTERS=$(cat /etc/dhclient-*.leases | grep "option routers" | \
+              cut -d" " -f5 | cut -d";" -f1)
+
+    # Systematically run through the lease info, and try to re-up
+    for ROUTER in $ROUTERS
+    do
+        PERCENTAGE=$(ping -c ${NUM_PINGS} ${ROUTER} | \
+            grep "${NUM_PINGS} packets transmitted" | \
+            sed -f ${LIB_DIR}/comma_split.sed | grep "packet loss" | cut -d% -f1)
+
+        if [ "$PERCENTAGE" -gt "$MIN_PERCENTAGE" ]; then
+            # Re-up
+            # NOTE - This may need some double checking, there's all manner of
+            # wackiness going on in ESXi, and this may not re-up all interfaces
+            dhclient-uw
+        else
+            # We seem to have a working interface, get out of the loop
+            break
+        fi
+    done
+    # If we make it here and still don't have a working network, then we shut
+    # down the steward
+    PERCENTAGE=$(ping -c ${NUM_PINGS} ${ROUTER} | \
+        grep "${NUM_PINGS} packets transmitted" | cut -d, -f3 | cut -d% -f1)
+
+    if [ "$PERCENTAGE" -gt "$MIN_PERCENTAGE" ]; then
+        trace_error "--------------"
+        trace_error "Network reconfiguration attempted a maximum number of times, yet still no viable network!"
+        trace_error "Linux client agent is shutting down"
+        /etc/init.d/eil_steward.sh stop
+        trace_error "Setting Linux client agent to restart in ${RESTART_TIME_MINUTES} minutes"
+        OUTPUT=$(at -f ${BIN_STEWARD} -v now + ${RESTART_TIME_MINUTES} minutes)
+        trace_error "${OUTPUT}"
+    fi
+elif [ -n "$IS_ANGSTROM" ]; then
+    # FIXME - This assumes we're running XenClient, if we encounter another
+    # Angstrom-based distro in the future, we will want additional logic here
+    # to deal with it
+
+    # First, let's see if we even have the proper host file setup
+    is_hosts_setup
+    _STATUS=$?
+    if [ "${_STATUS}" -eq "0" ]; then
+        trace "Angstrom-based XenClient, NetworkManager must repair our connection, it is out of our hands..."
+    else
+        trace "Angstrom-based XenClient has obliterated our hosts file,"
+        trace" restoring it..."
+        /etc/init.d/xen_host_replace.sh start
+    fi
+else
+    # We have no clue how to handle this case, shutting down the agent
+    trace_error "--------------"
+    trace_error "Network unreachable and on a system which we don't seem to support!"
+    trace_error "Linux client agent is shutting down"
+    /etc/init.d/eil_steward.sh stop
+    trace_error "Setting Linux client agent to restart in ${RESTART_TIME_MINUTES} minutes"
+    OUTPUT=$(at -f ${BIN_STEWARD} -v now + ${RESTART_TIME_MINUTES} minutes)
+    trace_error "${OUTPUT}"
+fi
+
+# vim:set ai et sts=4 sw=4 tw=80:

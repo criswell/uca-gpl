@@ -1,0 +1,77 @@
+#!/bin/sh
+# this post-install script contacts the interface on linux PXE server
+# to report OS successfully installed via PXE or if error
+# if success, it will ping PXE server until port switching occurs
+# (once ping fails, then port switch in progress)
+# wait 30 sec and reboot
+# if failure, display error message for user to resolve and pause script
+
+# ip address of PXE install server to report status and verify port switch
+serverIP='172.16.48.2'
+
+# list all NIC's and parse MAC addresses
+macAddr=$(ifconfig | awk '/HWaddr/ {print $5}')
+macAddr=$(echo $macAddr | sed 's/ /,/g' | sed 's/:/-/g')
+
+# call web interface on pxe server to report success
+result=$(wget -q -O - http://$serverIP/pxeConfig/postInstall.php?mac=$macAddr\&msg=success)
+resultProcess=$(echo $result | cut -d',' -f 2)
+
+# parse results above
+if [[ $resultProcess == success ]]
+then
+
+        # if result success, ping ip of pxe server until it fails, then wait 30 sec and reboot
+        #echo
+        #echo Successfully notified RMS that provisioned completed
+        #echo Waiting for port switching to occur
+        #echo
+
+        while true; do
+
+                # ping pxe server and parse results for 100% failure, indicating port swtiching done
+                pingResult=$(ping -c 4 $serverIP | tail -n 2 | head -n 1 | cut -d' ' -f 8)
+
+                # if packet loss is 100%, then we know port switch done, wait 15 sec, then reboot
+                if [[ $pingResult == 100% ]]
+                then
+
+                        echo
+                        echo Port switching in progress or completed...
+                        echo Waiting 15 seconds before rebooting system
+                        sleep 10
+                        echo 5 seconds left...
+                        sleep 5
+			echo Rebooting...
+			reboot
+			exit
+
+                fi
+
+                echo RMS notified provisioning successful, waiting for port switching, redetection in 5sec
+                sleep 5
+
+        done
+
+fi
+
+# otherwise, result is failure to update RMS DB, print error / failure message and
+# wait for user intervention
+echo
+echo Failed to notify RMS that provisioning completed for other error, see below
+echo
+echo Returned error: $result
+echo
+#echo Please contact automation team to resolve error
+#echo Pausing script to display error message
+echo To complete installation, do the following:
+echo 1. Cancel OS provisioning operation in RMS for this machine
+echo 2. Port switch to destination VLAN
+echo 3. Press Control+C or Control+Alt+Del to reboot system
+echo 
+echo Contact automation team for all other issues
+echo 
+
+# use read command to pause script
+read userInput
+

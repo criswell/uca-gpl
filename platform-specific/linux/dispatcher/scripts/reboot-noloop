@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# More specific reboot tool with logic to detect reboot cycles
+# due to CCMS errors
+
+# The setward binary
+BIN_STEWARD="/opt/intel/eil/clientagent/bin/eil_steward"
+
+# This is the timeout in minutes
+# After this many minutes, it is considered okay to have another reboot
+TIMEOUT_IN_MINUTES=40
+
+# The time for the agent to restart (in minutes)
+RESTART_TIME_MINUTES=15
+
+# Num reboots before shutdown of agent
+# This is the number of reboots within the above allowed timeout we are allowed
+# before the client agent is forceably stopped
+NUM_REBOOTS_ALLOWED=5
+
+# Load our libraries
+. /opt/intel/eil/clientagent/lib/helper.sh
+. /opt/intel/eil/clientagent/lib/globals.sh
+
+LASTREBOOT=$HOME_DIR/.last_reboot
+NUMREBOOTS=$HOME_DIR/.num_reboots
+
+normal_reboot() {
+    DTE=$(date_utc_stamp "now")
+    touch $LASTREBOOT
+    touch $NUMREBOOTS
+    echo $DTE > $LASTREBOOT
+    echo "1" >> $NUMREBOOTS
+    /sbin/shutdown -r now
+}
+
+if [ -f "$LASTREBOOT" ]; then
+    # We have a last reboot, let's make sure that CCMS hasn't deadlocked into
+    # an infinite reboot cycle
+    DTE1=$(cat $LASTREBOOT)
+    DTE2=$(date_utc_stamp "now")
+    DELTA=$(date_utc_stamp_delta -m $DTE1 $DTE2)
+    if [ "$DELTA" -lt "$TIMEOUT_IN_MINUTES" ]; then
+        # Alright, let's count our number of times rebooted thus far
+        COUNTREBOOTS=$(cat $NUMREBOOTS | wc -l)
+        if [ "$COUNTREBOOTS" -gt "$NUM_REBOOTS_ALLOWED" ]; then
+            # Alright, that's enough CCMS, no soup for you!
+            trace_error "--------------"
+            trace_error "Maximum reboots exceeded within time limit!"
+            trace_error "Linux client agent is assuming that CCMS has reached a deadlock state."
+            trace_error "Linux client agent shutting down!"
+            /etc/init.d/eil_steward.sh stop
+            trace_error "Setting Linux client agent to restart in ${RESTART_TIME_MINUTES} minutes"
+            OUTPUT=$(at -f ${BIN_STEWARD} -v now + ${RESTART_TIME_MINUTES} minutes)
+            trace_error "${OUTPUT}"
+        else
+            # We're still within limits, handle our reboot
+            normal_reboot
+        fi
+    else
+        # Okay, we're fine, just reboot
+        rm -f $LASTREBOOT
+        rm -f $NUMREBOOTS
+        normal_reboot
+    fi
+else
+    # Okay, no last reboot, let's touch it and reboot then
+    rm -f $LASTREBOOT
+    rm -f $NUMREBOOTS
+    normal_reboot
+fi
+
+# vim:set ai et sts=4 sw=4 tw=80:

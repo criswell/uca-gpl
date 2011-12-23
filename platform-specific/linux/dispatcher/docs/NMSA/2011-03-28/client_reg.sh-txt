@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# client_register.php?mac=&hostname=&bmc=&bridge=&trans=
+
+MAC=$1
+HOST=$2
+BMC=""
+BRIDGE=""
+TRANS=""
+
+RECORD_ID_NEXT_LS_BYTE=1
+RECORD_ID_NEXT_MS_BYTE=2
+OEM_ID_BYTE=6
+RECORD_SUBTYPE=11
+NM_DEVICE_SLAVE_BYTE=13                # bridge 
+CHANNEL_NUMBER_BYTE=14                 # transport
+CMD_STR="0x0a 0x23"                    # 0x0a (storage) 0x23 (getsdr)
+RES_ID="0x00 0x00"                     # Reservation id ls & ms
+READ_OFF_LENGTH="0x00 0x10"            # offset into record and length to read
+OEM_FLAG="c0"
+NM_FLAG="0d"
+
+get_sdr_entry() {
+ byte_array=()
+ recordId_ls="$1"
+ recordId_ms="$2"
+ req="$CMD_STR $RES_ID $recordId_ls $recordId_ms $READ_OFF_LENGTH"
+ rsp=`ipmitool raw $req`
+ nxt_recordId_ls_tmp="`echo $rsp | awk '{ print $'$RECORD_ID_NEXT_LS_BYTE' }'`"
+ nxt_recordId_ms_tmp="`echo $rsp | awk '{ print $'$RECORD_ID_NEXT_MS_BYTE' }'`"
+ if [ ${nxt_recordId_ls_tmp:0:1} == "0" ]; then
+   nxt_recordId_ls="0x${nxt_recordId_ls_tmp:1}"
+  else
+   nxt_recordId_ls="0x$nxt_recordId_ls_tmp"
+ fi
+ if [ ${nxt_recordId_ms_tmp:0:1} == "0" ]; then
+  nxt_recordId_ms="0x${nxt_recordId_ms_tmp:1}"
+ else
+  nxt_recordId_ms="0x$nxt_recordId_ms_tmp"
+ fi 
+ t=`echo $rsp | awk '{ print $6 }'`
+ if  [ "$t"  == "$OEM_FLAG" ]; then
+  if  [ "`echo $rsp | awk '{ print $'$RECORD_SUBTYPE' }'`" == "$NM_FLAG" ]; then
+   TRANS="`echo $rsp | awk '{ print $'$NM_DEVICE_SLAVE_BYTE' }'`"
+   BRIDGE="`echo $rsp | awk '{ print $'$CHANNEL_NUMBER_BYTE' }'`"
+   return 0
+  else
+   get_sdr_entry   "$nxt_recordId_ls" "$nxt_recordId_ms"
+  fi
+ else
+  get_sdr_entry   "$nxt_recordId_ls" "$nxt_recordId_ms"
+ fi
+}
+
+set_bt() {
+ get_sdr_entry 0 0
+}
+
+set_bmc() {
+ BMC=`ipmitool lan print | grep "IP Address" | grep -v "Source" | awk '{print $4}'`
+}
+
+set_bt
+set_bmc
+REG_URL="client_register.php?mac=$MAC&hostname=$HOST&bmc=$BMC&bridge=$BRIDGE&trans=$TRANS"
+echo $REG_URL

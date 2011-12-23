@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# Platform agnostic (hopefully) reboot tool
+
+# Does *no* checks to verify that we aren't caught in an endless reboot cycle.
+# For that, we rely on a more intelligent reboot tool that only works on certain
+# platforms
+
+# NOTE: We don't use 'reboot' because that is not part of the LSB, thus it is
+# NOT guaranteed to be on every Linux platform (even though it probably will
+# be) nor is its behavior guaranteed (even though it probably will be)
+#
+# Since the recent upstart rewrite has changed the way boot/shutdown/reboot
+# happens under Linux, we're being very careful to use *only* those items
+# specified in the LSB v4.0 for the shutdown command
+
+/sbin/shutdown -r now
+
+# vim:set ai et sts=4 sw=4 tw=80:

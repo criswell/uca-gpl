@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+
+# Asset refresh script
+# --------------------
+# In many ways, this has to be a fire-and-forget operation. We cannot
+# communicate failures back to the steward since the asset info script handled
+# as an init (which is by design, and this is desired).
+#
+# However, this is not a problem. We have designed for possible failures in the
+# assetHelper library utilized by the steward itself (see
+# lib_nmsa/assetHelper.h and the associated documentation in html/ for more
+# information).
+
+# The asset info script
+ASSETINFO_SCRIPT="/etc/init.d/assetinfo"
+
+# Command to refresh it
+ASSETINFO_REFRESH="${ASSETINFO_SCRIPT} start"
+
+# The asset info XML file itself
+ASSETINFO_XML="/opt/intel/assetinfo"
+
+# The steward init script
+STEWARD_INIT="/etc/init.d/eil_steward.sh"
+
+# The steward refresh command
+STEWARD_REFRESH="${STEWARD_INIT} asset"
+
+# Load our libraries
+. /opt/intel/eil/clientagent/lib/helper.sh
+. /opt/intel/eil/clientagent/lib/globals.sh
+
+trace "Attempting to update asset info (if it exists)"
+
+# First verify that the file exists
+if [ -f "${ASSETINFO_SCRIPT}" ]; then
+    trace "The asset info script exists, refreshing it"
+    # Alright, refresh it
+    $ASSETINFO_REFRESH > /dev/null 2>&1
+    # Next, check to see if we have an assetinfo file after that operation
+    if [ -f "${ASSETINFO_XML}" ]; then
+        trace "Updated XML.."
+        if [ -f "${STEWARD_INIT}" ]; then
+            trace "Sending SIGUSR1 to steward"
+            $STEWARD_REFRESH > /dev/null 2>&1
+        else
+            trace_error "--------------"
+            trace_error "The Linux client agent does not appear to be installed properly!"
+        fi
+    fi
+fi
+
+# vim:set ai et sts=4 sw=4 tw=80:
