@@ -5,3 +5,8 @@
 * The makefiles will need to be fixed. Currently they depend on a lot of
   things specific to the LCA, but if all we need is the script elevator, those
   dependencies drop to practically nothing.
+
+* The dispatcher scripts will need to be tweaked to work with the new UCA.
+  Most importantly, the entire install and init process will have to be
+  tweaked. For example, the elevate script tool will now need to be used in
+  init as we're running a script as EIL.EIL user/group.
