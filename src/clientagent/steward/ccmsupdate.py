@@ -228,7 +228,8 @@ class CCMS_Update(Atom):
         except:
             #print "---> Manual help required, restart the network on PXE move"
             #sys.exit('Would you kindly restart the network?')
-            print "---> VLAN switch, running TCP diagnostics to pump interface"
-            tcpDiag()
+            #print "---> VLAN switch, running TCP diagnostics to pump interface"
+            #tcpDiag()
+            raise exceptions.NotImplementedError()
 
 # vim:set ai et sts=4 sw=4 tw=80:
