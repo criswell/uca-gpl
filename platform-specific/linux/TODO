@@ -1,0 +1,3 @@
+* The build environment needs MASSIVE re-working here. It currently builds a
+  lot we do not need. For example, it has the build deps and source for gsoap.
+  Basically, a re-write using virtual-env would be the way to go.
