@@ -31,7 +31,7 @@ normal_reboot() {
     touch $NUMREBOOTS
     echo $DTE > $LASTREBOOT
     echo "1" >> $NUMREBOOTS
-    /sbin/shutdown -r now
+    sleep 15 ; /sbin/shutdown -r now
 }
 
 if [ -f "$LASTREBOOT" ]; then
