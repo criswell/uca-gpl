@@ -19,6 +19,10 @@ class ClientAgentState:
     # Version information FIXME would be nice to generate programatically
     VERSION = "4.3.0.1.d20111011"
 
+    # Various Linux-isms we need for compatibility with the dispatcher scripts
+    COMDIR = None
+    BINDIR = None
+
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
 
@@ -35,7 +39,7 @@ if not ClientAgentState.INIT_SETUP:
         ClientAgentState.CLIENTAGENT_ROOT = '/opt/intel/eil/clientagent'
         fn = '%s/home/client-agent-base.log' % ClientAgentState.CLIENTAGENT_ROOT
         try:
-            stream = os.popen('/opt/intel/eil/clientagent/tools/clientagent-helper.sh --stdlog')
+            stream = os.popen('/usr/bin/clientagent-helper.sh --stdlog')
             output = stream.readlines()
             stream.close()
 
@@ -46,6 +50,19 @@ if not ClientAgentState.INIT_SETUP:
 
         logging.basicConfig(filename=fn,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        comdir = '%s/home/commands' % ClientAgentState.CLIENTAGENT_ROOT
+        try:
+            stream = os.popen('/usr/bin/clientagent-helper.sh --comdir')
+            output = stream.readlines()
+            sream.close()
+
+            if len(output) == 1:
+                comdir = output[0]
+        finally:
+            stream.close()
+
+        ClientAgentState.COMDIR = comdir
 
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
     debug_level = 2
