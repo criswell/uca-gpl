@@ -15,6 +15,7 @@ if platformId.IS_WINDOWS:
     from netbios import *
 else:
     import fcntl, socket, struct
+    from clientagent.dispatcher_helper import linux_ExecuteCommand
 
 class Dispatcher:
     '''
@@ -87,10 +88,7 @@ class Dispatcher:
         '''
         Reboots a Linux system
         '''
-        # FIXME - This needs to call the external dispatcher scripts
-        #timeout = (1.0/60) * timeout
-        #os.system("shutdown -r %i '%s'" % (timeout, message))
-        raise exceptions.NotImplementedError()
+        return linux_ExecuteCommand('reboot')
 
 
 # vim:set ai et sts=4 sw=4 tw=80:
