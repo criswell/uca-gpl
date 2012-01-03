@@ -64,6 +64,19 @@ if not ClientAgentState.INIT_SETUP:
 
         ClientAgentState.COMDIR = comdir
 
+        bindir = '%s/bin' % ClientAgentState.CLIENTAGENT_ROOT
+        try:
+            stream = os.popen('/usr/bin/clientagent-helper.sh --bin')
+            output = stream.readlines()
+            sream.close()
+
+            if len(output) == 1:
+                bindir = output[0]
+        finally:
+            stream.close()
+
+        ClientAgentState.BINDIR = bindir
+
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
     debug_level = 2
     if(ClientAgentState.CONFIG.C.has_option('main', 'log_level')):
