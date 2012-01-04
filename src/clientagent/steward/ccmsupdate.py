@@ -197,7 +197,7 @@ class CCMS_Update(Atom):
         if timeDelta >= self.TARGET_TIMEDELTA:
             txID = self.newMessageID()
             self.client = self.setHeaders(self.client, txID)
-            ctx = self.generateContext(client, self.MY_HOST, self.MY_HWADDR)
+            ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
 
             try:
                 self.logger.info('Checking for command from CCMS')
