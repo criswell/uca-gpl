@@ -149,7 +149,7 @@ class Daemon:
     def main(self):
         running = True
         while running:
-            self.run()
+            running = self.run()
 
     def restart(self):
         """
