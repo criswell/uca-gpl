@@ -48,14 +48,14 @@ class Dispatcher:
         return rbrtncode
 
     def tcpDiag():
-    '''
-    Performs basic, platform specific tcp diagnostics and pumping for when we
-    switch to PXE or GHOST vlans
-    '''
-    if IS_WINDOWS:
-        self.__Win32tcpDiag()
-    else:
-        self.__LinuxTcpDiag()
+        '''
+        Performs basic, platform specific tcp diagnostics and pumping for when we
+        switch to PXE or GHOST vlans
+        '''
+        if IS_WINDOWS:
+            self.__Win32tcpDiag()
+        else:
+            self.__LinuxTcpDiag()
 
     # The following methods are all platform-specific, they are set obfuscated
     # because they are not supposed to be called externally
