@@ -47,10 +47,24 @@ class Dispatcher:
 
         return rbrtncode
 
+    def tcpDiag():
+    '''
+    Performs basic, platform specific tcp diagnostics and pumping for when we
+    switch to PXE or GHOST vlans
+    '''
+    if IS_WINDOWS:
+        self.__Win32tcpDiag()
+    else:
+        self.__LinuxTcpDiag()
+
     # The following methods are all platform-specific, they are set obfuscated
     # because they are not supposed to be called externally
 
     # WINDOWS SECTION
+    def __Win32tcpDiag(self):
+        os.system('ipconfig /release')
+        os.system('ipconfig /renew')
+
     def __AdjustPrivilege(self, priv, enable=True):
         '''
         Adjusts the privileges on Windows systems
@@ -75,7 +89,7 @@ class Dispatcher:
         '''
         self.__AdjustPrivilege(SE_SHUTDOWN_NAME)
         try:
-            wrbcode = 0
+            wrbcode = True
             win32api.InitiateSystemShutdown(None, message, timeout, bForce, bReboot)
         finally:
             # Now we remove the privilege we just added.
@@ -90,5 +104,7 @@ class Dispatcher:
         '''
         return linux_ExecuteCommand('reboot')
 
+    def __LinuxTcpDiag(self):
+        throwAwayResult = linux_ExecuteCommand('tcp_diag')
 
 # vim:set ai et sts=4 sw=4 tw=80:

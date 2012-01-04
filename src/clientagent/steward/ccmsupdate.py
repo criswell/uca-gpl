@@ -213,7 +213,7 @@ class CCMS_Update(Atom):
                     # cannot fail under Linux, and we will never come back from
                     # the dispatcher.reboot call
                     self.ACKclient = self.setStatusUpdateHeaders(self.ACKclient, txID)
-                    if rebcode == 0:
+                    if rebcode:
                         rstat = 'COMMAND_EXECUTION_COMPLETE'
                         rsuc = True
                         rresult = 0
@@ -237,10 +237,7 @@ class CCMS_Update(Atom):
                     # FIXME TODO
                     pass
             except:
-                #print "---> Manual help required, restart the network on PXE move"
-                #sys.exit('Would you kindly restart the network?')
-                #print "---> VLAN switch, running TCP diagnostics to pump interface"
-                #tcpDiag()
-                raise exceptions.NotImplementedError()
+                self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
+                self.dispatcher.tcpDiag()
 
 # vim:set ai et sts=4 sw=4 tw=80:
