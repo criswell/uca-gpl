@@ -4,7 +4,7 @@ ccmsupdate.py
 Main atomic operator class for the CCMS updates.
 '''
 
-import logging, time
+import logging, time, random
 
 from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
