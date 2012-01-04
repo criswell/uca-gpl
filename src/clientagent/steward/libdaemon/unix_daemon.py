@@ -124,8 +124,9 @@ class Daemon:
                 sys.exit(1)
 
     def main(self):
-        while self.run():
-            pass
+        running = True
+        while running:
+            self.run()
 
     def restart(self):
         """
