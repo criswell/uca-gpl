@@ -55,7 +55,7 @@ if not ClientAgentState.INIT_SETUP:
         try:
             stream = os.popen('/usr/bin/clientagent-helper.sh --comdir')
             output = stream.readlines()
-            sream.close()
+            stream.close()
 
             if len(output) == 1:
                 comdir = output[0]
