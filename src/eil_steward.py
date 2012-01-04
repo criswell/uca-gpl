@@ -55,10 +55,13 @@ class StewardHandler(Daemon):
                 aliveCount = aliveCount + 1
 
         if aliveCount > 0:
+            self.logger.info('Activities done, sleeping')
             wait_time = self.__sleep_timer - (time.time() - start_time)
 
             if wait_time < self.__min_time_resolution:
                 wait_time = self.__min_time_resolution
+
+            self.logger.debug('Sleeping "%s"' % wait_time)
             time.sleep(wait_time)
             timeDelta = time.time() - start_time
             if timeDelta < self.__sleep_timer:
