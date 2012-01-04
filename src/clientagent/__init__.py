@@ -68,7 +68,7 @@ if not ClientAgentState.INIT_SETUP:
         try:
             stream = os.popen('/usr/bin/clientagent-helper.sh --bin')
             output = stream.readlines()
-            sream.close()
+            stream.close()
 
             if len(output) == 1:
                 bindir = output[0]
