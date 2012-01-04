@@ -100,6 +100,8 @@ if __name__ == "__main__":
                 daemon.restart()
             elif 'debug' == sys.argv[1]:
                 daemon.start(True)
+            elif 'status' == sys.argv[1]:
+                daemon.status()
             else:
                 print "Unknown command"
                 sys.exit(2)
