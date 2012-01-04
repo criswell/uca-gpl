@@ -16,6 +16,7 @@ class Daemon:
         self.stdout = self.config.C.get('linux', 'daemon_stdout')
         self.stderr = self.config.C.get('linux', 'daemon_stderr')
         self.pidfile = self.config.C.get('linux', 'pidfile')
+        self.debug = False
 
     def daemonize(self):
         """
@@ -64,11 +65,12 @@ class Daemon:
     def delpid(self):
         os.remove(self.pidfile)
 
-    def start(self):
+    def start(self, debug=False):
         """
         Start the daemon
         """
         # Check for a pidfile to see if the daemon already runs
+        self.debug = debug
         try:
             pf = file(self.pidfile,'r')
             pid = int(pf.read().strip())
@@ -82,7 +84,8 @@ class Daemon:
             sys.exit(1)
 
         # Start the daemon
-        self.daemonize()
+        if not self.debug:
+            self.daemonize()
         self.local_init()
         self.main()
         self.stop()
