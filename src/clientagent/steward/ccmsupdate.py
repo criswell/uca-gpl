@@ -11,6 +11,7 @@ from clientagent.common.utility import mkdir_p
 from clientagent.common.utility import getIfInfo
 from clientagent import get_config
 from clientagent.dispatcher import Dispatcher
+from clientagent.steward.commandhandler import handleReboot
 
 # SUDs
 from suds.client import Client
@@ -213,28 +214,7 @@ class CCMS_Update(Atom):
                 if commandName == None:
                     self.logger.info('No CCMS command found to execute')
                 elif commandName == 'reboot':
-                    rebcode = self.dispatcher.reboot('CCMS Reboot', 10)
-                    self.ACKclient = self.setStatusUpdateHeaders(self.ACKclient, txID)
-                    if rebcode:
-                        rstat = 'COMMAND_EXECUTION_COMPLETE'
-                        rsuc = True
-                        rresult = 0
-                        rerr = result.ErrorCode
-                        rtime = result.ExpectedTimeOut
-                        rOID = result.OperationID
-                        rmt= result.SetMachineType
-                        cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
-                    else:
-                        rstat = 'COMMAND_FAILED'
-                        rsuc = False
-                        rresult = None
-                        rerr = 'reboot failed'
-                        rtime = result.ExpectedTimeOut
-                        rOID = result.OperationID
-                        rmt= result.SetMachineType
-                        cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
-
-                    ACKresult = self.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+                    handleReboot(self, dispatcher, result)
                 elif commandName == 'join domain':
                     doma = 'dl.inteleil.com'
                     retry = 1
