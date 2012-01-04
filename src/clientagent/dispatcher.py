@@ -40,9 +40,9 @@ class Dispatcher:
         Generic reboot wrapper
         '''
         rbrtncode = 0
-        if IS_WINDOWS:
+        if self.platformID.IS_WINDOWS:
             rbrtncode = self.__Win32Reboot(message, timeout, True, True)
-        elif IS_LINUX:
+        elif self.platformID.IS_LINUX:
             self.__LinuxReboot(message, timeout)
 
         return rbrtncode
@@ -52,7 +52,7 @@ class Dispatcher:
         Performs basic, platform specific tcp diagnostics and pumping for when we
         switch to PXE or GHOST vlans
         '''
-        if IS_WINDOWS:
+        if self.platformID.IS_WINDOWS:
             self.__Win32tcpDiag()
         else:
             self.__LinuxTcpDiag()
