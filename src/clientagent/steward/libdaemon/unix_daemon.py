@@ -123,6 +123,29 @@ class Daemon:
                 print str(err)
                 sys.exit(1)
 
+    def status(self):
+        '''
+        Query the status of the daemon
+        '''
+        try:
+            pf = file(self.pidfile,'r')
+            pid = int(pf.read().strip())
+            pf.close()
+        except IOError:
+            pid = None
+
+        if not pid:
+            message = "pidfile %s does not exist. Daemon not running\n"
+            sys.stdout.write(message % self.pidfile)
+        else:
+            if os.path.exists('/proc/%s' % pid):
+                message = "daemon running, proccess %s\n"
+                sys.stdout.write(message % pid)
+            else:
+                message = "pidfile %s exists, but daemon not running as process %s\n"
+                sys.stdout.write(message % (self.pidfile, pid))
+
+
     def main(self):
         running = True
         while running:
