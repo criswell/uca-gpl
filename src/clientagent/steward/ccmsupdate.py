@@ -221,7 +221,8 @@ class CCMS_Update(Atom):
                 else:
                     # FIXME TODO
                     pass
-            except:
+            except Exception as e:
+                self.logger.info(e.message)
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
                 self.dispatcher.tcpDiag()
 
