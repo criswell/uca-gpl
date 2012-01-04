@@ -215,7 +215,7 @@ class CCMS_Update(Atom):
                         commandName = result.CommandName.lower()
 
                     if commandName == None:
-                        self.logger.info('No CCMS command found to execute')
+                        self.logger.info('CCMS Command was "None"')
                     elif commandName == 'reboot':
                         handleReboot(self, dispatcher, result)
                     elif commandName == 'join domain':

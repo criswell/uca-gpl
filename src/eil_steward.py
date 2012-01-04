@@ -44,7 +44,7 @@ class StewardHandler(Daemon):
     def run(self):
         self.logger.info("Startup daemon/service");
         timeDelta = self.__sleep_timer
-        ##while True:
+        # while True:
         start_time = time.time()
         self.logger.debug('Starting client agent activity')
 
