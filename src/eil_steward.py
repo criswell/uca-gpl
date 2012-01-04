@@ -75,6 +75,7 @@ def usage_linux():
     print "\tstart\t\tStart the daemon/service"
     print "\tstop\t\tStop the daemon/service"
     print "\trestart\t\tRestart the daemon/service"
+    print "\tdebug\t\tStart the daemon/service in debug mode"
 
 def usage_win():
     pass
