@@ -208,19 +208,21 @@ class CCMS_Update(Atom):
                 self.logger.debug(result)
 
                 commandName = None
-
-                if 'lower' in dir(result.CommandName):
-                    commandName = result.CommandName.lower()
-
-                if commandName == None:
+                if result == None:
                     self.logger.info('No CCMS command found to execute')
-                elif commandName == 'reboot':
-                    handleReboot(self, dispatcher, result)
-                elif commandName == 'join domain':
-                    handleJoin(self, result)
                 else:
-                    # FIXME TODO
-                    pass
+                    if 'lower' in dir(result.CommandName):
+                        commandName = result.CommandName.lower()
+
+                    if commandName == None:
+                        self.logger.info('No CCMS command found to execute')
+                    elif commandName == 'reboot':
+                        handleReboot(self, dispatcher, result)
+                    elif commandName == 'join domain':
+                        handleJoin(self, result)
+                    else:
+                        # FIXME TODO
+                        pass
             except Exception as e:
                 self.logger.info(e.message)
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
