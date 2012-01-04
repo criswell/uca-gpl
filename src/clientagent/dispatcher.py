@@ -47,7 +47,7 @@ class Dispatcher:
 
         return rbrtncode
 
-    def tcpDiag():
+    def tcpDiag(self):
         '''
         Performs basic, platform specific tcp diagnostics and pumping for when we
         switch to PXE or GHOST vlans
