@@ -105,16 +105,17 @@ def handleJoin(ccmsUpdate, result):
         rmt= result.SetMachineType
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
 
-    # Retry logic from win Client Agent version -
-    # for Join Domain only
-    if retry <= ccmsUpdate.MAX_JOIN_RETRIES:
-        retry =+ 1
+        # Retry logic from win Client Agent version -
+        # for Join Domain only
+        if retry <= ccmsUpdate.MAX_JOIN_RETRIES:
+            retry =+ 1
 
-        ccmsUpdate.dispatcher.tcpDiag()     ## release renew IP first
-        time.sleep(15)
+            # release renew IP first
+            ccmsUpdate.dispatcher.tcpDiag()
+            time.sleep(15)
 
-        joinExitCode = ccmsUpdate.dispatcher.join(commandName, domain)
-        RetryReturn(joinExitCode, rerr, rtime, rOID, rmt)
+            joinExitCode = ccmsUpdate.dispatcher.join(commandName, domain)
+            RetryReturn(joinExitCode, rerr, rtime, rOID, rmt)
     else:
         rstat = 'COMMAND_FAILED'
         rsuc = False
