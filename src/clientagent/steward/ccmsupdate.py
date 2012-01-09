@@ -190,6 +190,21 @@ class CCMS_Update(Atom):
 
         return ack
 
+    def generateCommand(client, cNam, CStat, cSucc, cResult, cErr, cExTime, cOID, cMT):
+        '''
+        Generates an EILCommand according to parameters.
+        '''
+        ack = client.factory.create('ns0:EILCommand')
+        ack.CommandName = cNam
+        ack.CommandStatus = CStat
+        ack.CommandResult = cResult
+        ack.CommandSuccessful = cSucc
+        ack.ErrorCode = cErr
+        ack.OperationID = cOID
+        ack.SetMachineType = cMT
+
+        return ack
+
     def shutdown(self):
         pass
 
