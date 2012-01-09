@@ -63,8 +63,8 @@ class Dispatcher:
 
     def tcpDiag(self):
         '''
-        Performs basic, platform specific tcp diagnostics and pumping for when we
-        switch to PXE or GHOST vlans
+        Performs basic, platform specific tcp diagnostics and pumping for when
+        we switch to PXE or GHOST vlans
         '''
         if self.platformID.IS_WINDOWS:
             self.__Win32tcpDiag()
@@ -75,6 +75,12 @@ class Dispatcher:
     # because they are not supposed to be called externally
 
     # WINDOWS SECTION
+    def __Win32Join(self, commandName, domain):
+        '''
+        Windows-specific domain join
+        '''
+        
+
     def __Win32tcpDiag(self):
         os.system('ipconfig /release')
         os.system('ipconfig /renew')
