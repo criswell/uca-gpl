@@ -166,16 +166,16 @@ class CCMS_Update(Atom):
         ctx.mType = mType.HOST
         return ctx
 
-    def generateAckCommand(self, client, commandName, commandStatus, commandSuccess, commandResult, errorCode, operationID, machineType):
+    def generateCommand(self, client, commandName, commandStatus, commandSuccess, commandResult, errorCode, operationID, machineType):
         '''
-        Generates an acknowledgement command.
+        Generates an EILCommand according to parameters.
 
         @param client The SUDs client in use
         @param commandName The command name which we are acknowledging
         @param commandStatus The status of the command
         @param commandSuccess Whether the command was successful or not
         @param commandResult The result of the command
-        @param errorCode Any error code associated with this ACK
+        @param errorCode Any error code associated
         @param operationID The Operation ID for the transaction
         @param machineType The machine type of the host machine
         '''
@@ -187,21 +187,6 @@ class CCMS_Update(Atom):
         ack.ErrorCode = errorCode
         ack.OperationID = operationID
         ack.SetMachineType = machineType
-
-        return ack
-
-    def generateCommand(client, cNam, CStat, cSucc, cResult, cErr, cExTime, cOID, cMT):
-        '''
-        Generates an EILCommand according to parameters.
-        '''
-        ack = client.factory.create('ns0:EILCommand')
-        ack.CommandName = cNam
-        ack.CommandStatus = CStat
-        ack.CommandResult = cResult
-        ack.CommandSuccessful = cSucc
-        ack.ErrorCode = cErr
-        ack.OperationID = cOID
-        ack.SetMachineType = cMT
 
         return ack
 

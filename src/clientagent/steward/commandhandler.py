@@ -24,7 +24,7 @@ def handleReboot(ccmsUpdate, dispatcher, result):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateAckCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
     else:
         rstat = 'COMMAND_FAILED'
         rsuc = False
@@ -33,7 +33,7 @@ def handleReboot(ccmsUpdate, dispatcher, result):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateAckCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
 
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
