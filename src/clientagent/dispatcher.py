@@ -61,6 +61,11 @@ class Dispatcher:
 
         return joinCode
 
+    def unJoin(self, commandName, timeout):
+        '''
+        '''
+        pass
+
     def tcpDiag(self):
         '''
         Performs basic, platform specific tcp diagnostics and pumping for when
