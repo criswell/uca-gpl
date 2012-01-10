@@ -218,11 +218,11 @@ class CCMS_Update(Atom):
                     if commandName == None:
                         self.logger.info('CCMS Command was "None"')
                     elif commandName == 'reboot':
-                        handleReboot(self, result)
+                        handleReboot(self, ctx, result)
                     elif commandName == 'join domain':
-                        handleJoin(self, result)
+                        handleJoin(self, ctx, result)
                     elif commandName == 'unjoin domain':
-                        handleUnJoin(self, result)
+                        handleUnJoin(self, ctx, result)
                     else:
                         # FIXME TODO
                         pass

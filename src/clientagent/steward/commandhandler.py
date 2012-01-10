@@ -5,7 +5,7 @@ Contains the command hanlding routines which previously were cluttering up
 the CCMS Update loop.
 '''
 
-def handleReboot(ccmsUpdate, result):
+def handleReboot(ccmsUpdate, ctx, result):
     '''
     Handles the reboot requests and acknowledgements.
 
@@ -37,7 +37,7 @@ def handleReboot(ccmsUpdate, result):
 
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
-def handleJoin(ccmsUpdate, result):
+def handleJoin(ccmsUpdate, ctx, result):
     domain = 'dl.inteleil.com'
     retry = 1
 
@@ -133,12 +133,12 @@ def handleJoin(ccmsUpdate, result):
 
     ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: ' + ACKresult)
 
-def handleUnJoin(ccmsUpdate, result):
-    servicemanager.LogInfoMsg("!!!!!!!!!!! UNJOIN DOMAIN")
+def handleUnJoin(ccmsUpdate, ctx, result):
+    ccmsUpdate.logger.info('domain unjoin requested')
     cmdName = result.CommandName
-    utrncode = UnJoin(cmdName, 10)
+    utrncode = ccmsUpdate.dispatcher.unJoin(cmdName, 10)
 
-    if urtncode == 0:                     
+    if urtncode == 0:
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -146,9 +146,9 @@ def handleUnJoin(ccmsUpdate, result):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = generateCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
-
-    if urtncode == 2692:               ## already unjoined from a domain         
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+    elif urtncode == 2692:
+        # already unjoined from a domain
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -156,7 +156,7 @@ def handleUnJoin(ccmsUpdate, result):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = generateCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
     else:
         rstat = 'COMMAND_FAILED'
         rsuc = False
@@ -165,8 +165,8 @@ def handleUnJoin(ccmsUpdate, result):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = generateCommand(ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
 
-    ACKresult = ACKclient.service.UpdateCommandStatus(ctx, cACK)
+    ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
 # vim:set ai et sts=4 sw=4 tw=80:
