@@ -13,6 +13,7 @@ from clientagent import get_config
 from clientagent.dispatcher import Dispatcher
 from clientagent.steward.commandhandler import handleReboot
 from clientagent.steward.commandhandler import handleJoin
+from clientagent.steward.commandhandler import handleUnJoin
 
 # SUDs
 from suds.client import Client
@@ -220,6 +221,8 @@ class CCMS_Update(Atom):
                         handleReboot(self, result)
                     elif commandName == 'join domain':
                         handleJoin(self, result)
+                    elif commandName == 'unjoin domain':
+                        handleUnJoin(self, result)
                     else:
                         # FIXME TODO
                         pass
