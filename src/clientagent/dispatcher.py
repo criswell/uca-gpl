@@ -47,13 +47,13 @@ class Dispatcher:
 
         return rbrtncode
 
-    def join(self, commandName, domain):
+    def join(self, domain):
         '''
         Generic domain join wrapper
         '''
         joinCode = 4 # This is the error code, we default to an error
         if self.platformID.IS_WINDOWS:
-            joinCode = self.__Win32Join(commandName, domain)
+            joinCode = self.__Win32Join(domain)
         # NOTE: Linux is unhandled here, i.e., we return the default code of
         # error. This is because under Linux the domain join command does not
         # make sense. If, later on, we add a SAMBA requirement, it might make
@@ -87,7 +87,7 @@ class Dispatcher:
     # because they are not supposed to be called externally
 
     # WINDOWS SECTION
-    def __Win32Join(self, commandName, domain):
+    def __Win32Join(self, domain):
         '''
         Windows-specific domain join
         '''
