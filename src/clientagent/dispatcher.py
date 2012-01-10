@@ -61,10 +61,17 @@ class Dispatcher:
 
         return joinCode
 
-    def unJoin(self, commandName, timeout):
+    def unJoin(self):
         '''
+        Generic domain unjoin wrapper
         '''
-        pass
+        # This appears to be undefined, so we make a -1 mean failure
+        unJoinCode = -1
+        if self.platformID.IS_WINDOWS:
+            unJoinCode = self.__Win32UnJoin()
+        # NOTE: Linux is unhandled here, see note above for self.join(..)
+
+        return unJoinCode
 
     def tcpDiag(self):
         '''

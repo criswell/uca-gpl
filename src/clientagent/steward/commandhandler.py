@@ -136,7 +136,7 @@ def handleJoin(ccmsUpdate, ctx, result):
 def handleUnJoin(ccmsUpdate, ctx, result):
     ccmsUpdate.logger.info('domain unjoin requested')
     cmdName = result.CommandName
-    utrncode = ccmsUpdate.dispatcher.unJoin(cmdName, 10)
+    utrncode = ccmsUpdate.dispatcher.unJoin()
 
     if urtncode == 0:
         rstat = 'COMMAND_EXECUTION_COMPLETE'
