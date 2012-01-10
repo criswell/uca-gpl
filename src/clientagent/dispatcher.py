@@ -94,16 +94,31 @@ class Dispatcher:
         jresult = 0
         jcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call JoinDomainOrWorkgroup FJoinOptions=35 Name=\"" + domain + "\" Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
 
-        __AdjustPrivilege(SE_SHUTDOWN_NAME)
+        self.__AdjustPrivilege(SE_SHUTDOWN_NAME)
         try:
 
             jresult = os.system(jcmd)
 
         finally:
             # Now we remove the privilege we just added.
-            __AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
+            self.__AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
 
         return jresult
+
+    def __Win32UnJoin(self):
+        '''
+        Windows-specific domain unjoin
+        '''
+        ujresult = 0
+        ujcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call UnJoinDomainOrWorkgroup FUnJoinOptions=0 Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
+        self.__AdjustPrivilege(SE_SHUTDOWN_NAME)
+        try:
+            ujresult = os.system(ujcmd)
+        finally:
+            # Now we remove the privilege we just added.
+            self.__AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
+
+        return ujresult
 
     def __Win32tcpDiag(self):
         os.system('ipconfig /release')
