@@ -44,7 +44,7 @@ class StewardHandler(Daemon):
     def run(self):
         self.logger.info("Startup daemon/service");
         timeDelta = self.__sleep_timer
-        ##while True:
+
         start_time = time.time()
         self.logger.debug('Starting client agent activity')
 
@@ -55,10 +55,13 @@ class StewardHandler(Daemon):
                 aliveCount = aliveCount + 1
 
         if aliveCount > 0:
+            self.logger.info('Activities done, sleeping')
             wait_time = self.__sleep_timer - (time.time() - start_time)
 
             if wait_time < self.__min_time_resolution:
                 wait_time = self.__min_time_resolution
+
+            self.logger.debug('Sleeping "%s"' % wait_time)
             time.sleep(wait_time)
             timeDelta = time.time() - start_time
             if timeDelta < self.__sleep_timer:
@@ -75,6 +78,8 @@ def usage_linux():
     print "\tstart\t\tStart the daemon/service"
     print "\tstop\t\tStop the daemon/service"
     print "\trestart\t\tRestart the daemon/service"
+    print "\tdebug\t\tStart the daemon/service in debug mode"
+    print "\tstatus\t\tReturn running status of the daemon/service"
 
 def usage_win():
     pass
@@ -93,6 +98,10 @@ if __name__ == "__main__":
                 daemon.stop()
             elif 'restart' == sys.argv[1]:
                 daemon.restart()
+            elif 'debug' == sys.argv[1]:
+                daemon.start(True)
+            elif 'status' == sys.argv[1]:
+                daemon.status()
             else:
                 print "Unknown command"
                 sys.exit(2)

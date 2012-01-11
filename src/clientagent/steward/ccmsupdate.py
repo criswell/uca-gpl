@@ -4,13 +4,16 @@ ccmsupdate.py
 Main atomic operator class for the CCMS updates.
 '''
 
-import logging, time
+import logging, time, random
 
 from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
 from clientagent.common.utility import getIfInfo
 from clientagent import get_config
 from clientagent.dispatcher import Dispatcher
+from clientagent.steward.commandhandler import handleReboot
+from clientagent.steward.commandhandler import handleJoin
+from clientagent.steward.commandhandler import handleUnJoin
 
 # SUDs
 from suds.client import Client
@@ -27,6 +30,8 @@ class CCMS_Update(Atom):
         self.dispatcher = Dispatcher()
         self.config = get_config()
         self.FIRST_PASS = True
+        self.TARGET_TIMEDELTA = 30
+        self.MAX_JOIN_RETRIES = 2
 
         self.logger = logging.getLogger('clientagent.steward.ccmsupdate')
         self.logger.info("CCMS Update atom startup");
@@ -162,18 +167,27 @@ class CCMS_Update(Atom):
         ctx.mType = mType.HOST
         return ctx
 
-    def generateAckCommand(self, client, cNam, CStat, cSucc, cResult, cErr, cExTime, cOID, cMT):
+    def generateCommand(self, client, commandName, commandStatus, commandSuccess, commandResult, errorCode, operationID, machineType):
         '''
-        Generates an acknowledgement command.
+        Generates an EILCommand according to parameters.
+
+        @param client The SUDs client in use
+        @param commandName The command name which we are acknowledging
+        @param commandStatus The status of the command
+        @param commandSuccess Whether the command was successful or not
+        @param commandResult The result of the command
+        @param errorCode Any error code associated
+        @param operationID The Operation ID for the transaction
+        @param machineType The machine type of the host machine
         '''
         ack = client.factory.create('ns0:EILCommand')
-        ack.CommandName = cNam
-        ack.CommandStatus = CStat
-        ack.CommandResult = cResult
-        ack.CommandSuccessful = cSucc
-        ack.ErrorCode = cErr
-        ack.OperationID = cOID
-        ack.SetMachineType = cMT
+        ack.CommandName = commandName
+        ack.CommandStatus = commandStatus
+        ack.CommandResult = commandResult
+        ack.CommandSuccessful = commandSuccess
+        ack.ErrorCode = errorCode
+        ack.OperationID = operationID
+        ack.SetMachineType = machineType
 
         return ack
 
@@ -181,55 +195,40 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
-        txID = self.newMessageID()
-        self.client = self.setHeaders(self.client, txID)
-        ctx = self.generateContext(client, MY_HOST, MY_HWADDR)
+        if timeDelta >= self.TARGET_TIMEDELTA:
+            txID = self.newMessageID()
+            self.client = self.setHeaders(self.client, txID)
+            ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
 
-        try:
-            self.logger.info('Checking for command from CCMS')
-            # FIXME - How do we handle situations where there is no
-            # hostname set? See TODO
-            result = self.client.service.GetCommandToExecute(ctx)
-            self.logger.debug('CCMS Result:')
-            self.logger.debug(result)
+            try:
+                self.logger.info('Checking for command from CCMS')
+                # FIXME - How do we handle situations where there is no
+                # hostname set? See TODO
+                result = self.client.service.GetCommandToExecute(ctx)
+                self.logger.debug('CCMS Result:')
+                self.logger.debug(result)
 
-            if result == None:
-                self.logger.info('No CCMS command found to execute')
-            elif result.CommandName == "reboot":
-                rebcode = self.dispatcher.reboot('CCMS Reboot', 10)
-                # FIXME, under Linux these ACK headers must be sent back
-                # BEFORE we call the dispatcher with reboot. Simply-put, it
-                # cannot fail under Linux, and we will never come back from
-                # the dispatcher.reboot call
-                self.ACKclient = self.setStatusUpdateHeaders(self.ACKclient, txID)
-                if rebcode == 0:
-                    rstat = 'COMMAND_EXECUTION_COMPLETE'
-                    rsuc = True
-                    rresult = 0
-                    rerr = result.ErrorCode
-                    rtime = result.ExpectedTimeOut
-                    rOID = result.OperationID
-                    rmt= result.SetMachineType
-                    cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+                commandName = None
+                if result == None:
+                    self.logger.info('No CCMS command found to execute')
                 else:
-                    rstat = 'COMMAND_FAILED'
-                    rsuc = False
-                    rresult = None
-                    rerr = 'reboot failed'
-                    rtime = result.ExpectedTimeOut
-                    rOID = result.OperationID
-                    rmt= result.SetMachineType
-                    cACK = self.generateAckCommand(self.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+                    if 'lower' in dir(result.CommandName):
+                        commandName = result.CommandName.lower()
 
-                ACKresult = self.ACKclient.service.UpdateCommandStatus(ctx, cACK)
-            else:
-                # FIXME TODO
-                pass
-        except:
-            #print "---> Manual help required, restart the network on PXE move"
-            #sys.exit('Would you kindly restart the network?')
-            #print "---> VLAN switch, running TCP diagnostics to pump interface"
-            #tcpDiag()
-            raise exceptions.NotImplementedError()
+                    if commandName == None:
+                        self.logger.info('CCMS Command was "None"')
+                    elif commandName == 'reboot':
+                        handleReboot(self, ctx, result)
+                    elif commandName == 'join domain':
+                        handleJoin(self, ctx, result)
+                    elif commandName == 'unjoin domain':
+                        handleUnJoin(self, ctx, result)
+                    else:
+                        # FIXME TODO
+                        pass
+            except Exception as e:
+                self.logger.info(e.message)
+                self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
+                self.dispatcher.tcpDiag()
 
 # vim:set ai et sts=4 sw=4 tw=80:

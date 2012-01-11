@@ -16,6 +16,7 @@ class Daemon:
         self.stdout = self.config.C.get('linux', 'daemon_stdout')
         self.stderr = self.config.C.get('linux', 'daemon_stderr')
         self.pidfile = self.config.C.get('linux', 'pidfile')
+        self.debug = False
 
     def daemonize(self):
         """
@@ -64,11 +65,12 @@ class Daemon:
     def delpid(self):
         os.remove(self.pidfile)
 
-    def start(self):
+    def start(self, debug=False):
         """
         Start the daemon
         """
         # Check for a pidfile to see if the daemon already runs
+        self.debug = debug
         try:
             pf = file(self.pidfile,'r')
             pid = int(pf.read().strip())
@@ -82,7 +84,8 @@ class Daemon:
             sys.exit(1)
 
         # Start the daemon
-        self.daemonize()
+        if not self.debug:
+            self.daemonize()
         self.local_init()
         self.main()
         self.stop()
@@ -120,9 +123,33 @@ class Daemon:
                 print str(err)
                 sys.exit(1)
 
+    def status(self):
+        '''
+        Query the status of the daemon
+        '''
+        try:
+            pf = file(self.pidfile,'r')
+            pid = int(pf.read().strip())
+            pf.close()
+        except IOError:
+            pid = None
+
+        if not pid:
+            message = "pidfile %s does not exist. Daemon not running\n"
+            sys.stdout.write(message % self.pidfile)
+        else:
+            if os.path.exists('/proc/%s' % pid):
+                message = "daemon running, proccess %s\n"
+                sys.stdout.write(message % pid)
+            else:
+                message = "pidfile %s exists, but daemon not running as process %s\n"
+                sys.stdout.write(message % (self.pidfile, pid))
+
+
     def main(self):
-        while self.run():
-            pass
+        running = True
+        while running:
+            running = self.run()
 
     def restart(self):
         """

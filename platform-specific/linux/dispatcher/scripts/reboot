@@ -14,6 +14,6 @@
 # happens under Linux, we're being very careful to use *only* those items
 # specified in the LSB v4.0 for the shutdown command
 
-/sbin/shutdown -r now
+sleep 15s ; /sbin/shutdown -r now
 
 # vim:set ai et sts=4 sw=4 tw=80:
