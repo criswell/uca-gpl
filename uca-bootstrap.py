@@ -8,7 +8,7 @@ NOTE- For now, this will be fairly rough. But if we decide to keep using it, we
 will want to refine it considerably.
 '''
 
-import urllib, zipfile, os, tempfile
+import urllib, zipfile, os, tempfile, shutil
 
 # Platform determination
 if os.name == 'nt':
@@ -51,11 +51,35 @@ try:
     print 'Stored in "%s"...' % filename
     ucaZip = zipfile.ZipFile(filename, 'r')
     binDir = '%s/bin' % ROOT_DIR
-    print 'Making binDir "%s"...' % binDir
-    mkdir_p(binDir)
+    #print 'Making binDir "%s"...' % binDir
+    #mkdir_p(binDir)
     tempDir = tempfile.mkdtemp()
     print 'Obtained a tempDir "%s"...' % tempDir
     print 'Extracting the UCA into tempDir'
+    ucaZip.extractall(tempDir)
+    ucaZip.close()
+
+    srcBinDir = '%s/uca/bin' % tempDir
+
+    print 'Copying the bin directory'
+    print '%s -> %s' % (srcBinDir, binDir)
+    shutil.copytree(srcBinDir, binDir)
+
+    if IS_LINUX:
+        print 'Linux> Installing dispatcher'
+        stream = os.popen('%s/dispatcher/install.sh' % tempDir)
+        output = stream.readlines()
+        stream.close()
+        for line in output:
+            print line
+    else:
+        print "Windows> FIXME TODO"
+
+    
+
+    # FIXME clean-up tempDir
+
+    # FIXME - Do we need to clean-up ucaZip?
 except Exception e:
     print "Error trying to bootstrap the unified agent\n\n"
     print e
