@@ -16,18 +16,18 @@
 
 # RHEL information
 # chkconfig: 2345 80 20
-# description: The EIL Linux Client Agent steward
+# description: The EIL Unified Client Agent steward
 
 # Make sure we have an appropriate path (this shouldn't be necessary, but
 # just to be safe on all platforms)
 PATH="${PATH}:/usr/bin"
 
-BIN_STEWARD="/opt/intel/eil/clientagent/bin/eil_steward"
+BIN_STEWARD="/opt/intel/eil/clientagent/bin/eil_steward.py"
 
 check_steward_running() {
-    if [ -e "/opt/intel/eil/clientagent/home/client-agent.pid" ]; then
+    if [ -e "/opt/intel/eil/clientagent/clientagent.pid" ]; then
         # Verify that it's already running
-        local PID1=$(cat /opt/intel/eil/clientagent/home/client-agent.pid)
+        local PID1=$(cat /opt/intel/eil/clientagent/client-agent.pid)
         if [ -d "/proc/${PID1}" ]; then
             # It's running
             return 0
@@ -54,7 +54,7 @@ start)
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists, let's kill old file
         # and restart
-        rm -f /opt/intel/eil/clientagent/home/client-agent.pid
+        rm -f /opt/intel/eil/clientagent/clientagent.pid
         $BIN_STEWARD
     else
         # Okay to start
@@ -69,11 +69,11 @@ stop)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # Send it SIGHUP
-        PID1=$(cat /opt/intel/eil/clientagent/home/client-agent.pid)
+        PID1=$(cat /opt/intel/eil/clientagent/clientagent.pid)
         kill -1 ${PID1}
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
-        rm -f /opt/intel/eil/clientagent/home/client-agent.pid
+        rm -f /opt/intel/eil/clientagent/clientagent.pid
     else
         echo "eil_steward is not running."
     fi
@@ -86,7 +86,7 @@ restart|try-restart|reload|force-reload)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # Send it SIGHUP
-        PID1=$(cat /opt/intel/eil/clientagent/home/client-agent.pid)
+        PID1=$(cat /opt/intel/eil/clientagent/clientagent.pid)
         kill -1 ${PID1}
 
         # Give it a bit to stop what it was doing
@@ -94,7 +94,7 @@ restart|try-restart|reload|force-reload)
         $BIN_STEWARD
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
-        rm -f /opt/intel/eil/clientagent/home/client-agent.pid
+        rm -f /opt/intel/eil/clientagent/clientagent.pid
         $BIN_STEWARD
     else
         # Wasn't running, just restart
@@ -109,7 +109,7 @@ status)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # It's running
-        PID1=$(cat /opt/intel/eil/clientagent/home/client-agent.pid)
+        PID1=$(cat /opt/intel/eil/clientagent/clientagent.pid)
         echo "eil_steward start/running, process ${PID1}"
     elif [ "${_STATUS}" -eq "1" ]; then
         echo "eil_steward not running, pid file exists"
@@ -125,7 +125,7 @@ asset)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # Send it SIGUSR1
-        PID1=$(cat /opt/intel/eil/clientagent/home/client-agent.pid)
+        PID1=$(cat /opt/intel/eil/clientagent/clientagent.pid)
         kill -10 ${PID1}
         echo "eil_steward has been sent SIGUSR1 to refresh asset info"
     else

@@ -55,7 +55,7 @@ def handleJoin(ccmsUpdate, ctx, result):
             else:
                 parmidx += 1
 
-    joinExitCode = ccmsUpdate.dispatcher.join( domain)
+    joinExitCode = ccmsUpdate.dispatcher.join(domain)
     ##      ******  in CCMS they are:     *******
     ##  COMMAND_ISSUED,             == 0
     ##  COMMAND_RECEIVED,           == 1
