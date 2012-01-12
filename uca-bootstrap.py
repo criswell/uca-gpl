@@ -75,8 +75,6 @@ try:
     else:
         print "Windows> FIXME TODO"
 
-    
-
     # FIXME clean-up tempDir
 
     # FIXME - Do we need to clean-up ucaZip?
