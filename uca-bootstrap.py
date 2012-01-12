@@ -8,7 +8,15 @@ NOTE- For now, this will be fairly rough. But if we decide to keep using it, we
 will want to refine it considerably.
 '''
 
-import urllib, zipfile
+import urllib, zipfile, os, tempfile
+
+# Platform determination
+if os.name == 'nt':
+    IS_WINDOWS = True
+    IS_LINUX = False
+else:
+    IS_WINDOWS = False
+    IS_LINUX = True
 
 PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
@@ -20,6 +28,36 @@ HOSTS = {
         '10.4.0.123' = [' nmsa01.eil-infra.com', 'nmsa01']
     }
 
+ROOT_DIR = 'C:\\eil'
+if IS_LINUX:
+    ROOT_DIR = '/opt/intel/eil/clientagent'
 
+def mkdir_p(path):
+    '''
+    Does the equivalent of a 'mkdir -p' (Linux) on both platforms.
+    '''
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
+
+# Start out by grabbing the latest UCA - NOTE we're pulling from staging here
+try:
+    url = 'http://%s/uca/uca.zip' % STAGING_IP
+    print 'Pulling UCA zipefile: %s' % url
+    (filename, headers) = urllib.urlretrieve(url)
+    print 'Stored in "%s"...' % filename
+    ucaZip = zipfile.ZipFile(filename, 'r')
+    binDir = '%s/bin' % ROOT_DIR
+    print 'Making binDir "%s"...' % binDir
+    mkdir_p(binDir)
+    tempDir = tempfile.mkdtemp()
+    print 'Obtained a tempDir "%s"...' % tempDir
+    print 'Extracting the UCA into tempDir'
+except Exception e:
+    print "Error trying to bootstrap the unified agent\n\n"
+    print e
 
 # vim:set ai et sts=4 sw=4 tw=80:
