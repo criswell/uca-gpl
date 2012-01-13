@@ -70,18 +70,21 @@ try:
         stream = os.popen('/etc/init.d/eil_steward.sh stop')
         output = stream.readlines()
         stream.close()
-        print output
+        for line in output:
+            print line
         print 'Linux> Installing dispatcher'
         stream = os.popen('%s/linux/dispatcher/install.sh' % tempDir)
         output = stream.readlines()
         stream.close()
         for line in output:
             print line
+        # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
         stream = os.popen('/etc/init.d/eil_steward.sh start')
         output = stream.readlines()
         stream.close()
-        print output
+        for line in output:
+            print line
     else:
         print "Windows> Installing"
 
