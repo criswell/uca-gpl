@@ -69,7 +69,7 @@ try:
     srcBinDir = '%s/uca/bin' % tempDir
 
     print 'Cleaning up the bin directory (if it exists)'
-    shutil.rmtree(binDir, true)
+    shutil.rmtree(binDir, True)
 
     print 'Copying the bin directory'
     print '%s -> %s' % (srcBinDir, binDir)
