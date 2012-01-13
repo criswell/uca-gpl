@@ -83,6 +83,7 @@ try:
         exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % tempDir)
         # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
+        exec_command('chmod a+x %s/eil_steward.py' % binDir)
         exec_command('/etc/init.d/eil_steward.sh start')
     else:
         os.chdir('C:/EIL/bin')
