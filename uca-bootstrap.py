@@ -80,7 +80,7 @@ try:
         exec_command('/etc/init.d/eil_steward.sh stop')
         print 'Linux> Installing dispatcher'
         exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % tempDir)
-        exec_command('%s/uca/linux/dispatcher/install.sh' % tempDir)
+        exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % tempDir)
         # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
         exec_command('/etc/init.d/eil_steward.sh start')
