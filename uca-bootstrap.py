@@ -87,7 +87,10 @@ try:
         exec_command('sc delete EILTAFService')
         exec_command('sc delete EILAutoUpdateService')
         print "Windows> Installing new service"
-        exec_command('')
+        exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
+        exec_command('sc failure EILClientAgent reset= 30 action= restart/5000')
+        exec_command('sc start EILClientAgent')
+        exec_command('sc queryx EILClientAgent')
 
     # FIXME clean-up tempDir
 
