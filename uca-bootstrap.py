@@ -43,7 +43,10 @@ def mkdir_p(path):
             pass
         else: raise
 
-def printlines(output):
+def exec_command(cmd):
+    stream = os.popen(cmd)
+    output = stream.readlines()
+    stream.close()
     for line in output:
         print line
 
@@ -71,27 +74,15 @@ try:
 
     if IS_LINUX:
         print 'Linux> Stopping previous client agent'
-        stream = os.popen('/etc/init.d/eil_steward.sh stop')
-        output = stream.readlines()
-        stream.close()
-        printlines(output)
+        exec_command('/etc/init.d/eil_steward.sh stop')
         print 'Linux> Installing dispatcher'
-        stream = os.popen('%s/linux/dispatcher/install.sh' % tempDir)
-        output = stream.readlines()
-        stream.close()
-        printlines(output)
+        exec_command('%s/linux/dispatcher/install.sh' % tempDir)
         # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
-        stream = os.popen('/etc/init.d/eil_steward.sh start')
-        output = stream.readlines()
-        stream.close()
-        printlines(output)
+        exec_command('/etc/init.d/eil_steward.sh start')
     else:
         print "Windows> Stopping and removing previous services"
-        stream = os.popen('net stop EILTAFService')
-        output = stream.readlines()
-        stream.close()
-        printlines(output)
+        exec_command('net stop EILTAFService')
         print "Windows> Installing"
 
     # FIXME clean-up tempDir
