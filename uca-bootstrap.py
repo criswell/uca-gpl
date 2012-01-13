@@ -95,7 +95,7 @@ try:
     # FIXME clean-up tempDir
 
     # FIXME - Do we need to clean-up ucaZip?
-except Exception e:
+except Exception as e:
     print "Error trying to bootstrap the unified agent\n\n"
     print e
 
