@@ -66,14 +66,24 @@ try:
     shutil.copytree(srcBinDir, binDir)
 
     if IS_LINUX:
+        print 'Linux> Stopping previous client agent'
+        stream = os.popen('/etc/init.d/eil_steward.sh stop')
+        output = stream.readlines()
+        stream.close()
+        print output
         print 'Linux> Installing dispatcher'
-        stream = os.popen('%s/dispatcher/install.sh' % tempDir)
+        stream = os.popen('%s/linux/dispatcher/install.sh' % tempDir)
         output = stream.readlines()
         stream.close()
         for line in output:
             print line
+        print 'Linux> Starting new client agent'
+        stream = os.popen('/etc/init.d/eil_steward.sh start')
+        output = stream.readlines()
+        stream.close()
+        print output
     else:
-        print "Windows> FIXME TODO"
+        print "Windows> Installing"
 
     # FIXME clean-up tempDir
 
