@@ -22,10 +22,10 @@ PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
 
 HOSTS = {
-        '10.4.0.29' = ['goblinserver2'],
-        '172.16.3.10' = ['rmssrvr01.eil-infra.com', 'rmssvr01'],
-        '172.16.3.10' = ['eilauto01.eil-infra.com', 'eilauto01'],
-        '10.4.0.123' = [' nmsa01.eil-infra.com', 'nmsa01']
+        '10.4.0.29' : ['goblinserver2'],
+        '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
+        '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
+        '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
     }
 
 ROOT_DIR = 'C:\\eil'
