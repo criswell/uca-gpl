@@ -81,9 +81,13 @@ try:
         print 'Linux> Starting new client agent'
         exec_command('/etc/init.d/eil_steward.sh start')
     else:
+        os.chdir('C:/EIL/bin')
         print "Windows> Stopping and removing previous services"
         exec_command('net stop EILTAFService')
-        print "Windows> Installing"
+        exec_command('sc delete EILTAFService')
+        exec_command('sc delete EILAutoUpdateService')
+        print "Windows> Installing new service"
+        exec_command('')
 
     # FIXME clean-up tempDir
 

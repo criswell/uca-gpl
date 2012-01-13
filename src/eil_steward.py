@@ -14,10 +14,12 @@ from clientagent.steward.ccmsupdate import CCMS_Update
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
+    sys.path.append('C:/EIL/bin')
     import win32serviceutil
     from clientagent.steward.libdaemon.windows_service import Service as Daemon
 else:
     # Linux
+    sys.path.append('/opt/intel/eil/clientagent/bin')
     from clientagent.steward.libdaemon.unix_daemon import Daemon
 
 class StewardHandler(Daemon):
