@@ -43,6 +43,10 @@ def mkdir_p(path):
             pass
         else: raise
 
+def printlines(output):
+    for line in output:
+        print line
+
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
     url = 'http://%s/uca/uca.zip' % STAGING_IP
@@ -70,22 +74,24 @@ try:
         stream = os.popen('/etc/init.d/eil_steward.sh stop')
         output = stream.readlines()
         stream.close()
-        for line in output:
-            print line
+        printlines(output)
         print 'Linux> Installing dispatcher'
         stream = os.popen('%s/linux/dispatcher/install.sh' % tempDir)
         output = stream.readlines()
         stream.close()
-        for line in output:
-            print line
+        printlines(output)
         # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
         stream = os.popen('/etc/init.d/eil_steward.sh start')
         output = stream.readlines()
         stream.close()
-        for line in output:
-            print line
+        printlines(output)
     else:
+        print "Windows> Stopping and removing previous services"
+        stream = os.popen('net stop EILTAFService')
+        output = stream.readlines()
+        stream.close()
+        printlines(output)
         print "Windows> Installing"
 
     # FIXME clean-up tempDir
