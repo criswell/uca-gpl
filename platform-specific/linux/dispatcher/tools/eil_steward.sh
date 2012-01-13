@@ -57,10 +57,10 @@ start)
         # Service is not running, but pid file exists, let's kill old file
         # and restart
         rm -f ${PIDFILE}
-        $BIN_STEWARD
+        $BIN_STEWARD start
     else
         # Okay to start
-        $BIN_STEWARD
+        $BIN_STEWARD start
     fi
 
     exit 0
@@ -71,8 +71,9 @@ stop)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # Send it SIGHUP
-        PID1=$(cat ${PIDFILE})
-        kill -1 ${PID1}
+        #PID1=$(cat ${PIDFILE})
+        #kill -1 ${PID1}
+        $BIN_STEWARD stop
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
         rm -f ${PIDFILE}
@@ -88,19 +89,19 @@ restart|try-restart|reload|force-reload)
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
         # Send it SIGHUP
-        PID1=$(cat ${PIDFILE})
-        kill -1 ${PID1}
+        #PID1=$(cat ${PIDFILE})
+        #kill -1 ${PID1}
 
         # Give it a bit to stop what it was doing
-        sleep 5
-        $BIN_STEWARD
+        #sleep 5
+        $BIN_STEWARD restart
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
         rm -f ${PIDFILE}
-        $BIN_STEWARD
+        $BIN_STEWARD restart
     else
         # Wasn't running, just restart
-        $BIN_STEWARD
+        $BIN_STEWARD restart
     fi
 
     exit 0
