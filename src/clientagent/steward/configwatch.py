@@ -13,14 +13,11 @@ class ConfigWatch(Atom):
     '''
     def __init__(self):
         self.config = get_config()
-        lastTime = None
-        pass
+        self.TARGET_TIMEDELTA = 60
 
     def update(self, timeDelta):
-        if lastTime is None:
-            lastTime = timeDelta
-        else:
-            pass
+        if timeDelta >= self.TARGET_TIMEDELTA:
+            self.config.recheck()
 
     def shutdown(self):
         # Nothing to do
