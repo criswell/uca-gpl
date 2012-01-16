@@ -12,6 +12,7 @@ import sys, logging, time
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
 from clientagent.steward.ccmsupdate import CCMS_Update
+from clientagent.steward.configwatch import ConfigWatch
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
@@ -35,6 +36,7 @@ class StewardHandler(Daemon):
         self.logger.info("Version: %s" % ClientAgentState.VERSION);
         # Setup the atom queue
         self.atoms = [
+            ConfigWatch(),
             CCMS_Update(),
         ]
 
