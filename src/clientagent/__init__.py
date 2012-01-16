@@ -78,6 +78,13 @@ if not ClientAgentState.INIT_SETUP:
         ClientAgentState.BINDIR = bindir
 
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
+
+    updateLogger()
+    ClientAgentState.CONFIG.setCallback(updateLogger)
+
+    ClientAgentState.INIT_SETUP = True
+
+def updateLogger():
     debug_level = 2
     if(ClientAgentState.CONFIG.C.has_option('main', 'log_level')):
         _debug_level = ClientAgentState.CONFIG.C.get('main', 'log_level')
@@ -100,7 +107,7 @@ if not ClientAgentState.INIT_SETUP:
         # Anything higher will be debug to full
         Logger.setLevel(logging.DEBUG)
 
-    ClientAgentState.INIT_SETUP = True
+    Logger.INFO('Log level set to %d' % debug_level)
 
 def get_config():
     '''
