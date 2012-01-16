@@ -21,6 +21,8 @@ class Config:
         self._configFile = "%s/clientagent.cfg" % self._root
         self.C = configparser.SafeConfigParser()
         self._load_config()
+        self._callbacks = []
+        self._lastModTime = self._getConfigMod()
 
     def _load_config(self):
         if os.path.isdir(self._root):
@@ -93,5 +95,38 @@ class Config:
             configfile.close()
         except:
             raise
+
+    def _getConfigMod(self):
+        '''
+        Obtains the mtime for the config file. Returns None on os.error
+        '''
+        mtime = None
+        try:
+            mtime = os.path.getmtime(self._configFile)
+        except:
+            mtime = None
+
+        return mtime
+
+    def recheck(self):
+        '''
+        Re-checks the config file for changes. If no changes, does nothing. If
+        changes have been found, will reload the config file and execute the
+        callbacks for other modules watching for config modifications.
+        '''
+        mtime = self._getConfigMod()
+        if mtime != self._lastModTime:
+            self._lastModTime = mtime
+            self._load_config()
+            for callback in self._callbacks:
+                callback()
+
+    def setCallback(self, callback):
+        '''
+        Sets a callback method for when the config file changes.
+
+        @param callback The callback method. Should not accept any arguments.
+        '''
+        self._callbacks.append(callback)
 
 # vim:set ai et sts=4 sw=4 tw=80:
