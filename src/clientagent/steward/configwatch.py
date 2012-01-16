@@ -13,5 +13,17 @@ class ConfigWatch(Atom):
     '''
     def __init__(self):
         self.config = get_config()
+        lastTime = None
+        pass
+
+    def update(self, timeDelta):
+        if lastTime is None:
+            lastTime = timeDelta
+        else:
+            pass
+
+    def shutdown(self):
+        # Nothing to do
+        pass
 
 # vim:set ai et sts=4 sw=4 tw=80:
