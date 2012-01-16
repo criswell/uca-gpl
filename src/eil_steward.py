@@ -8,6 +8,7 @@ between the client agent and CCMS.
 '''
 
 import sys, logging, time
+
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
 from clientagent.steward.ccmsupdate import CCMS_Update
