@@ -6,6 +6,7 @@ Abstract interface to the system-level functions.
 
 import logging
 from clientagent.common.platform_id import PlatformID
+import os
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
