@@ -7,6 +7,13 @@ The steward is the main control daemon that acts as the communicator link
 between the client agent and CCMS.
 '''
 
+# Before we begin, we need to properly set up paths
+import os
+if os.name == 'nt':
+    sys.path.append('C:/EIL/bin')
+else:
+    sys.path.append('/opt/intel/eil/clientagent/bin')
+
 import sys, logging, time
 
 from clientagent.common.platform_id import PlatformID
@@ -16,12 +23,10 @@ from clientagent.steward.configwatch import ConfigWatch
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
-    sys.path.append('C:/EIL/bin')
     import win32serviceutil
     from clientagent.steward.libdaemon.windows_service import Service as Daemon
 else:
     # Linux
-    sys.path.append('/opt/intel/eil/clientagent/bin')
     from clientagent.steward.libdaemon.unix_daemon import Daemon
 
 class StewardHandler(Daemon):
