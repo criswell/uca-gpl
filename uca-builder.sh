@@ -42,6 +42,10 @@ build()
     mkdir -p ${TMP_WORKSPACE}/uca/windows
     cp -fr ${TMP_REPO}/src/* ${TMP_WORKSPACE}/uca/bin/.
     cp -fr ${TMP_REPO}/platform-specific/linux/dispatcher ${TMP_WORKSPACE}/uca/linux/.
+    cd ${TMP_REPO}/platform-specific/linux/elevate_script
+    make clean
+    make
+    cp ${TMP_REPO}/platform-specific/linux/elevate_script ${TMP_WORKSPACE}/uca/bin/.
 
     # FIXME currently no platform-specifics on Windows
 
