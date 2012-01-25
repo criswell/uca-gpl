@@ -23,6 +23,31 @@ class ClientAgentState:
     COMDIR = None
     BINDIR = None
 
+def updateLogger():
+    debug_level = 2
+    if(ClientAgentState.CONFIG.C.has_option('main', 'log_level')):
+        _debug_level = ClientAgentState.CONFIG.C.get('main', 'log_level')
+        try:
+            debug_level = int(_debug_level)
+        except:
+            pass
+
+    Logger = logging.getLogger()
+
+    if debug_level < 1:
+        Logger.setLevel(logging.CRITICAL)
+    elif debug_level == 1:
+        Logger.setLevel(logging.ERROR)
+    elif debug_level == 2:
+        Logger.setLevel(logging.WARNING)
+    elif debug_level == 3:
+        Logger.setLevel(logging.INFO)
+    else:
+        # Anything higher will be debug to full
+        Logger.setLevel(logging.DEBUG)
+
+    Logger.INFO('Log level set to %d' % debug_level)
+
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
 
@@ -83,31 +108,6 @@ if not ClientAgentState.INIT_SETUP:
     ClientAgentState.CONFIG.setCallback(updateLogger)
 
     ClientAgentState.INIT_SETUP = True
-
-def updateLogger():
-    debug_level = 2
-    if(ClientAgentState.CONFIG.C.has_option('main', 'log_level')):
-        _debug_level = ClientAgentState.CONFIG.C.get('main', 'log_level')
-        try:
-            debug_level = int(_debug_level)
-        except:
-            pass
-
-    Logger = logging.getLogger()
-
-    if debug_level < 1:
-        Logger.setLevel(logging.CRITICAL)
-    elif debug_level == 1:
-        Logger.setLevel(logging.ERROR)
-    elif debug_level == 2:
-        Logger.setLevel(logging.WARNING)
-    elif debug_level == 3:
-        Logger.setLevel(logging.INFO)
-    else:
-        # Anything higher will be debug to full
-        Logger.setLevel(logging.DEBUG)
-
-    Logger.INFO('Log level set to %d' % debug_level)
 
 def get_config():
     '''
