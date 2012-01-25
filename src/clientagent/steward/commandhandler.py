@@ -5,7 +5,7 @@ Contains the command hanlding routines which previously were cluttering up
 the CCMS Update loop.
 '''
 
-def handleReboot(ccmsUpdate, ctx, result):
+def handleReboot(ccmsUpdate, ctx, result, txID):
     '''
     Handles the reboot requests and acknowledgements.
 
@@ -37,7 +37,7 @@ def handleReboot(ccmsUpdate, ctx, result):
 
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
-def handleJoin(ccmsUpdate, ctx, result):
+def handleJoin(ccmsUpdate, ctx, result, txID):
     domain = 'dl.inteleil.com'
     retry = 1
 
@@ -133,7 +133,7 @@ def handleJoin(ccmsUpdate, ctx, result):
 
     ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: ' + ACKresult)
 
-def handleUnJoin(ccmsUpdate, ctx, result):
+def handleUnJoin(ccmsUpdate, ctx, result, txID):
     ccmsUpdate.logger.info('domain unjoin requested')
     cmdName = result.CommandName
     utrncode = ccmsUpdate.dispatcher.unJoin()

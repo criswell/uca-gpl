@@ -219,14 +219,17 @@ class CCMS_Update(Atom):
                     if commandName == None:
                         self.logger.info('CCMS Command was "None"')
                     elif commandName == 'reboot':
-                        handleReboot(self, ctx, result)
+                        handleReboot(self, ctx, result, txID)
                     elif commandName == 'join domain':
-                        handleJoin(self, ctx, result)
+                        handleJoin(self, ctx, result, txID)
                     elif commandName == 'unjoin domain':
-                        handleUnJoin(self, ctx, result)
+                        handleUnJoin(self, ctx, result, txID)
                     else:
                         # FIXME TODO
                         pass
+            except URLError:
+                self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
+                self.dispatcher.tcpDiag()
             except:
                 # TODO this will be the catch-all once we've identified the ones
                 # we want to handle
@@ -234,8 +237,5 @@ class CCMS_Update(Atom):
                 traceback_lines = traceback.format_exc().splitlines()
                 for line in traceback_lines:
                     self.logger.critical(line)
-
-                self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
-                self.dispatcher.tcpDiag()
 
 # vim:set ai et sts=4 sw=4 tw=80:
