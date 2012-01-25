@@ -56,4 +56,23 @@ die() {
     exit 1
 }
 
+######################
+# Package dependencies
+######################
+
+BIN_CONTENTS=$(cat <<EOF
+
+EOF
+)
+
+WIN_CONTENTS=$(cat <<EOF
+
+EOF
+)
+
+LIN_CONTENTS=$(cat <<EOF
+
+EOF
+)
+
 # vim:set ai et sts=4 sw=4 tw=80:
