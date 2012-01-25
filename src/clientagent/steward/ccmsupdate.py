@@ -227,7 +227,7 @@ class CCMS_Update(Atom):
                     else:
                         # FIXME TODO
                         pass
-            except URLError:
+            except URLError as e:
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
                 self.dispatcher.tcpDiag()
             except:
