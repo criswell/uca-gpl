@@ -8,13 +8,13 @@ between the client agent and CCMS.
 '''
 
 # Before we begin, we need to properly set up paths
-import os
+import os, sys
 if os.name == 'nt':
     sys.path.append('C:/EIL/bin')
 else:
     sys.path.append('/opt/intel/eil/clientagent/bin')
 
-import sys, logging, time
+import logging, time
 
 from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
