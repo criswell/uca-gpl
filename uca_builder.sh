@@ -33,8 +33,28 @@ build()
     trace "!!! Building the unified client agent release"
     set -x
     TMP_REPO=`mktemp -d`
+    TMP_WORKSPACE=`mktemp -d`
+    # FIXME depend on mercurial?
+    hg clone ${MY_CWD} ${TMP_REPO}
+
+    mkdir -p ${TMP_WORKSPACE}/uca/bin
+    mkdir -p ${TMP_WORKSPACE}/uca/linux
+    mkdir -p ${TMP_WORKSPACE}/uca/windows
+    cp -fr ${TMP_REPO}/src/* ${TMP_WORKSPACE}/uca/bin/.
+    cp -fr ${TMP_REPO}/platform-specific/linux/dispatcher ${TMP_WORKSPACE}/uca/linux/.
+
+    # FIXME currently no platform-specifics on Windows
+
+    cd ${TMP_WORKSPACE}
+    zip -r uca.zip uca/
     cd ${MY_CWD}
-    
+    cp -f ${TMP_WORKSPACE}/uca.zip ${MY_CWD}
+
+    rm -fr ${TMP_REPO}
+    rm -fr ${TMP_WORKSPACE}
+    set +x
 }
+
+build
 
 # vim:set ai et sts=4 sw=4 tw=80:
