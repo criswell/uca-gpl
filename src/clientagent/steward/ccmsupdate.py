@@ -5,6 +5,7 @@ Main atomic operator class for the CCMS updates.
 '''
 
 import logging, time, random
+import sys, traceback
 
 from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
@@ -226,8 +227,14 @@ class CCMS_Update(Atom):
                     else:
                         # FIXME TODO
                         pass
-            except Exception as e:
-                self.logger.info(e.message)
+            except:
+                # TODO this will be the catch-all once we've identified the ones
+                # we want to handle
+                #exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
+
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
                 self.dispatcher.tcpDiag()
 
