@@ -46,7 +46,7 @@ def updateLogger():
         # Anything higher will be debug to full
         Logger.setLevel(logging.DEBUG)
 
-    Logger.INFO('Log level set to %d' % debug_level)
+    Logger.info('Log level set to %d' % debug_level)
 
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
