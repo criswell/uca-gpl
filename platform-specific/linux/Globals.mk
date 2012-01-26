@@ -18,9 +18,9 @@ DEBUG2=$(DEBUG1) -D EIL_DEBUG
 # Set the DEBUG variable to the level which we want
 DEBUG=$(DEBUG1)
 
-EIL_VERSION=$(shell cat ../VERSION)
-EIL_VERSION_TEXT=Version $(EIL_VERSION)
-EIL_VERSION_DEF=-D 'EIL_VERSION_TEXT="$(EIL_VERSION_TEXT)"'
+#EIL_VERSION=$(shell cat ../VERSION)
+#EIL_VERSION_TEXT=Version $(EIL_VERSION)
+#EIL_VERSION_DEF=-D 'EIL_VERSION_TEXT="$(EIL_VERSION_TEXT)"'
 
 # CCMS IP Address defines
 # The possible options are:
@@ -50,8 +50,8 @@ INSTALL=install
 INSTALL_GID=eil
 INSTALL_UID=eil
 
-CFLAGS=-c $(DEBUG) -Wall -Wno-write-strings -Wno-parentheses $(EIL_VERSION_DEF) $(CCMS_SERVER_DEF)
-CP_FLAGS=-c $(DEBUG) -Wall -Wno-write-strings -Wno-parentheses $(EIL_VERSION_DEF) $(CCMS_SERVER_DEF)
+CFLAGS=-c $(DEBUG) -Wall -Wno-write-strings -Wno-parentheses
+CP_FLAGS=-c $(DEBUG) -Wall -Wno-write-strings -Wno-parentheses
 
 LDFLAGS=
 CP_LDFLAGS=-lgsoap++

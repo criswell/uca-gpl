@@ -1,6 +1,6 @@
 # Makefile for the Elevate Script tool
 
-#include ../Globals.mk
+include ../Globals.mk
 
 SOURCES=elevate_script.cpp
 
