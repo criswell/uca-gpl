@@ -24,7 +24,7 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr,  rOID, rmt)
     else:
         rstat = 'COMMAND_FAILED'
         rsuc = False
@@ -33,7 +33,7 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr,  rOID, rmt)
 
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
@@ -81,7 +81,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rOID, rmt)
     elif joinExitCode == 1355:
         # do nothing
         rstat = 'COMMAND_EXECUTION_COMPLETE'
@@ -91,7 +91,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rOID, rmt)
     elif joinExitCode == 1219:
         # Multiple sessions to a server- disconnect all previous
         # sessions and try again?? will need to add the RETRY
@@ -103,7 +103,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rOID, rmt)
 
         # Retry logic from win Client Agent version -
         # for Join Domain only
@@ -146,7 +146,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
     elif urtncode == 2692:
         # already unjoined from a domain
         rstat = 'COMMAND_EXECUTION_COMPLETE'
@@ -156,7 +156,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
     else:
         rstat = 'COMMAND_FAILED'
         rsuc = False
@@ -165,7 +165,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         rtime = result.ExpectedTimeOut
         rOID = result.OperationID
         rmt= result.SetMachineType
-        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rtime, rOID, rmt)
+        cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
 
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
