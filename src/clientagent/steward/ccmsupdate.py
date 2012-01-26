@@ -228,6 +228,9 @@ class CCMS_Update(Atom):
                         # FIXME TODO
                         pass
             except urllib2.URLError as e:
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
                 self.dispatcher.tcpDiag()
             except:
