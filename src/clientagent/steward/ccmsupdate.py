@@ -5,7 +5,7 @@ Main atomic operator class for the CCMS updates.
 '''
 
 import logging, time, random
-import sys, traceback
+import sys, traceback, urllib2
 
 from clientagent.steward.atom import Atom
 from clientagent.common.utility import mkdir_p
@@ -227,7 +227,7 @@ class CCMS_Update(Atom):
                     else:
                         # FIXME TODO
                         pass
-            except URLError as e:
+            except urllib2.URLError as e:
                 self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
                 self.dispatcher.tcpDiag()
             except:
