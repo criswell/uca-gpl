@@ -84,6 +84,7 @@ try:
         # FIXME - Missing elevate scipt
         print 'Linux> Starting new client agent'
         exec_command('chmod a+x %s/eil_steward.py' % binDir)
+        exec_command('cmhod a+x %s/elevate_script' % binDir)
         exec_command('/etc/init.d/eil_steward.sh start')
     else:
         os.chdir('C:/EIL/bin')
