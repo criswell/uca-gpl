@@ -45,7 +45,7 @@ build()
     cd ${TMP_REPO}/platform-specific/linux/elevate_script
     make clean
     make
-    cp ${TMP_REPO}/platform-specific/linux/elevate_script ${TMP_WORKSPACE}/uca/bin/.
+    cp ${TMP_REPO}/platform-specific/linux/elevate_script/elevate_script ${TMP_WORKSPACE}/uca/bin/.
 
     # FIXME currently no platform-specifics on Windows
 
