@@ -5,7 +5,9 @@
 _run_command() {
     # FIXME Do we want to do any error checking here?
     # Currently fire and forget
-    ${BIN_DIR}/elevate_script ${SCRIPTS_DIR}/${PLATFORM_NAME}_${*}
+    #${BIN_DIR}/elevate_script ${SCRIPTS_DIR}/${PLATFORM_NAME}_${*}
+    # FIXME - We need to solve the script elevate problems!
+    ${SCRIPTS_DIR}/${PLATFORM_NAME}_${*}
 
     echo $?
 }
