@@ -8,3 +8,6 @@
 * Need to check for localhost test (see Linux Client Agent,
   steward/eil_steward.ccp, line 288). This is absolutely vital for proper new
   asset collection functionality.
+
+* Need to restore non-priv user security restrictions under Linux again. See
+  FIXME in platform-specific/linux/dispatcher/lib/dispatcher.sh on line 9.
