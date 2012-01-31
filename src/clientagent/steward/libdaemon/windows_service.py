@@ -16,18 +16,20 @@ class Service(win32serviceutil.ServiceFramework):
     _svc_display_name_ = ClientAgentState.SRV_DISPLAY_NAME
     _svc_description_ = ClientAgentState.SRV_DESCRIPTION
 
-    EndServ = False
+    #EndServ = False
 
     ##logging.debug("***********---> We are inside UnifiedClientAgent - we are beginning    RC 12-5-2011  *******")
     servicemanager.LogInfoMsg("***********---> We are inside windows_service.py - we are beginning    RC 12-5-2011  *******")
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None,0,0,None)
+        self.running = False
         ##socket.setdefaulttimeout(60)
 
     def SvcStop(self):
         ##servicemanager.LogInfoMsg("******** Entering  SvcStop: " + EndServ + "    ****")
-        self.EndServ = True
+        #self.EndServ = True
+        self.running = False
         ##servicemanager.LogInfoMsg("******** Value of EndServ (should be Y): " + EndServ + "    ****")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
@@ -69,7 +71,7 @@ class Service(win32serviceutil.ServiceFramework):
 
     def main(self):
         servicemanager.LogInfoMsg("We are inside windows_service in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")
-        running = True
+        self.running = True
         while running:
             self.run()
 
