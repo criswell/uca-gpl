@@ -50,6 +50,14 @@ def exec_command(cmd):
     for line in output:
         print line
 
+def setupBin(binDir, srcBinDir):
+    print 'Cleaning up the bin directory (if it exists)'
+    shutil.rmtree(binDir, True)
+
+    print 'Copying the bin directory'
+    print '%s -> %s' % (srcBinDir, binDir)
+    shutil.copytree(srcBinDir, binDir)
+
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
     url = 'http://%s/uca/uca.zip' % STAGING_IP
@@ -68,16 +76,10 @@ try:
 
     srcBinDir = '%s/uca/bin' % tempDir
 
-    print 'Cleaning up the bin directory (if it exists)'
-    shutil.rmtree(binDir, True)
-
-    print 'Copying the bin directory'
-    print '%s -> %s' % (srcBinDir, binDir)
-    shutil.copytree(srcBinDir, binDir)
-
     if IS_LINUX:
         print 'Linux> Stopping previous client agent'
         exec_command('/etc/init.d/eil_steward.sh stop')
+        setupBin(binDir, srcBinDir)
         print 'Linux> Installing dispatcher'
         exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % tempDir)
         exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % tempDir)
@@ -92,6 +94,7 @@ try:
         exec_command('net stop EILTAFService')
         exec_command('sc delete EILTAFService')
         exec_command('sc delete EILAutoUpdateService')
+        setupBin(binDir, srcBinDir)
         print "Windows> Installing new service"
         exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
         exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')

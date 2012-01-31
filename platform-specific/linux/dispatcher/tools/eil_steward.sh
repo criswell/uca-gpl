@@ -70,9 +70,6 @@ stop)
     check_steward_running
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
-        # Send it SIGHUP
-        #PID1=$(cat ${PIDFILE})
-        #kill -1 ${PID1}
         $BIN_STEWARD stop
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
@@ -88,12 +85,6 @@ restart|try-restart|reload|force-reload)
     check_steward_running
     _STATUS=$?
     if [ "${_STATUS}" -eq "0" ]; then
-        # Send it SIGHUP
-        #PID1=$(cat ${PIDFILE})
-        #kill -1 ${PID1}
-
-        # Give it a bit to stop what it was doing
-        #sleep 5
         $BIN_STEWARD restart
     elif [ "${_STATUS}" -eq "1" ]; then
         # Service is not running, but pid file exists
