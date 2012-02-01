@@ -38,7 +38,7 @@ def mkdir_p(path):
     '''
     try:
         os.makedirs(path)
-    except OSError as exc:
+    except OSError, exc:
         if exc.errno == errno.EEXIST:
             pass
         else: raise
@@ -116,7 +116,7 @@ try:
     # FIXME clean-up tempDir
 
     # FIXME - Do we need to clean-up ucaZip?
-except Exception as e:
+except Exception, e:
     print "Error trying to bootstrap the unified agent\n\n"
     print e
 
