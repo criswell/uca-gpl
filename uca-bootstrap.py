@@ -77,15 +77,14 @@ try:
     print 'Pulling UCA zipefile: %s' % url
     (filename, headers) = urllib.urlretrieve(url)
     print 'Stored in "%s"...' % filename
-    ucaZip = zipfile.ZipFile(filename, 'r')
+
     binDir = '%s/bin' % ROOT_DIR
     #print 'Making binDir "%s"...' % binDir
     #mkdir_p(binDir)
     tempDir = tempfile.mkdtemp()
     print 'Obtained a tempDir "%s"...' % tempDir
-    print 'Extracting the UCA into tempDir'
-    ucaZip.extractall(tempDir)
-    ucaZip.close()
+
+    unZip(filename, tempDir)
 
     srcBinDir = '%s/uca/bin' % tempDir
 
