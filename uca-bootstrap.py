@@ -8,7 +8,7 @@ NOTE- For now, this will be fairly rough. But if we decide to keep using it, we
 will want to refine it considerably.
 '''
 
-import urllib, zipfile, os, tempfile, shutil
+import urllib, zipfile, os, tempfile, shutil, sys
 
 # Platform determination
 if os.name == 'nt':
@@ -57,6 +57,19 @@ def setupBin(binDir, srcBinDir):
     print 'Copying the bin directory'
     print '%s -> %s' % (srcBinDir, binDir)
     shutil.copytree(srcBinDir, binDir)
+
+def unZip(filename, tempDir):
+    if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
+        # Horrible that we have to do this on legacy Python installs
+        exec_command('unzip %s -d %s' % (filename, tempDir))
+    else:
+        ucaZip = zipfile.ZipFile(filename, 'r')
+        binDir = '%s/bin' % ROOT_DIR
+
+        print 'Extracting the UCA into tempDir'
+        ucaZip.extractall(tempDir)
+        ucaZip.close()
+
 
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
