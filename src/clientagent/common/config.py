@@ -71,7 +71,7 @@ class Config:
             self.C.add_section('windows')
 
         # Our default is to enabled ERROR and above
-        self.C.set('main', 'log_level', '2')
+        self.C.set('main', 'log_level', '3')
 
         # Set some reasonable defaults for the servers we have to work with
         self.C.set('main', 'RMS', 'rmssvr01')

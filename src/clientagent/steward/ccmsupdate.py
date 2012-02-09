@@ -41,8 +41,10 @@ class CCMS_Update(Atom):
 
         (self.MY_HWADDR, self.MY_HOST) = (None, None)
         try:
-            self.logger.debug('Obtaining HWADDR and HOSTNAME')
+            self.logger.info('Obtaining HWADDR and HOSTNAME')
             (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
+            self.logger.info('HWADDR: %s' % self.MY_HWADDR)
+            self.logger.info('HOSTNAME: %s' % self.MY_HOST)
         except RuntimeError:
             # Well, this is unfortunate, we cannot run. Log an error and bail
             self.logger.critical('RuntimeError during attempt to find network interface hardware address!')
@@ -53,9 +55,11 @@ class CCMS_Update(Atom):
 
         if not self.MY_HOST and not self.MY_HWADDR:
             self.ACTIVE = False
+            self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
+            self.logger.critical('Setting CCMS_Update atom inactive..')
         else:
             self.ACTIVE = True
-            self.logger.debug('Creating SUDS SOAP client...')
+            self.logger.info('Creating SUDS SOAP client...')
             # FIXME - We're still not caching the WSDL, before production, we
             # really need to address this!
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
