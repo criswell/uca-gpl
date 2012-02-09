@@ -14,8 +14,8 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     @param result The result from the CCMS update call
     '''
     commandName = result.CommandName
-    rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
+    rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
     if rebcode:
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
@@ -42,6 +42,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     retry = 1
 
     commandName = result.CommandName
+    ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
 
     if result.CommandParameters != None:
         nbrparms = len(result.CommandParameters.KeyValueOfstringstring)
@@ -136,6 +137,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
 def handleUnJoin(ccmsUpdate, ctx, result, txID):
     ccmsUpdate.logger.info('domain unjoin requested')
     cmdName = result.CommandName
+    ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
     utrncode = ccmsUpdate.dispatcher.unJoin()
 
     if urtncode == 0:

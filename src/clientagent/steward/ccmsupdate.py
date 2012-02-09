@@ -68,6 +68,9 @@ class CCMS_Update(Atom):
                 self.client = Client(self.CCMS_WSDL, headers=headers)
                 self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
             except:
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
                 # FIXME we will need better error checking here, but for now,
                 # we use a catch-all
                 self.logger.critical('Unknown error trying to contact CCMS!')
