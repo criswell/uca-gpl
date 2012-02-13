@@ -73,7 +73,7 @@ def unZip(filename, tempDir):
 
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
-    url = 'http://%s/uca/uca.zip' % STAGING_IP
+    url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
     print 'Pulling UCA zipefile: %s' % url
     (filename, headers) = urllib.urlretrieve(url)
     print 'Stored in "%s"...' % filename
