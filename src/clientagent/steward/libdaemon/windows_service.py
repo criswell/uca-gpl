@@ -70,7 +70,7 @@ class Service(win32serviceutil.ServiceFramework):
         return True
 
     def main(self):
-        servicemanager.LogInfoMsg("We are inside windows_service in def(main) - Here is where our python code runs inside the Service via a call to runme()  ")
+        servicemanager.LogInfoMsg("We are inside windows_service in def(main) - Here is where our python code runs inside the Service via a call to runme()")
         self.running = True
         while self.running:
             self.run()
