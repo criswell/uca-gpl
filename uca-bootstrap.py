@@ -101,12 +101,12 @@ try:
         exec_command('chmod a+x %s/elevate_script' % binDir)
         exec_command('/etc/init.d/eil_steward.sh start')
     else:
-        os.chdir('C:/EIL/bin')
         print "Windows> Stopping and removing previous services"
         exec_command('net stop EILTAFService')
         exec_command('sc delete EILTAFService')
         exec_command('sc delete EILAutoUpdateService')
         setupBin(binDir, srcBinDir)
+        os.chdir('C:/EIL/bin')
         print "Windows> Installing new service"
         exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
         exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')
