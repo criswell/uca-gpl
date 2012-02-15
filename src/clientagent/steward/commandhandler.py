@@ -132,7 +132,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     # getcommand request  RC - NOV 2011
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
-    ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: ' + ACKresult)
+    ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: %s' % ACKresult)
 
 def handleUnJoin(ccmsUpdate, ctx, result, txID):
     ccmsUpdate.logger.info('domain unjoin requested')
