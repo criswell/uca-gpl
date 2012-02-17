@@ -28,6 +28,7 @@ def exec_command(cmd):
     for line in output:
         print line
 
+# Windows specific functions
 def win32_stopService(name):
     '''
     Given the name of a Windows service, will query for it and attempt to stop
@@ -55,5 +56,6 @@ def win32_stopPreviousServices():
     win32_stopService('EILAutoUpdateService')
     win32_stopService('EILClientAgent')
 
+# Linux specific functions
 
 # vim:set ai et sts=4 sw=4 tw=80:
