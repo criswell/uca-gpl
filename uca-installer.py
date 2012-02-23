@@ -29,17 +29,33 @@ def exec_command(cmd):
         print line
 
 # Windows specific functions
-def win32_stopService(name):
+def win32_checkServiceRunning(name):
     '''
-    Given the name of a Windows service, will query for it and attempt to stop
-    it (if running) and delete it.
+    Given the name of a Windows service, will query for it to determine if it is
+    running. Returns 'True' if the service is running.
     '''
+    returnCode = False
     try:
         scm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
         svc = win32service.OpenService(scm, name, win32service.SC_MANAGER_ALL_ACCESS)
         status = win32service.QueryServiceStatus(svc)
         win32service.CloseService(svc)
         if status[1] == 4:
+            returnCode = True
+    except:
+        pass
+    finally:
+        win32service.CloseService(svc)
+
+    return returnCode
+
+def win32_stopService(name):
+    '''
+    Given the name of a Windows service, will query for it and attempt to stop
+    it (if running) and delete it.
+    '''
+    try:
+        if win32_checkServiceRunning(name):
             # Service is running, stop it
             exec_command('net stop %s' % name)
         exec_command('sc delete %s' % name)
