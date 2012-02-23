@@ -71,7 +71,7 @@ def win32_stopService(name):
             exec_command('net stop %s' % name)
         exec_command('sc delete %s' % name)
     except:
-        print "Service %s not found or some other error on access." % name
+        logger.info("Service %s not found or some other error on access." % name)
     finally:
         win32service.CloseService(svc)
 
