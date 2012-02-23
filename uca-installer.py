@@ -91,6 +91,7 @@ def cleanUpPreviousTree(rootDir):
     '''
     Attempts to clean up previous install tree if it is present.
     '''
+    logger.info('Attempting to clean-up previous EIL install tree (if present)...')
     pass
 
 def createTreeAt(rootDir):
@@ -98,6 +99,7 @@ def createTreeAt(rootDir):
     Attempts to create a standard, cross-platform, install tree at the root
     directory 'rootDir'
     '''
+    logger.info('Attempting to create EIL install tree...')
     pass
 
 '''Main installation sequence'''
@@ -107,9 +109,8 @@ if IS_LINUX:
 else:
     logger.info('Attempting to stop and remove any previous EIL services...')
     win32_stopPreviousServices()
-    logger.info('Attempting to clean-up previous EIL install tree (if present)...')
+    # Clean up previous install tree, then re-create proper format
     cleanUpPreviousTree('C:\\eil')
-    logger.info('Attempting to create EIL install tree...')
     createTreeAt('C:\\eil')
 
 # vim:set ai et sts=4 sw=4 tw=80:
