@@ -46,8 +46,8 @@ def mkdir_p(path):
 # For logging, we need to ensure that the root directory is there
 mkdir_p("%s/home/" % ROOT_DIR)
 
-Logger = logging.getLogger()
-Logger.setLevel(logging.DEBUG)
+logger = logging.getLogger('uca-bootsrap')
+logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
         logging.basicConfig(filename='%s\\home\install.log' % ROOT_DIR,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -64,11 +64,11 @@ def exec_command(cmd):
         print line
 
 def setupBin(binDir, srcBinDir):
-    print 'Cleaning up the bin directory (if it exists)'
+    logger.info('Cleaning up the bin directory (if it exists)')
     shutil.rmtree(binDir, True)
 
-    print 'Copying the bin directory'
-    print '%s -> %s' % (srcBinDir, binDir)
+    logger.info('Copying the bin directory')
+    logger.info('%s -> %s' % (srcBinDir, binDir)
     shutil.copytree(srcBinDir, binDir)
 
 def unZip(filename, tempDir):
@@ -79,7 +79,7 @@ def unZip(filename, tempDir):
         ucaZip = zipfile.ZipFile(filename, 'r')
         binDir = '%s/bin' % ROOT_DIR
 
-        print 'Extracting the UCA into tempDir'
+        logger.info('Extracting the UCA into tempDir')
         ucaZip.extractall(tempDir)
         ucaZip.close()
 
@@ -87,40 +87,40 @@ def unZip(filename, tempDir):
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
     url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
-    print 'Pulling UCA zipefile: %s' % url
+    logger.info('Pulling UCA zipefile: %s' % url)
     (filename, headers) = urllib.urlretrieve(url)
-    print 'Stored in "%s"...' % filename
+    logger.info('Stored in "%s"...' % filename)
 
     binDir = '%s/bin' % ROOT_DIR
-    #print 'Making binDir "%s"...' % binDir
+    #logger.info('Making binDir "%s"...' % binDir
     #mkdir_p(binDir)
     tempDir = tempfile.mkdtemp()
-    print 'Obtained a tempDir "%s"...' % tempDir
+    logger.info('Obtained a tempDir "%s"...' % tempDir)
 
     unZip(filename, tempDir)
 
     srcBinDir = '%s/uca/bin' % tempDir
 
     if IS_LINUX:
-        print 'Linux> Stopping previous client agent'
+        logger.info('Linux> Stopping previous client agent')
         exec_command('/etc/init.d/eil_steward.sh stop')
         setupBin(binDir, srcBinDir)
-        print 'Linux> Installing dispatcher'
+        logger.info('Linux> Installing dispatcher')
         exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % tempDir)
         exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % tempDir)
         # FIXME - Missing elevate scipt
-        print 'Linux> Starting new client agent'
+        logger.info('Linux> Starting new client agent')
         exec_command('chmod a+x %s/eil_steward.py' % binDir)
         exec_command('chmod a+x %s/elevate_script' % binDir)
         exec_command('/etc/init.d/eil_steward.sh start')
     else:
-        print "Windows> Stopping and removing previous services"
+        logger.info("Windows> Stopping and removing previous services")
         exec_command('net stop EILTAFService')
         exec_command('sc delete EILTAFService')
         exec_command('sc delete EILAutoUpdateService')
         setupBin(binDir, srcBinDir)
         os.chdir('C:/EIL/bin')
-        print "Windows> Installing new service"
+        logger.info("Windows> Installing new service")
         exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
         exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')
         exec_command('sc start EILClientAgent')
@@ -130,7 +130,7 @@ try:
 
     # FIXME - Do we need to clean-up ucaZip?
 except Exception, e:
-    print "Error trying to bootstrap the unified agent\n\n"
-    print e
+    logger.critical("Error trying to bootstrap the unified agent")
+    logger.critical(e)
 
 # vim:set ai et sts=4 sw=4 tw=80:
