@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os
+import os, logging
 
 # Platform determination
 if os.name == 'nt':
@@ -17,6 +17,9 @@ if os.name == 'nt':
 else:
     IS_WINDOWS = False
     IS_LINUX = True
+
+Logger = logging.getLogger()
+Logger.setLevel(logging.DEBUG)
 
 def exec_command(cmd):
     '''

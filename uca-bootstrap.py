@@ -8,7 +8,7 @@ NOTE- For now, this will be fairly rough. But if we decide to keep using it, we
 will want to refine it considerably.
 '''
 
-import urllib, zipfile, os, tempfile, shutil, sys
+import urllib, zipfile, os, tempfile, shutil, sys, logging
 
 # Platform determination
 if os.name == 'nt':
@@ -42,6 +42,19 @@ def mkdir_p(path):
         if exc.errno == errno.EEXIST:
             pass
         else: raise
+
+# For logging, we need to ensure that the root directory is there
+mkdir_p("%s/home/" % ROOT_DIR)
+
+Logger = logging.getLogger()
+Logger.setLevel(logging.DEBUG)
+if IS_WINDOWS:
+        logging.basicConfig(filename='%s\\home\install.log' % ROOT_DIR,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    else:
+        fn = '%s/home/install.log' % ROOT_DIR
+        logging.basicConfig(filename=fn,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 def exec_command(cmd):
     stream = os.popen(cmd)
