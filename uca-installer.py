@@ -79,9 +79,10 @@ def win32_stopPreviousServices():
     '''
     Attempts to stop and clean up any previous services under Windows.
     '''
-    win32_stopService('EILTAFService')
-    win32_stopService('EILAutoUpdateService')
-    win32_stopService('EILClientAgent')
+    for service in ['EILTAFService', 'EILAutoUpdateService', 'EILClientAgent']:
+        win32_stopService(service)
+        if win32_checkServiceRunning(service):
+            logger.critical('Unable to clean up %s! It is still running!' % service)
 
 # Linux specific functions
 
