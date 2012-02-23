@@ -86,6 +86,13 @@ def win32_stopPreviousServices():
 
 # Linux specific functions
 
+# Generic functions
+def cleanUpPreviousTree(rootDir):
+    '''
+    Attempts to clean up previous install tree if it is present.
+    '''
+    pass
+
 '''Main installation sequence'''
 
 if IS_LINUX:
@@ -93,5 +100,7 @@ if IS_LINUX:
 else:
     logger.info('Attempting to stop and remove any previous EIL services...')
     win32_stopPreviousServices()
+    logger.info('Attempting to clean-up previous EIL install tree (if present)...')
+    cleanUpPreviousTree('C:\\eil')
 
 # vim:set ai et sts=4 sw=4 tw=80:
