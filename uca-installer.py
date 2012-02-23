@@ -86,4 +86,12 @@ def win32_stopPreviousServices():
 
 # Linux specific functions
 
+'''Main installation sequence'''
+
+if IS_LINUX:
+    pass
+else:
+    logger.info('Attempting to stop and remove any previous EIL services...')
+    win32_stopPreviousServices()
+
 # vim:set ai et sts=4 sw=4 tw=80:
