@@ -92,6 +92,9 @@ def cleanUpPreviousTree(rootDir):
     Attempts to clean up previous install tree if it is present.
     '''
     logger.info('Attempting to clean-up previous EIL install tree (if present)...')
+    # Note: What about logging? FIXME This and the bootstrapper are using
+    # python's logging class and logging to a directory in this tree. Maybe
+    # the logger should go someplace else and then get moved?
     pass
 
 def createTreeAt(rootDir):
