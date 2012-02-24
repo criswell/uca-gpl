@@ -104,6 +104,13 @@ def createTreeAt(rootDir):
     logger.info('Attempting to create EIL install tree...')
     pass
 
+def installAt(rootDir):
+    '''
+    Installs to a root directory structure.
+    '''
+    logger.info('Attempting to install...')
+    pass
+
 '''Main installation sequence'''
 
 if IS_LINUX:
@@ -114,5 +121,7 @@ else:
     # Clean up previous install tree, then re-create proper format
     cleanUpPreviousTree('C:\\eil')
     createTreeAt('C:\\eil')
+	# Now install
+	installAt('C:\\eil')
 
 # vim:set ai et sts=4 sw=4 tw=80:
