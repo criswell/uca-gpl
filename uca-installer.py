@@ -21,11 +21,10 @@ else:
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
-        logging.basicConfig(filename='%s\\home\install.log' % ROOT_DIR,
+        logging.basicConfig(filename='C:\\install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
-        fn = '%s/home/install.log' % ROOT_DIR
-        logging.basicConfig(filename=fn,
+        logging.basicConfig('/install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
