@@ -91,9 +91,6 @@ def cleanUpPreviousTree(rootDir):
     Attempts to clean up previous install tree if it is present.
     '''
     logger.info('Attempting to clean-up previous EIL install tree (if present)...')
-    # Note: What about logging? FIXME This and the bootstrapper are using
-    # python's logging class and logging to a directory in this tree. Maybe
-    # the logger should go someplace else and then get moved?
     pass
 
 def createTreeAt(rootDir):
@@ -121,7 +118,7 @@ else:
     # Clean up previous install tree, then re-create proper format
     cleanUpPreviousTree('C:\\eil')
     createTreeAt('C:\\eil')
-	# Now install
-	installAt('C:\\eil')
+    # Now install
+    installAt('C:\\eil')
 
 # vim:set ai et sts=4 sw=4 tw=80:
