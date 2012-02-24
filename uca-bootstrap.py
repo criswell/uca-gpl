@@ -21,13 +21,6 @@ else:
 PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
 
-HOSTS = {
-        '10.4.0.29' : ['goblinserver2'],
-        '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
-        '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
-        '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
-    }
-
 ROOT_DIR = 'C:\\eil'
 if IS_LINUX:
     ROOT_DIR = '/opt/intel/eil/clientagent'
@@ -49,10 +42,11 @@ mkdir_p("%s/home/" % ROOT_DIR)
 logger = logging.getLogger('uca-bootsrap')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
-        logging.basicConfig(filename='C:\\install.log',
+        logging.basicConfig(filename='%s\\home\install.log' % ROOT_DIR,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
-        logging.basicConfig('/install.log',
+        fn = '%s/home/install.log' % ROOT_DIR
+        logging.basicConfig(filename=fn,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
