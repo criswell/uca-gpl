@@ -50,7 +50,8 @@ def setupHosts(hostsFile):
     Will attempt to set up the hosts file located at the path hostsFile for
     UCA use. Will return True on success, or False on failure.
     '''
-    pass
+    if os.path.isfile(hostsFile):
+        hosts = open(hostsFile, 'rU')
 
 # Windows specific functions
 def win32_checkServiceRunning(name):
@@ -127,7 +128,6 @@ def win32_setupHosts():
         logger.critical('Could not modify hosts file, some problem occured. Install might not work.')
     else:
         logger.critical('Could not find appropriate environment variable for where the system files are. Could not set up hosts file as a result.')
-
 
 # Linux specific functions
 
