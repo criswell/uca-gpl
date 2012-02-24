@@ -14,6 +14,7 @@ class ConfigWatch(Atom):
     def __init__(self):
         self.config = get_config()
         self.TARGET_TIMEDELTA = 60
+        self.ACTIVE = True
 
     def update(self, timeDelta):
         if timeDelta >= self.TARGET_TIMEDELTA:

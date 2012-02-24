@@ -19,6 +19,7 @@ class AssetUpdate(Atom):
         self.config = get_config()
         self._timer = 0
         self.TARGET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
+        self.ACTIVE = True
         # TODO
 
     def shutdown(self):
