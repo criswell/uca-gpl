@@ -18,6 +18,13 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
+HOSTS = {
+        '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'],
+        '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
+        '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
+        '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
+    }
+
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
@@ -37,6 +44,13 @@ def exec_command(cmd):
     stream.close()
     for line in output:
         print line
+
+def setupHosts(hostsFile):
+    '''
+    Will attempt to set up the hosts file located at the path hostsFile for
+    UCA use. Will return True on success, or False on failure.
+    '''
+    pass
 
 # Windows specific functions
 def win32_checkServiceRunning(name):
@@ -83,6 +97,38 @@ def win32_stopPreviousServices():
         if win32_checkServiceRunning(service):
             logger.critical('Unable to clean up %s! It is still running!' % service)
 
+def win32_setupHosts():
+    '''
+    Runs through the annoying myriad of locations that the hosts file might be
+    located on Windows and attempts to set it up for UCA use.
+    '''
+    logger.info('Attempting to set up the hosts file in Windows- looking for environment variable defining system root...')
+    possibleHostFiles = []
+    try:
+        systemroot = os.environ['SYSTEMROOT']
+    except KeyError:
+        pass
+    else:
+        # This is by far the most likely place for it
+        possibleHostFiles.append('%s\\system32\\drivers\\etc\\hosts' % systemroot)
+
+    try:
+        systemroot = os.environ['WINDIR']
+    except KeyError:
+        pass
+    else:
+        possibleHostFiles.append('%s\\hosts' % systemroot)
+
+    if len(possibleHostFiles) > 1:
+        for filename in possibleHostFiles:
+            logger.info('Trying host file "%s"' % filename)
+            if setupHosts(filename):
+                return
+        logger.critical('Could not modify hosts file, some problem occured. Install might not work.')
+    else:
+        logger.critical('Could not find appropriate environment variable for where the system files are. Could not set up hosts file as a result.')
+
+
 # Linux specific functions
 
 # Generic functions
@@ -118,6 +164,8 @@ else:
     # Clean up previous install tree, then re-create proper format
     cleanUpPreviousTree('C:\\eil')
     createTreeAt('C:\\eil')
+    # Set up our hosts file (or try to)
+    win32_setupHosts()
     # Now install
     installAt('C:\\eil')
 
