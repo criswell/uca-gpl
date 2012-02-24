@@ -20,6 +20,7 @@ from clientagent.common.platform_id import PlatformID
 from clientagent import ClientAgentState
 from clientagent.steward.ccmsupdate import CCMS_Update
 from clientagent.steward.configwatch import ConfigWatch
+from clientagent.steward.assetupdate import AssetUpdate
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
@@ -43,6 +44,7 @@ class StewardHandler(Daemon):
         self.atoms = [
             ConfigWatch(),
             CCMS_Update(),
+            AssetUpdate(),
         ]
 
     def local_shutdown(self):
