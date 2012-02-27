@@ -52,6 +52,21 @@ def setupHosts(hostsFile):
     '''
     if os.path.isfile(hostsFile):
         hosts = open(hostsFile, 'rU')
+        
+        for rawline in hosts:
+            line = rawline.strip()
+            if '#' in line:
+                line = line[:line.index('#')]
+                
+            if line:
+                destination, aliases = re.split(r'\s', line, 1)
+                
+                # NOTE: This is pretty blunt- we check that the IP is there,
+                # but not whether or not it is aliased correctly. May want to
+                # reapproach this later on and see if this is sufficient.
+                # TODO
+                if HOSTS.has_key(destination):
+                    dummy = HOSTS.pop(destination)
 
 # Windows specific functions
 def win32_checkServiceRunning(name):
