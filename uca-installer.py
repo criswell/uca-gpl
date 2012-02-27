@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os, logging
+import os, logging, dircache, shutil
 
 # Platform determination
 if os.name == 'nt':
@@ -114,12 +114,38 @@ def win32_setupHosts():
 # Linux specific functions
 
 # Generic functions
+def recursive_delete(dirname):
+    '''
+    Given a directory, will attempt to recursively delete all entries. Will
+    return True on success, False on failure.
+    '''
+    retval = True
+    files = dircache.listdir(dirname)
+    for file in files:
+        path = os.path.join (dirname, file)
+        if os.path.isdir(path):
+            retval = recursive_delete(path)
+        else:
+            try:
+                os.unlink(path)
+            except:
+                logger.critical('Unable to remove %s! Is file still in use?' % path)
+                retval = False
+
+    try:
+        shutil.rmtree(dirname, True)
+    except:
+        logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
+        retval = False
+
+    return retval
+
 def cleanUpPreviousTree(rootDir):
     '''
     Attempts to clean up previous install tree if it is present.
     '''
     logger.info('Attempting to clean-up previous EIL install tree (if present)...')
-    pass
+    recursive_delete(rootDir)
 
 def createTreeAt(rootDir):
     '''
@@ -127,7 +153,9 @@ def createTreeAt(rootDir):
     directory 'rootDir'
     '''
     logger.info('Attempting to create EIL install tree...')
-    pass
+
+    # The previous bootstrapper was a bit indelicate with regard to this. So
+    # we will be taking a more nuanced aproach.
 
 def installAt(rootDir, srcDir):
     '''
