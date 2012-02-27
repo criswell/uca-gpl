@@ -145,6 +145,8 @@ def cleanUpPreviousTree(rootDir):
     Attempts to clean up previous install tree if it is present.
     '''
     logger.info('Attempting to clean-up previous EIL install tree (if present)...')
+    # The previous bootstrapper was a bit indelicate with regard to this. So
+    # we will be taking a more nuanced aproach.
     recursive_delete(rootDir)
 
 def createTreeAt(rootDir):
@@ -153,9 +155,6 @@ def createTreeAt(rootDir):
     directory 'rootDir'
     '''
     logger.info('Attempting to create EIL install tree...')
-
-    # The previous bootstrapper was a bit indelicate with regard to this. So
-    # we will be taking a more nuanced aproach.
 
 def installAt(rootDir, srcDir):
     '''
