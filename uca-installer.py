@@ -66,6 +66,7 @@ def setupHosts(hostsFile):
                 # reapproach this later on and see if this is sufficient.
                 # TODO
                 if HOSTS.has_key(destination):
+                    # dummy is throw-away, we just want it out of the dict
                     dummy = HOSTS.pop(destination)
                     
         hosts.close()
