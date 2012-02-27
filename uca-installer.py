@@ -35,53 +35,6 @@ if IS_WINDOWS:
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
-def exec_command(cmd):
-    '''
-    given a command, will execute it in the parent environment
-    '''
-    stream = os.popen(cmd)
-    output = stream.readlines()
-    stream.close()
-    for line in output:
-        print line
-
-def setupHosts(hostsFile):
-    '''
-    Will attempt to set up the hosts file located at the path hostsFile for
-    UCA use. Will return True on success, or False on failure.
-    '''
-    if os.path.isfile(hostsFile):
-        hosts = open(hostsFile, 'rU')
-
-        for rawline in hosts:
-            line = rawline.strip()
-            if '#' in line:
-                line = line[:line.index('#')]
-
-            if line:
-                destination, aliases = re.split(r'\s', line, 1)
-
-                # NOTE: This is pretty blunt- we check that the IP is there,
-                # but not whether or not it is aliased correctly. May want to
-                # reapproach this later on and see if this is sufficient.
-                # TODO
-                if HOSTS.has_key(destination):
-                    # dummy is throw-away, we just want it out of the dict
-                    dummy = HOSTS.pop(destination)
-
-        hosts.close()
-
-        # Now, add missing entries
-        if len(HOSTS) > 0:
-            hosts = open(hostsFile, 'aU')
-
-            hostAliases = []
-            for ip in HOSTS.keys():
-                hostAliases.append('%s    %s' % (ip, HOSTS[ip]))
-
-            hosts.writelines(hostAliases)
-            hosts.close()
-
 # Windows specific functions
 def win32_checkServiceRunning(name):
     '''
@@ -187,6 +140,53 @@ def installAt(rootDir, srcDir):
     logger.info('%s -> %s' % (srcBinDir, binDir)
     shutil.copytree(srcBinDir, binDir)
     pass
+
+def exec_command(cmd):
+    '''
+    given a command, will execute it in the parent environment
+    '''
+    stream = os.popen(cmd)
+    output = stream.readlines()
+    stream.close()
+    for line in output:
+        print line
+
+def setupHosts(hostsFile):
+    '''
+    Will attempt to set up the hosts file located at the path hostsFile for
+    UCA use. Will return True on success, or False on failure.
+    '''
+    if os.path.isfile(hostsFile):
+        hosts = open(hostsFile, 'rU')
+
+        for rawline in hosts:
+            line = rawline.strip()
+            if '#' in line:
+                line = line[:line.index('#')]
+
+            if line:
+                destination, aliases = re.split(r'\s', line, 1)
+
+                # NOTE: This is pretty blunt- we check that the IP is there,
+                # but not whether or not it is aliased correctly. May want to
+                # reapproach this later on and see if this is sufficient.
+                # TODO
+                if HOSTS.has_key(destination):
+                    # dummy is throw-away, we just want it out of the dict
+                    dummy = HOSTS.pop(destination)
+
+        hosts.close()
+
+        # Now, add missing entries
+        if len(HOSTS) > 0:
+            hosts = open(hostsFile, 'aU')
+
+            hostAliases = []
+            for ip in HOSTS.keys():
+                hostAliases.append('%s    %s' % (ip, HOSTS[ip]))
+
+            hosts.writelines(hostAliases)
+            hosts.close()
 
 '''Main installation sequence'''
 
