@@ -67,6 +67,19 @@ def setupHosts(hostsFile):
                 # TODO
                 if HOSTS.has_key(destination):
                     dummy = HOSTS.pop(destination)
+                    
+        hosts.close()
+        
+        # Now, add missing entries
+        if len(HOSTS) > 0:
+            hosts = open(hostsFile, 'aU')
+            
+            hostAliases = []
+            for ip in HOSTS.keys():
+                hostAliases.append('%s    %s' % (ip, HOSTS[ip]))
+                
+            hosts.writelines(hostAliases)
+            hosts.close()
 
 # Windows specific functions
 def win32_checkServiceRunning(name):
