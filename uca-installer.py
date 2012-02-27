@@ -52,15 +52,15 @@ def setupHosts(hostsFile):
     '''
     if os.path.isfile(hostsFile):
         hosts = open(hostsFile, 'rU')
-        
+
         for rawline in hosts:
             line = rawline.strip()
             if '#' in line:
                 line = line[:line.index('#')]
-                
+
             if line:
                 destination, aliases = re.split(r'\s', line, 1)
-                
+
                 # NOTE: This is pretty blunt- we check that the IP is there,
                 # but not whether or not it is aliased correctly. May want to
                 # reapproach this later on and see if this is sufficient.
@@ -68,17 +68,17 @@ def setupHosts(hostsFile):
                 if HOSTS.has_key(destination):
                     # dummy is throw-away, we just want it out of the dict
                     dummy = HOSTS.pop(destination)
-                    
+
         hosts.close()
-        
+
         # Now, add missing entries
         if len(HOSTS) > 0:
             hosts = open(hostsFile, 'aU')
-            
+
             hostAliases = []
             for ip in HOSTS.keys():
                 hostAliases.append('%s    %s' % (ip, HOSTS[ip]))
-                
+
             hosts.writelines(hostAliases)
             hosts.close()
 
