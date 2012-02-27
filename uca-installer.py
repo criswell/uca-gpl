@@ -176,11 +176,16 @@ def createTreeAt(rootDir):
     logger.info('Attempting to create EIL install tree...')
     pass
 
-def installAt(rootDir):
+def installAt(rootDir, srcDir):
     '''
     Installs to a root directory structure.
     '''
+    binDir = '%s/bin' % rootDir
+    srcBinDir = '%s/uca/bin' % srcDir
     logger.info('Attempting to install...')
+    logger.info('Copying the bin directory')
+    logger.info('%s -> %s' % (srcBinDir, binDir)
+    shutil.copytree(srcBinDir, binDir)
     pass
 
 '''Main installation sequence'''
