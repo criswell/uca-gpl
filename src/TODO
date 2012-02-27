@@ -11,3 +11,5 @@
 
 * Need to restore non-priv user security restrictions under Linux again. See
   FIXME in platform-specific/linux/dispatcher/lib/dispatcher.sh on line 9.
+
+* Finish installer/updated on Linux-side (currently stubbed).
