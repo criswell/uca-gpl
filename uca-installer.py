@@ -144,7 +144,10 @@ def linux_setupHosts():
     '''
     Set up the hosts file under Linux.
     '''
-    pass
+    logger.info('Attempting to set up the hosts file in Linux...')
+    if setupHosts('/etc/hosts'):
+        return
+    logger.critical('Could not modify hosts file, install might not work.')
 
 def linux_installDispatcher(dst, src):
     '''
@@ -275,7 +278,8 @@ def setupHosts(hostsFile):
 
             hostAliases = []
             for ip in HOSTS.keys():
-                hostAliases.append('%s    %s' % (ip, HOSTS[ip]))
+                aliases = ' '.join(HOSTS[ip])
+                hostAliases.append('%s    %s' % (ip, aliases)
 
             hosts.writelines(hostAliases)
             hosts.close()
@@ -286,8 +290,8 @@ def copyHome(srcDir, dstDir):
     '''
     try:
         logger.info('Attempting to copy the home directory...')
-        src = '%s/home' % srcDir
-        dst = '%s/home' % dstDirdir
+        src = os.path.join(srcDir, 'home')
+        dst = os.path.join(dstDir, 'home')
         shutil.copytree(src, dst)
     except:
         logger.critical('Error copying the home directory!')
