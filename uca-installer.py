@@ -323,12 +323,12 @@ if len(sys.argv) == 2:
         linux_stopPreviousDaemons()
         # Back-up home
         tempdir = tempfile.mkdtemp()
-        copyHome('C:\\eil', tempdir)
+        copyHome('/opt/intel/eil/clientagent', tempdir)
         # Uninstall the previous agent
         linux_uninstallPreviousAgent()
         # Clean up previous install tree, then re-create proper format
-        cleanUpPreviousTree('C:\\eil')
-        createTreeAt('C:\\eil')
+        cleanUpPreviousTree('/opt/intel/eil/clientagent')
+        createTreeAt('/opt/intel/eil/clientagent')
         # Set up our hosts file (or try to)
         linux_setupHosts()
         # Now install
@@ -337,7 +337,7 @@ if len(sys.argv) == 2:
         linux_installDispatcher('/opt/intel/eil/clientagent', srcDir)
         linux_installTools('/opt/intel/eil/clientagent', srcDir)
         # Restore home
-        copyHome(tempdir, 'C:\\eil')
+        copyHome(tempdir, '/opt/intel/eil/clientagent')
         recursive_delete(tempdir)
     else:
         logger.info('Attempting to stop and remove any previous EIL services...')
