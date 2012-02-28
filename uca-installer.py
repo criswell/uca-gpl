@@ -113,6 +113,14 @@ def win32_setupHosts():
     else:
         logger.critical('Could not find appropriate environment variable for where the system files are. Could not set up hosts file as a result.')
 
+def win32_installTools(rootDir):
+    '''
+    Given the rootDir, will install the Windows-specific tools.
+    '''
+    logger.info('Installing tools...')
+    # FIXME - Add items here
+    pass
+
 # Linux specific functions
 
 # Generic functions
@@ -250,5 +258,7 @@ else:
     win32_setupHosts()
     # Now install
     installAt('C:\\eil')
+    # Any Windows-specific install items
+    win32_installTools('C:\\eil')
 
 # vim:set ai et sts=4 sw=4 tw=80:
