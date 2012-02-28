@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os, logging, dircache, shutil, traceback
+import os, logging, dircache, shutil, traceback, sys
 
 # Platform determination
 if os.name == 'nt':
@@ -245,20 +245,26 @@ def setupHosts(hostsFile):
             hosts.close()
 
 '''Main installation sequence'''
-
-if IS_LINUX:
-    pass
+if len(sys.argv) == 2:
+    srcDir = sys.argv[1]
+    if IS_LINUX:
+        pass
+    else:
+        logger.info('Attempting to stop and remove any previous EIL services...')
+        win32_stopPreviousServices()
+        # Clean up previous install tree, then re-create proper format
+        cleanUpPreviousTree('C:\\eil')
+        createTreeAt('C:\\eil')
+        # Set up our hosts file (or try to)
+        win32_setupHosts()
+        # Now install
+        installAt('C:\\eil', srcDir)
+        # Any Windows-specific install items
+        win32_installTools('C:\\eil')
 else:
-    logger.info('Attempting to stop and remove any previous EIL services...')
-    win32_stopPreviousServices()
-    # Clean up previous install tree, then re-create proper format
-    cleanUpPreviousTree('C:\\eil')
-    createTreeAt('C:\\eil')
-    # Set up our hosts file (or try to)
-    win32_setupHosts()
-    # Now install
-    installAt('C:\\eil')
-    # Any Windows-specific install items
-    win32_installTools('C:\\eil')
-
+    print "Not enough parameters given to installer!\n"
+    print "The UCA installer requires the path to the extracted UCA archive:"
+    print "\tuca-installer.py path_to_uca_archive\n"
+    print "This installer is intended to be ran by the UCA bootstrapper."
+ 
 # vim:set ai et sts=4 sw=4 tw=80:
