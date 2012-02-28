@@ -247,7 +247,7 @@ def setupHosts(hostsFile):
 
             hosts.writelines(hostAliases)
             hosts.close()
-            
+
 def copyHome(srcDir, dstDir):
     '''
     Copy the home directory (log and config files)
@@ -269,8 +269,17 @@ def copyHome(srcDir, dstDir):
     objects other than those exceptions defined. It will also remove the source
     python files.
     '''
-    # FIXME TODO
-    pass
+    for root, dirs, files in os.walk(srcDir):
+        for file in files:
+            if file not in PRECOMPILE_EXCEPTIONS:
+                try:
+                    py_compile.compile(os.path.join(root, file))
+                    os.unlink(os.path.join(root, file))
+                except:
+                    logger.critical('Error precompiline a file!')
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        logger.critical(line)
 
 '''Main installation sequence'''
 if len(sys.argv) == 2:
