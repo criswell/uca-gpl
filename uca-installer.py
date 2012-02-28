@@ -18,14 +18,19 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
+''' The host file definitions '''
 HOSTS = {
         '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'],
         '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
         '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
         '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
     }
-    
- DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
+ 
+'''  The directories to create in the root tree '''
+DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
+
+''' A list of any Python scripts we should not pre-compile '''
+PRECOMPILE_EXCEPTIONS = [ 'eil_steward.py', 'uca-installer.py' ]
 
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
@@ -257,10 +262,21 @@ def copyHome(srcDir, dstDir):
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
             logger.critical(line)
+            
+ def precompilePy(srcDir):
+    '''
+    Will run through the source archive directory and pre-compile all the Python
+    objects other than those exceptions defined. It will also remove the source
+    python files.
+    '''
+    # FIXME TODO
+    pass
 
 '''Main installation sequence'''
 if len(sys.argv) == 2:
     srcDir = sys.argv[1]
+    # PRECOMPILE ALL THE THINGS!
+    precompilePy(srcDir)
     if IS_LINUX:
         pass
     else:
