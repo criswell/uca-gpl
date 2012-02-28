@@ -204,7 +204,7 @@ def createTreeAt(rootDir):
     logger.info('Attempting to create EIL install tree...')
     for dir in DIRS:
         try:
-            mkdir_p('%s/%s' % (rootDir, dir))
+            mkdir_p(os.path.join(rootDir, dir))
         except:
             logger.critical('Could not create "%s/%s"! Traceback follows...' % (rootDir, dir))
             traceback_lines = traceback.format_exc().splitlines()
@@ -215,8 +215,8 @@ def installAt(rootDir, srcDir):
     '''
     Installs to a root directory structure.
     '''
-    binDir = '%s/bin' % rootDir
-    srcBinDir = '%s/uca/bin' % srcDir
+    binDir = os.path.join(rootDir, 'bin')
+    srcBinDir = os.path.join(srcDir, 'uca', 'bin') 
     logger.info('Attempting to install...')
     logger.info('Copying the bin directory')
     logger.info('%s -> %s' % (srcBinDir, binDir)
