@@ -132,6 +132,10 @@ def linux_stopPreviousDaemons():
     Stop previous Linux agent daemons. Will not remove them or uninstall them
     from the system.
     '''
+    if os.path.isfile('/etc/init.d/eil_steward.sh'):
+        exec_command('/etc/init.d/eil_steward.sh stop')
+    if os.path.isfile('/etc/init.d/nmsa_handler.sh'):
+        exec_command('/etc/init.d/nmsa_handler.sh stop'
     pass
 
 def linux_uninstallPreviousAgent():
@@ -233,7 +237,7 @@ def exec_command(cmd):
     output = stream.readlines()
     stream.close()
     for line in output:
-        print line
+        logger.info(line)
         
 def mkdir_p(path):
     '''
