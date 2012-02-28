@@ -280,6 +280,7 @@ if len(sys.argv) == 2:
         win32_installTools('C:\\eil')
         # Restore home
         copyHome(tempdir, 'C:\\eil')
+        recursive_delete(tempdir)
 else:
     print "Not enough parameters given to installer!\n"
     print "The UCA installer requires the path to the extracted UCA archive:"
