@@ -133,7 +133,7 @@ def linux_stopPreviousDaemons():
     from the system.
     '''
     pass
-    
+
 def linux_uninstallPreviousAgent():
     '''
     Uninstall any previous Linux agent daemons.
@@ -145,14 +145,14 @@ def linux_setupHosts():
     Set up the hosts file under Linux.
     '''
     pass
-    
+
 def linux_installDispatcher(dst, src):
     '''
     Install the dispatcher items to the dst directory. The archive from which
     the dispatcher is installed from is in src.
     '''
     pass
-    
+
 def linux_installTools(dst, src):
     '''
     Install any other tools specific to Linux. The archive is from src, and
