@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os, logging, dircache, shutil
+import os, logging, dircache, shutil, traceback
 
 # Platform determination
 if os.name == 'nt':
@@ -24,6 +24,8 @@ HOSTS = {
         '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
         '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
     }
+    
+ DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
 
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
@@ -155,6 +157,14 @@ def createTreeAt(rootDir):
     directory 'rootDir'
     '''
     logger.info('Attempting to create EIL install tree...')
+    for dir in DIRS:
+        try:
+            mkdir_p('%s/%s' % (rootDir, dir))
+        except:
+            logger.critical('Could not create "%s/%s"! Traceback follows...' % (rootDir, dir))
+            traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
 
 def installAt(rootDir, srcDir):
     '''
@@ -177,6 +187,17 @@ def exec_command(cmd):
     stream.close()
     for line in output:
         print line
+        
+def mkdir_p(path):
+    '''
+    Does the equivalent of a 'mkdir -p' (Linux) on both platforms.
+    '''
+    try:
+        os.makedirs(path)
+    except OSError, exc:
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
 
 def setupHosts(hostsFile):
     '''

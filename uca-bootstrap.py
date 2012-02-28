@@ -76,7 +76,6 @@ def unZip(filename, tempDir):
         ucaZip.extractall(tempDir)
         ucaZip.close()
 
-
 # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
 try:
     url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
