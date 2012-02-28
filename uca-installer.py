@@ -133,6 +133,18 @@ def linux_stopPreviousDaemons():
     from the system.
     '''
     pass
+    
+def linux_uninstallPreviousAgent():
+    '''
+    Uninstall any previous Linux agent daemons.
+    '''
+    pass
+
+def linux_setupHosts():
+    '''
+    Set up the hosts file under Linux.
+    '''
+    pass
 
 # Generic functions
 def recursive_delete(dirname):
@@ -298,7 +310,15 @@ if len(sys.argv) == 2:
         # Back-up home
         tempdir = tempfile.mkdtemp()
         copyHome('C:\\eil', tempdir)
-        
+        # Uninstall the previous agent
+        linux_uninstallPreviousAgent()
+        # Clean up previous install tree, then re-create proper format
+        cleanUpPreviousTree('C:\\eil')
+        createTreeAt('C:\\eil')
+        # Set up our hosts file (or try to)
+        linux_setupHosts()
+        # Now install
+        installAt('/opt/intel/eil/clientagent', srcDir)
         # Restore home
         copyHome(tempdir, 'C:\\eil')
         recursive_delete(tempdir)
