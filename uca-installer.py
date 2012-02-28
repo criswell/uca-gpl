@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os, logging, dircache, shutil, traceback, sys
+import os, logging, dircache, shutil, traceback, sys, tempfile
 
 # Platform determination
 if os.name == 'nt':
@@ -171,8 +171,8 @@ def createTreeAt(rootDir):
         except:
             logger.critical('Could not create "%s/%s"! Traceback follows...' % (rootDir, dir))
             traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
+            for line in traceback_lines:
+                logger.critical(line)
 
 def installAt(rootDir, srcDir):
     '''
@@ -184,7 +184,6 @@ def installAt(rootDir, srcDir):
     logger.info('Copying the bin directory')
     logger.info('%s -> %s' % (srcBinDir, binDir)
     shutil.copytree(srcBinDir, binDir)
-    pass
 
 def exec_command(cmd):
     '''
@@ -243,6 +242,21 @@ def setupHosts(hostsFile):
 
             hosts.writelines(hostAliases)
             hosts.close()
+            
+def copyHome(srcDir, dstDir):
+    '''
+    Copy the home directory (log and config files)
+    '''
+    try:
+        logger.info('Attempting to copy the home directory...')
+        src = '%s/home' % srcDir
+        dst = '%s/home' % dstDirdir
+        shutil.copytree(src, dst)
+    except:
+        logger.critical('Error copying the home directory!')
+        traceback_lines = traceback.format_exc().splitlines()
+        for line in traceback_lines:
+            logger.critical(line)
 
 '''Main installation sequence'''
 if len(sys.argv) == 2:
@@ -252,6 +266,9 @@ if len(sys.argv) == 2:
     else:
         logger.info('Attempting to stop and remove any previous EIL services...')
         win32_stopPreviousServices()
+        # Back-up home
+        tempdir = tempfile.mkdtemp()
+        copyHome('C:\\eil', tempdir)
         # Clean up previous install tree, then re-create proper format
         cleanUpPreviousTree('C:\\eil')
         createTreeAt('C:\\eil')
@@ -261,6 +278,8 @@ if len(sys.argv) == 2:
         installAt('C:\\eil', srcDir)
         # Any Windows-specific install items
         win32_installTools('C:\\eil')
+        # Restore home
+        copyHome(tempdir, 'C:\\eil')
 else:
     print "Not enough parameters given to installer!\n"
     print "The UCA installer requires the path to the extracted UCA archive:"
