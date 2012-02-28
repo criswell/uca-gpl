@@ -127,6 +127,12 @@ def win32_installTools(rootDir):
     pass
 
 # Linux specific functions
+def linux_stopPreviousDaemons():
+    '''
+    Stop previous Linux agent daemons. Will not remove them or uninstall them
+    from the system.
+    '''
+    pass
 
 # Generic functions
 def recursive_delete(dirname):
@@ -287,7 +293,15 @@ if len(sys.argv) == 2:
     # PRECOMPILE ALL THE THINGS!
     precompilePy(srcDir)
     if IS_LINUX:
-        pass
+        logger.info('Attempting to stop any previous EIL agents...')
+        linux_stopPreviousDaemons()
+        # Back-up home
+        tempdir = tempfile.mkdtemp()
+        copyHome('C:\\eil', tempdir)
+        
+        # Restore home
+        copyHome(tempdir, 'C:\\eil')
+        recursive_delete(tempdir)
     else:
         logger.info('Attempting to stop and remove any previous EIL services...')
         win32_stopPreviousServices()
