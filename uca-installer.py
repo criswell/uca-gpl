@@ -138,11 +138,15 @@ def linux_stopPreviousDaemons():
         exec_command('/etc/init.d/nmsa_handler.sh stop'
     pass
 
-def linux_uninstallPreviousAgent():
+def linux_uninstallPreviousAgent(srcDir):
     '''
     Uninstall any previous Linux agent daemons.
     '''
-    pass
+    # We use system's unlink because we don't want to fail on errors
+    exec_command('unlink /usr/bin/eil_steward')
+    exec_command('unlink /bin/eil_steward')
+    exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % srcDir)
+    exec_command('cd %s/uca/linux/dispatcher; ./install.sh -p' % srcDir)
 
 def linux_setupHosts():
     '''
@@ -333,7 +337,7 @@ if len(sys.argv) == 2:
         tempdir = tempfile.mkdtemp()
         copyHome('/opt/intel/eil/clientagent', tempdir)
         # Uninstall the previous agent
-        linux_uninstallPreviousAgent()
+        linux_uninstallPreviousAgent(srcDir)
         # Clean up previous install tree, then re-create proper format
         cleanUpPreviousTree('/opt/intel/eil/clientagent')
         createTreeAt('/opt/intel/eil/clientagent')
