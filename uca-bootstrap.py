@@ -25,27 +25,13 @@ ROOT_DIR = 'C:\\eil'
 if IS_LINUX:
     ROOT_DIR = '/opt/intel/eil/clientagent'
 
-def mkdir_p(path):
-    '''
-    Does the equivalent of a 'mkdir -p' (Linux) on both platforms.
-    '''
-    try:
-        os.makedirs(path)
-    except OSError, exc:
-        if exc.errno == errno.EEXIST:
-            pass
-        else: raise
-
-# For logging, we need to ensure that the root directory is there
-mkdir_p("%s/home/" % ROOT_DIR)
-
 logger = logging.getLogger('uca-bootsrap')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
-        logging.basicConfig(filename='C:\\install.log',
+        logging.basicConfig(filename='C:\\uca-install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
-        logging.basicConfig('/install.log',
+        logging.basicConfig('/uca-install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
@@ -55,14 +41,6 @@ def exec_command(cmd):
     stream.close()
     for line in output:
         print line
-
-def setupBin(binDir, srcBinDir):
-    logger.info('Cleaning up the bin directory (if it exists)')
-    shutil.rmtree(binDir, True)
-
-    logger.info('Copying the bin directory')
-    logger.info('%s -> %s' % (srcBinDir, binDir)
-    shutil.copytree(srcBinDir, binDir)
 
 def unZip(filename, tempDir):
     if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
@@ -83,44 +61,27 @@ try:
     (filename, headers) = urllib.urlretrieve(url)
     logger.info('Stored in "%s"...' % filename)
 
-    binDir = '%s/bin' % ROOT_DIR
+    #binDir = '%s/bin' % ROOT_DIR
     #logger.info('Making binDir "%s"...' % binDir
     #mkdir_p(binDir)
     tempDir = tempfile.mkdtemp()
     logger.info('Obtained a tempDir "%s"...' % tempDir)
 
-    unZip(filename, tempDir)
-
-    srcBinDir = '%s/uca/bin' % tempDir
-
     if IS_LINUX:
-        logger.info('Linux> Stopping previous client agent')
-        exec_command('/etc/init.d/eil_steward.sh stop')
-        setupBin(binDir, srcBinDir)
-        logger.info('Linux> Installing dispatcher')
-        exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % tempDir)
-        exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % tempDir)
-        # FIXME - Missing elevate scipt
-        logger.info('Linux> Starting new client agent')
-        exec_command('chmod a+x %s/eil_steward.py' % binDir)
-        exec_command('chmod a+x %s/elevate_script' % binDir)
-        exec_command('/etc/init.d/eil_steward.sh start')
+        # Version check for older Python
+        pass
     else:
-        logger.info("Windows> Stopping and removing previous services")
-        exec_command('net stop EILTAFService')
-        exec_command('sc delete EILTAFService')
-        exec_command('sc delete EILAutoUpdateService')
-        setupBin(binDir, srcBinDir)
-        os.chdir('C:/EIL/bin')
-        logger.info("Windows> Installing new service")
-        exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
-        exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')
-        exec_command('sc start EILClientAgent')
-        exec_command('sc queryex EILClientAgent')
+        unZip(filename, tempDir)
+
+        #srcBinDir = '%s/uca/bin' % tempDir
+
+        exec_command('python %s/uca-installer.py' % tempDir)
 
     # FIXME clean-up tempDir
 
     # FIXME - Do we need to clean-up ucaZip?
+
+    # FIXME - move log file into destination
 except Exception, e:
     logger.critical("Error trying to bootstrap the unified agent")
     logger.critical(e)

@@ -35,10 +35,10 @@ PRECOMPILE_EXCEPTIONS = [ 'eil_steward.py', 'uca-installer.py' ]
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
-        logging.basicConfig(filename='C:\\install.log',
+        logging.basicConfig(filename='C:\\uca-install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
-        logging.basicConfig('/install.log',
+        logging.basicConfig('/uca-install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
