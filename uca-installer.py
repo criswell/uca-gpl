@@ -25,7 +25,7 @@ HOSTS = {
         '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
         '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
     }
- 
+
 '''  The directories to create in the root tree '''
 DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
 
@@ -238,7 +238,7 @@ def exec_command(cmd):
     stream.close()
     for line in output:
         logger.info(line)
-        
+
 def mkdir_p(path):
     '''
     Does the equivalent of a 'mkdir -p' (Linux) on both platforms.
@@ -302,7 +302,7 @@ def copyHome(srcDir, dstDir):
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
             logger.critical(line)
-            
+
  def precompilePy(srcDir):
     '''
     Will run through the source archive directory and pre-compile all the Python
@@ -370,5 +370,5 @@ else:
     print "The UCA installer requires the path to the extracted UCA archive:"
     print "\tuca-installer.py path_to_uca_archive\n"
     print "This installer is intended to be ran by the UCA bootstrapper."
- 
+
 # vim:set ai et sts=4 sw=4 tw=80:
