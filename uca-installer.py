@@ -162,13 +162,17 @@ def linux_installDispatcher(dst, src):
     Install the dispatcher items to the dst directory. The archive from which
     the dispatcher is installed from is in src.
     '''
-    pass
+    logger.info('Attempting to install the Linux dispatcher...')
+    exec_command('chmod a+x %s/uca/linux/dispatcher/install.sh' % src)
+    exec_command('cd %s/uca/linux/dispatcher; ./install.sh' % src)
 
 def linux_installTools(dst, src):
     '''
     Install any other tools specific to Linux. The archive is from src, and
     the root install directory is dst.
     '''
+    logger.info('Installing tools...')
+    # FIXME - Add items here
     pass
 
 # Generic functions
