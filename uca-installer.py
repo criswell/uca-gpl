@@ -8,7 +8,7 @@ bootstrapper during installation.
 '''
 
 import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
-import py_compile
+import compileall
 
 # Platform determination
 if os.name == 'nt':
@@ -319,14 +319,15 @@ def precompilePy(srcDir):
     objects other than those exceptions defined. It will also remove the source
     python files.
     '''
+    logger.info('Pre-compiling sources...')
+    compileall.compile_dir(dirname, maxlevels=30, force=True, quiet)
     for root, dirs, files in os.walk(srcDir):
         for file in files:
             if file not in PRECOMPILE_EXCEPTIONS:
                 try:
-                    py_compile.compile(os.path.join(root, file))
                     os.unlink(os.path.join(root, file))
                 except:
-                    logger.critical('Error precompiline a file!')
+                    logger.critical('Error unlinking a file!')
                     traceback_lines = traceback.format_exc().splitlines()
                     for line in traceback_lines:
                         logger.critical(line)
