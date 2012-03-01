@@ -120,7 +120,7 @@ try:
         installLog = installLogFile.readlines()
         installLogFile.close()
 
-        installLogFile = open(dstLogFile, 'aU')
+        installLogFile = open(dstLogFile, 'a')
         installLogFile.writelines(installLog)
         installLogFile.close()
 

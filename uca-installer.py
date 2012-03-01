@@ -286,7 +286,7 @@ def setupHosts(hostsFile):
 
         # Now, add missing entries
         if len(HOSTS) > 0:
-            hosts = open(hostsFile, 'aU')
+            hosts = open(hostsFile, 'a')
 
             hostAliases = []
             for ip in HOSTS.keys():
