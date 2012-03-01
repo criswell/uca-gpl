@@ -60,7 +60,7 @@ def win32_checkServiceRunning(name):
     except:
         pass
     finally:
-        win32service.CloseService(svc)
+        win32service.CloseServiceHandle(svc)
 
     return returnCode
 
