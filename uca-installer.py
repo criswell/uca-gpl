@@ -233,7 +233,7 @@ def installAt(rootDir, srcDir):
     srcBinDir = os.path.join(srcDir, 'uca', 'bin') 
     logger.info('Attempting to install...')
     logger.info('Copying the bin directory')
-    logger.info('%s -> %s' % (srcBinDir, binDir)
+    logger.info('%s -> %s' % (srcBinDir, binDir))
     shutil.copytree(srcBinDir, binDir)
 
 def exec_command(cmd):
