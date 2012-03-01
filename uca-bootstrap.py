@@ -46,9 +46,12 @@ def exec_command(cmd, noLog=False):
     output = p.stdout.readlines()
     p.stdin.close()
     p.stdout.close()
-    if not noLog:
-        for line in output:
+
+    for line in output:
+        if not noLog:
             logger.info(line)
+        else:
+            print line
 
 def unZip(filename, tempDir):
     if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
