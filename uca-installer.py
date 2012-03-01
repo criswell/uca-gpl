@@ -8,6 +8,7 @@ bootstrapper during installation.
 '''
 
 import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
+import py_compile
 
 # Platform determination
 if os.name == 'nt':
