@@ -129,6 +129,13 @@ def win32_installTools(rootDir):
     # FIXME - Add items here
     pass
 
+def win32_startService():
+    '''
+    Starts the service under Windows once it has been installed
+    '''
+    # FIXME
+    pass
+
 # Linux specific functions
 def linux_stopPreviousDaemons():
     '''
@@ -175,6 +182,13 @@ def linux_installTools(dst, src):
     '''
     logger.info('Installing tools...')
     # FIXME - Add items here
+    pass
+
+def linux_startDaemon():
+    '''
+    Starts the daemon under Linux once it has been installed.
+    '''
+    # FIXME
     pass
 
 # Generic functions
@@ -363,6 +377,8 @@ if len(sys.argv) == 2:
         linux_installTools('/opt/intel/eil/clientagent', srcDir)
         # Restore home
         copyHome(tempdir, '/opt/intel/eil/clientagent')
+        # Start the agent
+        linux_startDaemon()
         recursive_delete(tempdir)
     else:
         logger.info('Attempting to stop and remove any previous EIL services...')
@@ -381,6 +397,8 @@ if len(sys.argv) == 2:
         win32_installTools('C:\\eil')
         # Restore home
         copyHome(tempdir, 'C:\\eil')
+        # Start the agent
+        win32_startService()
         recursive_delete(tempdir)
 else:
     print "Not enough parameters given to installer!\n"
