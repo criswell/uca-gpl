@@ -295,10 +295,14 @@ def setupHosts(hostsFile):
             hostAliases = []
             for ip in HOSTS.keys():
                 aliases = ' '.join(HOSTS[ip])
-                hostAliases.append('%s    %s' % (ip, aliases))
+                hostAliases.append('%s    %s\n' % (ip, aliases))
 
             hosts.writelines(hostAliases)
             hosts.close()
+
+        return True
+    else:
+        return False
 
 def copyHome(srcDir, dstDir):
     '''
