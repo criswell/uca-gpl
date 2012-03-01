@@ -112,7 +112,7 @@ else:
         logger.critical("Error trying to bootstrap the unified agent")
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
-            logger.critcal(line)
+            logger.critical(line)
 
 # Move log file into destination
 try:
