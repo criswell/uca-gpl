@@ -44,7 +44,7 @@ def exec_command(cmd):
     output = stream.readlines()
     stream.close()
     for line in output:
-        print line
+        logger.info(line)
 
 def unZip(filename, tempDir):
     if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
@@ -57,6 +57,7 @@ def unZip(filename, tempDir):
         logger.info('Extracting the UCA into tempDir')
         ucaZip.extractall(tempDir)
         ucaZip.close()
+        logger.info('Extracted...')
 
 if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
     # Default to old LCA
@@ -77,6 +78,8 @@ else:
         logger.info('Obtained a tempDir "%s"...' % tempDir)
 
         unZip(filename, tempDir)
+
+        logger.info('Executing the installer...')
 
         exec_command('python %s/uca-installer.py' % tempDir)
 
@@ -105,7 +108,7 @@ else:
 
 # Move log file into destination
 try:
-    logger.shutdown()
+    logging.shutdown()
 
     if os.path.isfile(dstLogFile):
         installLogFile - open(logFile, 'rU')
