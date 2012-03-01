@@ -85,7 +85,7 @@ else:
         logger.info('Executing the installer...')
 
         installer = os.path.join(tempDir, 'uca', 'uca-installer.py')
-        command = 'python %s' % installer
+        command = 'python %s %s' % (installer, tempDir)
 
         logger.info(command)
 
