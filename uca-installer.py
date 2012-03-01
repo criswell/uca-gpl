@@ -320,7 +320,7 @@ def precompilePy(srcDir):
     python files.
     '''
     logger.info('Pre-compiling sources...')
-    compileall.compile_dir(dirname, maxlevels=30, force=True, quiet=True)
+    compileall.compile_dir(srcDir, maxlevels=30, force=True, quiet=True)
     for root, dirs, files in os.walk(srcDir):
         for file in files:
             if file not in PRECOMPILE_EXCEPTIONS:
