@@ -192,8 +192,10 @@ def linux_startDaemon():
     '''
     Starts the daemon under Linux once it has been installed.
     '''
-    # FIXME
-    pass
+    logger.info('Starting new client agent...')
+    exec_command('chmod a+x /opt/intel/eil/clientagent/bin/eil_steward.py')
+    #exec_command('chmod a+x /opt/intel/eil/clientagent/bin/elevate_script')
+    exec_command('/etc/init.d/eil_steward.sh start')
 
 # Generic functions
 def recursive_delete(dirname):
