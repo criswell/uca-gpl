@@ -27,11 +27,15 @@ if IS_LINUX:
 
 logger = logging.getLogger('uca-bootsrap')
 logger.setLevel(logging.DEBUG)
+logFile = None
+dstLogFile = os.path.join(ROOT_DIR, 'home', 'uca-install.log')
 if IS_WINDOWS:
-        logging.basicConfig(filename='C:\\uca-install.log',
+        logFile = 'C:\\uca-install.log'
+        logging.basicConfig(filename=logFile,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     else:
-        logging.basicConfig('/uca-install.log',
+        logFile = '/uca-install.log'
+        logging.basicConfig(logFile,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
@@ -87,6 +91,22 @@ else:
         logger.critical("Error trying to bootstrap the unified agent")
         logger.critical(e)
 
-# FIXME - move log file into destination
+# Move log file into destination
+try:
+    logger.shutdown()
+    installLogFile - open(logFile, 'rU')
+    installLog - installLogFile.readlines()
+    installLogFile.close()
+
+    installLogFile = open(dstLogFile, 'aU')
+    installLogFile.writelines(installLog)
+    installLogFile.close()
+
+    os.unlink(logFile)
+except:
+    print "Error shutting down and moving the install log..."
+    traceback_lines = traceback.format_exc().splitlines()
+        for line in traceback_lines:
+            print line
 
 # vim:set ai et sts=4 sw=4 tw=80:
