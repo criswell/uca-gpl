@@ -7,7 +7,7 @@ Basic installer for the UCA. Should be platform agnostic, and run by the
 bootstrapper during installation.
 '''
 
-import os, logging, dircache, shutil, traceback, sys, tempfile
+import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
 
 # Platform determination
 if os.name == 'nt':
@@ -240,9 +240,11 @@ def exec_command(cmd):
     '''
     given a command, will execute it in the parent environment
     '''
-    stream = os.popen(cmd)
-    output = stream.readlines()
-    stream.close()
+    p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = p.stdout.readlines()
+    p.stdin.close()
+    p.stdout.close()
     for line in output:
         logger.info(line)
 
