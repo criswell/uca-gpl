@@ -37,9 +37,9 @@ logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
         logging.basicConfig(filename='C:\\uca-install.log',
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    else:
-        logging.basicConfig('/uca-install.log',
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+else:
+    logging.basicConfig('/uca-install.log',
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
 # Windows specific functions

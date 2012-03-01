@@ -33,10 +33,10 @@ if IS_WINDOWS:
         logFile = 'C:\\uca-install.log'
         logging.basicConfig(filename=logFile,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    else:
-        logFile = '/uca-install.log'
-        logging.basicConfig(logFile,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+else:
+    logFile = '/uca-install.log'
+    logging.basicConfig(logFile,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
 def exec_command(cmd):
