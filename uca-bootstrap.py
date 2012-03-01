@@ -81,7 +81,9 @@ else:
 
         logger.info('Executing the installer...')
 
-        exec_command('python %s/uca-installer.py' % tempDir)
+        installer = os.path.join(tempDir, 'uca-installer.py')
+
+        exec_command('python %s' % installer)
 
         # Clean-up tempDir (do a best effort here, but don't bomb on failure)
         try:
