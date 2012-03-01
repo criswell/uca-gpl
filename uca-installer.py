@@ -54,13 +54,16 @@ def win32_checkServiceRunning(name):
         scm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
         svc = win32service.OpenService(scm, name, win32service.SC_MANAGER_ALL_ACCESS)
         status = win32service.QueryServiceStatus(svc)
-        win32service.CloseService(svc)
+        win32service.CloseServiceHandle(svc)
         if status[1] == 4:
             returnCode = True
     except:
         pass
     finally:
-        win32service.CloseServiceHandle(svc)
+        try:
+            win32service.CloseServiceHandle(svc)
+        except:
+            pass
 
     return returnCode
 
