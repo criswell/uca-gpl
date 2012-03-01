@@ -40,14 +40,15 @@ else:
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
-def exec_command(cmd):
+def exec_command(cmd, noLog=False):
     p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = p.stdout.readlines()
     p.stdin.close()
     p.stdout.close()
-    for line in output:
-        logger.info(line)
+    if not noLog:
+        for line in output:
+            logger.info(line)
 
 def unZip(filename, tempDir):
     if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
@@ -89,7 +90,7 @@ else:
 
         logger.info(command)
 
-        exec_command(command)
+        exec_command(command, True)
 
         # Clean-up tempDir (do a best effort here, but don't bomb on failure)
         try:
