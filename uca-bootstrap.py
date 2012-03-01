@@ -82,8 +82,11 @@ else:
         logger.info('Executing the installer...')
 
         installer = os.path.join(tempDir, 'uca-installer.py')
+        command = 'python %s' % installer
 
-        exec_command('python %s' % installer)
+        logger.info(command)
+
+        exec_command(command)
 
         # Clean-up tempDir (do a best effort here, but don't bomb on failure)
         try:
@@ -114,7 +117,7 @@ try:
 
     if os.path.isfile(dstLogFile):
         installLogFile - open(logFile, 'rU')
-        installLog - installLogFile.readlines()
+        installLog = installLogFile.readlines()
         installLogFile.close()
 
         installLogFile = open(dstLogFile, 'aU')
