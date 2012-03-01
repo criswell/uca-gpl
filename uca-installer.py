@@ -133,8 +133,12 @@ def win32_startService():
     '''
     Starts the service under Windows once it has been installed
     '''
-    # FIXME
-    pass
+    os.chdir('C:/EIL/bin')
+    logger.info(" Installing new service...")
+    exec_command('python C:\\EIL\\bin\\eil_steward.py --username localsystem --startup auto install')
+    exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')
+    exec_command('sc start EILClientAgent')
+    exec_command('sc queryex EILClientAgent')
 
 # Linux specific functions
 def linux_stopPreviousDaemons():
@@ -342,10 +346,10 @@ def precompilePy(srcDir):
     logger.info('Pre-compiling sources...')
     compileall.compile_dir(srcDir, maxlevels=30, force=True, quiet=True)
     for root, dirs, files in os.walk(srcDir):
-        for file in files:
-            if file not in PRECOMPILE_EXCEPTIONS:
+        for filename in files:
+            if filename not in PRECOMPILE_EXCEPTIONS and filename.endswith('.py'):
                 try:
-                    os.unlink(os.path.join(root, file))
+                    os.unlink(os.path.join(root, filename))
                 except:
                     logger.critical('Error unlinking a file!')
                     traceback_lines = traceback.format_exc().splitlines()
