@@ -312,7 +312,7 @@ def copyHome(srcDir, dstDir):
         for line in traceback_lines:
             logger.critical(line)
 
- def precompilePy(srcDir):
+def precompilePy(srcDir):
     '''
     Will run through the source archive directory and pre-compile all the Python
     objects other than those exceptions defined. It will also remove the source
