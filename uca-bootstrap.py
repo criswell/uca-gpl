@@ -9,6 +9,7 @@ will want to refine it considerably.
 '''
 
 import urllib, zipfile, os, tempfile, shutil, sys, logging, traceback
+import subprocess
 
 # Platform determination
 if os.name == 'nt':
@@ -30,9 +31,9 @@ logger.setLevel(logging.DEBUG)
 logFile = None
 dstLogFile = os.path.join(ROOT_DIR, 'home', 'uca-install.log')
 if IS_WINDOWS:
-        logFile = 'C:\\uca-install.log'
-        logging.basicConfig(filename=logFile,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logFile = 'C:\\uca-install.log'
+    logging.basicConfig(filename=logFile,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 else:
     logFile = '/uca-install.log'
     logging.basicConfig(logFile,
@@ -40,9 +41,11 @@ else:
 logger.addHandler(logging.StreamHandler())
 
 def exec_command(cmd):
-    stream = os.popen(cmd)
-    output = stream.readlines()
-    stream.close()
+    p = subprocess.Popen(cmd, shell=True,
+          stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    output = p.stdout.readlines()
+    p.stdin.close()
+    p.stdout.close()
     for line in output:
         logger.info(line)
 

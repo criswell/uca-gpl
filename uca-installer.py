@@ -35,8 +35,8 @@ PRECOMPILE_EXCEPTIONS = [ 'eil_steward.py', 'uca-installer.py' ]
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
-        logging.basicConfig(filename='C:\\uca-install.log',
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(filename='C:\\uca-install.log',
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 else:
     logging.basicConfig('/uca-install.log',
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -135,8 +135,7 @@ def linux_stopPreviousDaemons():
     if os.path.isfile('/etc/init.d/eil_steward.sh'):
         exec_command('/etc/init.d/eil_steward.sh stop')
     if os.path.isfile('/etc/init.d/nmsa_handler.sh'):
-        exec_command('/etc/init.d/nmsa_handler.sh stop'
-    pass
+        exec_command('/etc/init.d/nmsa_handler.sh stop')
 
 def linux_uninstallPreviousAgent(srcDir):
     '''
