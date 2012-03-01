@@ -54,36 +54,35 @@ def unZip(filename, tempDir):
         ucaZip.extractall(tempDir)
         ucaZip.close()
 
-# Start out by grabbing the latest UCA - NOTE we're pulling from staging here
-try:
-    url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
-    logger.info('Pulling UCA zipefile: %s' % url)
-    (filename, headers) = urllib.urlretrieve(url)
-    logger.info('Stored in "%s"...' % filename)
+if IS_LINUX and something:
+    # Version check for python
+    pass
+else:
+    # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
+    try:
+        url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
+        logger.info('Pulling UCA zipefile: %s' % url)
+        (filename, headers) = urllib.urlretrieve(url)
+        logger.info('Stored in "%s"...' % filename)
 
-    #binDir = '%s/bin' % ROOT_DIR
-    #logger.info('Making binDir "%s"...' % binDir
-    #mkdir_p(binDir)
-    tempDir = tempfile.mkdtemp()
-    logger.info('Obtained a tempDir "%s"...' % tempDir)
+        tempDir = tempfile.mkdtemp()
+        logger.info('Obtained a tempDir "%s"...' % tempDir)
 
-    if IS_LINUX:
-        # Version check for older Python
-        pass
-    else:
-        unZip(filename, tempDir)
+        if IS_LINUX:
+            # Version check for older Python
+            pass
+        else:
+            unZip(filename, tempDir)
 
-        #srcBinDir = '%s/uca/bin' % tempDir
+            exec_command('python %s/uca-installer.py' % tempDir)
 
-        exec_command('python %s/uca-installer.py' % tempDir)
+        # FIXME clean-up tempDir
 
-    # FIXME clean-up tempDir
+        # FIXME - Do we need to clean-up ucaZip?
 
-    # FIXME - Do we need to clean-up ucaZip?
-
-    # FIXME - move log file into destination
-except Exception, e:
-    logger.critical("Error trying to bootstrap the unified agent")
-    logger.critical(e)
+        # FIXME - move log file into destination
+    except Exception, e:
+        logger.critical("Error trying to bootstrap the unified agent")
+        logger.critical(e)
 
 # vim:set ai et sts=4 sw=4 tw=80:
