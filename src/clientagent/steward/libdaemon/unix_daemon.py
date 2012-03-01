@@ -62,6 +62,13 @@ class Daemon:
         pid = str(os.getpid())
         file(self.pidfile,'w+').write("%s\n" % pid)
 
+    def checkprocess(self, pid):
+        '''
+        Checks if a given process ID (pid) is a running process. Returns True
+        if it is, False if it is not.
+        '''
+        return os.path.exists('/proc/%s' % pid)
+
     def delpid(self):
         os.remove(self.pidfile)
 
@@ -79,8 +86,12 @@ class Daemon:
             pid = None
 
         if pid:
-            message = "pidfile %s already exist. Daemon already running?\n"
-            sys.stderr.write(message % self.pidfile)
+            if checkprocess(pid):
+                message = "pidfile %s already exist. Daemon is already running.\n"
+                sys.stderr.write(message % self.pidfile)
+            else:
+                message = "pidfile %s already exist. However, daemon is not running.\n"
+                sys.stderr.write(message % self.pidfile)
             sys.exit(1)
 
         # Start the daemon
@@ -138,7 +149,7 @@ class Daemon:
             message = "pidfile %s does not exist. Daemon not running\n"
             sys.stdout.write(message % self.pidfile)
         else:
-            if os.path.exists('/proc/%s' % pid):
+            if checkprocess(pid):
                 message = "daemon running, proccess %s\n"
                 sys.stdout.write(message % pid)
             else:
