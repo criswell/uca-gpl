@@ -41,8 +41,8 @@ else:
 logger.addHandler(logging.StreamHandler())
 
 def exec_command(cmd):
-    p = subprocess.Popen(cmd, shell=True,
-          stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+        subprocess.stdout=PIPE, subprocess.stderr=STDOUT, close_fds=True)
     output = p.stdout.readlines()
     p.stdin.close()
     p.stdout.close()
