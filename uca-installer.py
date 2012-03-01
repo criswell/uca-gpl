@@ -292,7 +292,7 @@ def setupHosts(hostsFile):
             hostAliases = []
             for ip in HOSTS.keys():
                 aliases = ' '.join(HOSTS[ip])
-                hostAliases.append('%s    %s' % (ip, aliases)
+                hostAliases.append('%s    %s' % (ip, aliases))
 
             hosts.writelines(hostAliases)
             hosts.close()
