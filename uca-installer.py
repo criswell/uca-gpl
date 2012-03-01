@@ -9,6 +9,7 @@ bootstrapper during installation.
 
 import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
 import compileall
+from distutils.dir_util import copy_tree
 
 # Platform determination
 if os.name == 'nt':
@@ -236,7 +237,7 @@ def installAt(rootDir, srcDir):
     logger.info('Attempting to install...')
     logger.info('Copying the bin directory')
     logger.info('%s -> %s' % (srcBinDir, binDir))
-    shutil.copytree(srcBinDir, binDir)
+    copy_tree(srcBinDir, binDir)
 
 def exec_command(cmd):
     '''
@@ -307,7 +308,7 @@ def copyHome(srcDir, dstDir):
         logger.info('Attempting to copy the home directory...')
         src = os.path.join(srcDir, 'home')
         dst = os.path.join(dstDir, 'home')
-        shutil.copytree(src, dst)
+        copy_tree(src, dst)
     except:
         logger.critical('Error copying the home directory!')
         traceback_lines = traceback.format_exc().splitlines()
