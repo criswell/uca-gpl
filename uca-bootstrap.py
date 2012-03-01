@@ -94,15 +94,19 @@ else:
 # Move log file into destination
 try:
     logger.shutdown()
-    installLogFile - open(logFile, 'rU')
-    installLog - installLogFile.readlines()
-    installLogFile.close()
 
-    installLogFile = open(dstLogFile, 'aU')
-    installLogFile.writelines(installLog)
-    installLogFile.close()
+    if os.path.isfile(dstLogFile):
+        installLogFile - open(logFile, 'rU')
+        installLog - installLogFile.readlines()
+        installLogFile.close()
 
-    os.unlink(logFile)
+        installLogFile = open(dstLogFile, 'aU')
+        installLogFile.writelines(installLog)
+        installLogFile.close()
+
+        os.unlink(logFile)
+    else:
+        os.rename(logFile, dstLogFile)
 except:
     print "Error shutting down and moving the install log..."
     traceback_lines = traceback.format_exc().splitlines()
