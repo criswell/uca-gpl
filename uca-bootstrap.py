@@ -116,7 +116,7 @@ try:
     logging.shutdown()
 
     if os.path.isfile(dstLogFile):
-        installLogFile - open(logFile, 'rU')
+        installLogFile = open(logFile, 'rU')
         installLog = installLogFile.readlines()
         installLogFile.close()
 
