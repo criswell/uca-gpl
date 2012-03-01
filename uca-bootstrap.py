@@ -54,14 +54,18 @@ def unZip(filename, tempDir):
         ucaZip.extractall(tempDir)
         ucaZip.close()
 
-if IS_LINUX and something:
-    # Version check for python
-    pass
+if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
+    # Default to old LCA
+    url = 'http://172.16.3.10/EILLinuxAgent/latest/clientagent-bootstrap.sh'
+    logger.info('Pulling LCA bootsrap: %s' % url)
+    (filename, headers) = urllib.urlretrieve(url)
+    logger.info('Stored in "%s"...' % filename)
+    exec_command('chmod a+x %s ; sh %s' % (filename, filename))
 else:
     # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
     try:
         url = 'http://%s/ucaPhase1/uca.zip' % STAGING_IP
-        logger.info('Pulling UCA zipefile: %s' % url)
+        logger.info('Pulling UCA zipfile: %s' % url)
         (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
 
@@ -79,10 +83,10 @@ else:
         # FIXME clean-up tempDir
 
         # FIXME - Do we need to clean-up ucaZip?
-
-        # FIXME - move log file into destination
     except Exception, e:
         logger.critical("Error trying to bootstrap the unified agent")
         logger.critical(e)
+
+# FIXME - move log file into destination
 
 # vim:set ai et sts=4 sw=4 tw=80:
