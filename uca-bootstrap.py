@@ -8,7 +8,7 @@ NOTE- For now, this will be fairly rough. But if we decide to keep using it, we
 will want to refine it considerably.
 '''
 
-import urllib, zipfile, os, tempfile, shutil, sys, logging
+import urllib, zipfile, os, tempfile, shutil, sys, logging, traceback
 
 # Platform determination
 if os.name == 'nt':
@@ -76,20 +76,32 @@ else:
         tempDir = tempfile.mkdtemp()
         logger.info('Obtained a tempDir "%s"...' % tempDir)
 
-        if IS_LINUX:
-            # Version check for older Python
-            pass
-        else:
-            unZip(filename, tempDir)
+        unZip(filename, tempDir)
 
-            exec_command('python %s/uca-installer.py' % tempDir)
+        exec_command('python %s/uca-installer.py' % tempDir)
 
-        # FIXME clean-up tempDir
+        # Clean-up tempDir (do a best effort here, but don't bomb on failure)
+        try:
+            shutil.rmtree(tempDir, True)
+        except:
+            logger.info('Could not remove tmpDir, "%s"...' % tempDir)
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                logger.info(line)
 
-        # FIXME - Do we need to clean-up ucaZip?
-    except Exception, e:
+        # Clean-up ucaZip (again, best effort)
+        try:
+            os.unlink(filename)
+        except:
+            logger.info('Could not remove zip file, "%s"...' % filename)
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                logger.info(line)
+    except:
         logger.critical("Error trying to bootstrap the unified agent")
-        logger.critical(e)
+        traceback_lines = traceback.format_exc().splitlines()
+        for line in traceback_lines:
+            logger.critcal(line)
 
 # Move log file into destination
 try:
@@ -106,11 +118,11 @@ try:
 
         os.unlink(logFile)
     else:
-        os.rename(logFile, dstLogFile)
+        shutil.move(logFile, dstLogFile)
 except:
     print "Error shutting down and moving the install log..."
     traceback_lines = traceback.format_exc().splitlines()
-        for line in traceback_lines:
-            print line
+    for line in traceback_lines:
+        print line
 
 # vim:set ai et sts=4 sw=4 tw=80:
