@@ -113,7 +113,7 @@ class Daemon:
         except IOError:
             pid = None
 
-        if not pidquiet:
+        if not pid:
             if not quiet:
                 message = "pidfile %s does not exist. Daemon not running?\n"
                 sys.stderr.write(message % self.pidfile)
