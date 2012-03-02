@@ -204,23 +204,30 @@ def recursive_delete(dirname):
     return True on success, False on failure.
     '''
     retval = True
-    files = dircache.listdir(dirname)
-    for file in files:
-        path = os.path.join (dirname, file)
-        if os.path.isdir(path):
-            retval = recursive_delete(path)
-        else:
-            try:
-                os.unlink(path)
-            except:
-                logger.critical('Unable to remove %s! Is file still in use?' % path)
-                retval = False
-
     try:
-        shutil.rmtree(dirname, True)
+        files = dircache.listdir(dirname)
+        for file in files:
+            path = os.path.join (dirname, file)
+            if os.path.isdir(path):
+                retval = recursive_delete(path)
+            else:
+                try:
+                    os.unlink(path)
+                except:
+                    logger.critical('Unable to remove %s! Is file still in use?' % path)
+                    retval = False
+
+        try:
+            shutil.rmtree(dirname, True)
+        except:
+            logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
+            retval = False
     except:
         logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
         retval = False
+        traceback_lines = traceback.format_exc().splitlines()
+        for line in traceback_lines:
+            logger.critical(line)
 
     return retval
 
