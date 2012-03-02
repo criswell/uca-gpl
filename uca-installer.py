@@ -336,7 +336,7 @@ def copyHome(srcDir, dstDir):
     Copy the home directory (log and config files)
     '''
     try:
-        is os.path.exists(srcDir):
+        if os.path.exists(srcDir):
             logger.info('Attempting to copy the home directory...')
             src = os.path.join(srcDir, 'home')
             dst = os.path.join(dstDir, 'home')
