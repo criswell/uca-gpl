@@ -223,7 +223,7 @@ def recursive_delete(dirname):
             logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
             retval = False
     except:
-        logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
+        logger.critical('Unable to remove directory %s! Contents may still be in use...' %dirname)
         retval = False
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
