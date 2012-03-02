@@ -269,7 +269,7 @@ def exec_command(cmd):
     p.stdin.close()
     p.stdout.close()
     for line in output:
-        logger.info(line)
+        logger.info(line.rstrip())
 
 def mkdir_p(path):
     '''
