@@ -23,8 +23,8 @@ else:
 ''' The host file definitions '''
 HOSTS = {
         '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'],
-        '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
-        '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
+        #'172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
+        #'172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
         '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
     }
 
