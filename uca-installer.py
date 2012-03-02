@@ -22,10 +22,10 @@ else:
 
 ''' The host file definitions '''
 HOSTS = {
-        '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'],
-        '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'],
-        '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'],
-        '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01']
+        'eilportal' :  { '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'] },
+        'rmssrvr01' : { '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'] },
+        'eilauto01' : { '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'] },
+        'nmsa01' : { '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01'] }
     }
 
 '''  The directories to create in the root tree '''
@@ -309,9 +309,10 @@ def setupHosts(hostsFile):
                 # but not whether or not it is aliased correctly. May want to
                 # reapproach this later on and see if this is sufficient.
                 # TODO
-                if HOSTS.has_key(destination):
-                    # dummy is throw-away, we just want it out of the dict
-                    dummy = HOSTS.pop(destination)
+                for alias in aliases:
+                    if alias in HOSTS.keys():
+                        # dummy is throw-away, we just want it out of the dict
+                        dummy = HOSTS.pop(alias)
 
         hosts.close()
 
@@ -320,9 +321,10 @@ def setupHosts(hostsFile):
             hosts = open(hostsFile, 'a')
 
             hostAliases = []
-            for ip in HOSTS.keys():
-                aliases = ' '.join(HOSTS[ip])
-                hostAliases.append('%s    %s\n' % (ip, aliases))
+            for alias in HOSTS.keys():
+                for ip in HOSTS[alias].keys():
+                    aliases = ' '.join(HOSTS[alias][ip])
+                    hostAliases.append('%s    %s\n' % (ip, aliases))
 
             hosts.writelines(hostAliases)
             hosts.close()
