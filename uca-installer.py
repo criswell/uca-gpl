@@ -336,10 +336,11 @@ def copyHome(srcDir, dstDir):
     Copy the home directory (log and config files)
     '''
     try:
-        logger.info('Attempting to copy the home directory...')
-        src = os.path.join(srcDir, 'home')
-        dst = os.path.join(dstDir, 'home')
-        copy_tree(src, dst)
+        is os.path.exists(srcDir):
+            logger.info('Attempting to copy the home directory...')
+            src = os.path.join(srcDir, 'home')
+            dst = os.path.join(dstDir, 'home')
+            copy_tree(src, dst)
     except:
         logger.critical('Error copying the home directory!')
         traceback_lines = traceback.format_exc().splitlines()
