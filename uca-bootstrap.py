@@ -54,7 +54,7 @@ def exec_command(cmd, noLog=False):
             print line
 
 def unZip(filename, tempDir):
-    if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
+    if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
         # Horrible that we have to do this on legacy Python installs
         exec_command('unzip %s -d %s' % (filename, tempDir))
     else:
@@ -66,7 +66,7 @@ def unZip(filename, tempDir):
         ucaZip.close()
         logger.info('Extracted...')
 
-if sys.version_info[0] < 3 and sys.version_info[1] < 7 and IS_LINUX:
+if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
     # Default to old LCA
     url = 'http://172.16.3.10/EILLinuxAgent/latest/clientagent-bootstrap.sh'
     logger.info('Pulling LCA bootsrap: %s' % url)
