@@ -63,4 +63,7 @@ build()
 
 build
 
+# For experimental builds, current command-line is:
+#  hg pull ; hg update ; ./uca-builder.sh ; mv uca.zip /home/pub/web/uca/uca.zip ; cp uca-bootstrap.py /home/pub/web/uca/uca-bootstrap.py
+
 # vim:set ai et sts=4 sw=4 tw=80:

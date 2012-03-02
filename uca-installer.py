@@ -204,23 +204,30 @@ def recursive_delete(dirname):
     return True on success, False on failure.
     '''
     retval = True
-    files = dircache.listdir(dirname)
-    for file in files:
-        path = os.path.join (dirname, file)
-        if os.path.isdir(path):
-            retval = recursive_delete(path)
-        else:
-            try:
-                os.unlink(path)
-            except:
-                logger.critical('Unable to remove %s! Is file still in use?' % path)
-                retval = False
-
     try:
-        shutil.rmtree(dirname, True)
+        files = dircache.listdir(dirname)
+        for file in files:
+            path = os.path.join (dirname, file)
+            if os.path.isdir(path):
+                retval = recursive_delete(path)
+            else:
+                try:
+                    os.unlink(path)
+                except:
+                    logger.critical('Unable to remove %s! Is file still in use?' % path)
+                    retval = False
+
+        try:
+            shutil.rmtree(dirname, True)
+        except:
+            logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
+            retval = False
     except:
-        logger.critical('Unable to remove directory %s! Contents may still be in use...' %path)
+        logger.critical('Unable to remove directory %s! Contents may still be in use...' %dirname)
         retval = False
+        traceback_lines = traceback.format_exc().splitlines()
+        for line in traceback_lines:
+            logger.critical(line)
 
     return retval
 
@@ -269,7 +276,7 @@ def exec_command(cmd):
     p.stdin.close()
     p.stdout.close()
     for line in output:
-        logger.info(line)
+        logger.info(line.rstrip())
 
 def mkdir_p(path):
     '''
@@ -329,10 +336,11 @@ def copyHome(srcDir, dstDir):
     Copy the home directory (log and config files)
     '''
     try:
-        logger.info('Attempting to copy the home directory...')
-        src = os.path.join(srcDir, 'home')
-        dst = os.path.join(dstDir, 'home')
-        copy_tree(src, dst)
+        if os.path.exists(srcDir):
+            logger.info('Attempting to copy the home directory...')
+            src = os.path.join(srcDir, 'home')
+            dst = os.path.join(dstDir, 'home')
+            copy_tree(src, dst)
     except:
         logger.critical('Error copying the home directory!')
         traceback_lines = traceback.format_exc().splitlines()

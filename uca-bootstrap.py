@@ -48,6 +48,7 @@ def exec_command(cmd, noLog=False):
     p.stdout.close()
 
     for line in output:
+        line = line.rstrip()
         if not noLog:
             logger.info(line)
         else:

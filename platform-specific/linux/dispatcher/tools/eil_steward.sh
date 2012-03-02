@@ -22,7 +22,7 @@
 # just to be safe on all platforms)
 PATH="${PATH}:/usr/bin"
 
-PIDFILE="/opt/intel/eil/clientagent/clientagent.pid"
+PIDFILE="/opt/intel/eil/clientagent/home/clientagent.pid"
 
 BIN_STEWARD="/opt/intel/eil/clientagent/bin/eil_steward.py"
 
