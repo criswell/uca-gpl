@@ -101,7 +101,7 @@ class Daemon:
         self.main()
         self.stop()
 
-    def stop(self):
+    def stop(self, quiet=False):
         """
         Stop the daemon
         """
@@ -113,7 +113,7 @@ class Daemon:
         except IOError:
             pid = None
 
-        if not pid:
+        if not pid and not quiet:
             message = "pidfile %s does not exist. Daemon not running?\n"
             sys.stderr.write(message % self.pidfile)
             return # not an error in a restart
@@ -166,7 +166,7 @@ class Daemon:
         """
         Restart the daemon
         """
-        self.stop()
+        self.stop(True)
         self.start()
 
     def run(self):
