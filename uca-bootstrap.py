@@ -55,8 +55,8 @@ def exec_command(cmd, noLog=False):
             print line
 
 def unZip(filename, tempDir):
-    if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
-        # Horrible that we have to do this on legacy Python installs
+    if IS_LINUX and os.path.isfile('/usr/bin/unzip'):
+        # Horrible that we have to do this on legacy or buggy Python installs
         exec_command('unzip %s -d %s' % (filename, tempDir))
     else:
         ucaZip = zipfile.ZipFile(filename, 'r')
