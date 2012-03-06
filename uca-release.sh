@@ -49,6 +49,18 @@ EOF
 
 make_release() {
     TMPDIR=$(mktemp -d)
+    cd ${TMPDIR}
+    hg clone $MY_CWD
+    if [ -n "$BRANCH" ]; then
+        hg update -C ${BRANCH}
+    fi
+    chmod a+x uca-builder.sh
+    ./uca-builder.sh
+    mv uca.zip ${RELEASE_DIR}/uca.zip
+    cp uca-bootstrap.py ${RELEASE_DIR}/uca-bootstrap.py
+    cp VERSION ${RELEASE_DIR}/VERSION.txt # .txt for stupid IIS
+    cd ${MY_CWD}
+    rm -fr ${TMPDIR}
 }
 
 if [ "$1" = "" ]; then
