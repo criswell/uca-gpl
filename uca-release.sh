@@ -50,7 +50,7 @@ EOF
 make_release() {
     TMPDIR=$(mktemp -d)
     cd ${TMPDIR}
-    hg clone $MY_CWD
+    hg clone $MY_CWD .
     if [ -n "$BRANCH" ]; then
         hg update -C ${BRANCH}
     fi
