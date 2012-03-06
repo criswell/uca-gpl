@@ -16,8 +16,8 @@ class ClientAgentState:
     SRV_NAME = "EILClientAgent"
     SRV_DISPLAY_NAME = "EIL Client Agent"
     SRV_DESCRIPTION = "EIL Portal Unified Client Service (Python) - resides on client - interfaces with CCMS"
-    # Version information FIXME would be nice to generate programatically
-    VERSION = "4.3.0.1.d20111011"
+    # Version information
+    VERSION = "Undefined!"
 
     # Various Linux-isms we need for compatibility with the dispatcher scripts
     COMDIR = None
@@ -103,6 +103,17 @@ if not ClientAgentState.INIT_SETUP:
         ClientAgentState.BINDIR = bindir
 
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
+
+    try:
+        verFile = os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'lib')
+        version = open(verFile, 'r')
+        for rawline in version:
+            verInfo = rawline.strip()
+            if len(verInfo) > 0:
+                ClientAgentState.VERSION = verInfo
+        version.close()
+    finally:
+        version.close()
 
     updateLogger()
     ClientAgentState.CONFIG.setCallback(updateLogger)
