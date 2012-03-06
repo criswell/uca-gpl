@@ -105,7 +105,7 @@ if not ClientAgentState.INIT_SETUP:
     ClientAgentState.CONFIG = Config(ClientAgentState.CLIENTAGENT_ROOT)
 
     try:
-        verFile = os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'lib')
+        verFile = os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'lib', 'VERSION')
         version = open(verFile, 'r')
         for rawline in version:
             verInfo = rawline.strip()
