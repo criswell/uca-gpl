@@ -38,13 +38,14 @@ build()
     hg clone ${MY_CWD} ${TMP_REPO}
 
     mkdir -p ${TMP_WORKSPACE}/uca/bin
+    mkdir -p ${TMP_WORKSPACE}/uca/lib
     mkdir -p ${TMP_WORKSPACE}/uca/linux
     mkdir -p ${TMP_WORKSPACE}/uca/windows
     cp -fr ${TMP_REPO}/src/* ${TMP_WORKSPACE}/uca/bin/.
     cp -fr ${TMP_REPO}/platform-specific/linux/dispatcher ${TMP_WORKSPACE}/uca/linux/.
     cp -fr ${TMP_REPO}/uca-bootstrap.py ${TMP_WORKSPACE}/uca/.
     cp -fr ${TMP_REPO}/uca-installer.py ${TMP_WORKSPACE}/uca/.
-    cp -fr ${TMP_REPO}/VERSION ${TMP_WORKSPACE}/uca/.
+    cp -fr ${TMP_REPO}/VERSION ${TMP_WORKSPACE}/uca/lib/.
     cd ${TMP_REPO}/platform-specific/linux/elevate_script
     make clean
     make

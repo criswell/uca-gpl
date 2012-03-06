@@ -259,12 +259,19 @@ def installAt(rootDir, srcDir):
     '''
     Installs to a root directory structure.
     '''
+    # Install bin
     binDir = os.path.join(rootDir, 'bin')
-    srcBinDir = os.path.join(srcDir, 'uca', 'bin') 
+    srcBinDir = os.path.join(srcDir, 'uca', 'bin')
     logger.info('Attempting to install...')
     logger.info('Copying the bin directory')
     logger.info('%s -> %s' % (srcBinDir, binDir))
     copy_tree(srcBinDir, binDir)
+    # Install lib
+    libDir = os.path.join(rootDir, 'lib')
+    srcLibDir = os.path.join(srcDir, 'uca', 'lib')
+    logger.info('Copying to lib directory')
+    logger.info('%s -> %s' % (srcLibDir, libDir))
+    copy_tree(srcLibDir, libDir)
 
 def exec_command(cmd):
     '''
