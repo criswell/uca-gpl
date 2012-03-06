@@ -114,6 +114,7 @@ class EILAsset:
 
         # Example showing how to set elements above
         self.asset['Common']['ClientAgentVersion'] = ClientAgentState.VERSION
+        self.initialize()
 
     def getAssetXML(self, hostName):
         '''
@@ -133,8 +134,17 @@ class EILAsset:
         # FIXME - Need to parse this stuff using xml.etree and return a string
         raise exceptions.NotImplementedError()
 
+    def initialize(self):
+        '''
+        This is the method you override to actually initialize your local
+        sub-class.
+        '''
+        raise exceptions.NotImplementedError()
+
     def updateAsset(self):
         '''
         This is the method you override to actually generate the asset
         '''
         raise exceptions.NotImplementedError()
+
+# vim:set ai et sts=4 sw=4 tw=80:
