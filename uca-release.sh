@@ -9,6 +9,8 @@
 #
 # The goal of this release tool is to generate a release for the UCA.
 
+unset RELEASE_DIR BRANCH || true
+
 PROGNAME=${0##*/}
 
 MY_CWD=`pwd`
@@ -45,6 +47,21 @@ available inside your distribution of choice.
 EOF
 }
 
+make_release() {
+    TMPDIR=$(mktemp -d)
+}
 
+if [ "$1" = "" ]; then
+    usage
+    exit 0
+fi
+
+RELEASE_DIR=$1
+
+if [ -n "$2" ]; then
+    BRANCH=$2
+fi
+
+make_release
 
 # vim:set ai et sts=4 sw=4 tw=80:
