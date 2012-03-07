@@ -112,8 +112,8 @@ if not ClientAgentState.INIT_SETUP:
             if len(verInfo) > 0:
                 ClientAgentState.VERSION = verInfo
         version.close()
-    finally:
-        version.close()
+    except:
+        ClientAgentState.VERSION = 'Undefined'
 
     updateLogger()
     ClientAgentState.CONFIG.setCallback(updateLogger)
