@@ -112,7 +112,7 @@ class EILAsset:
                     'CertificateHashes' : None,
                     'IsAMTConfigured' : None,               # Boolean
                     'UUID' : None,
-                }
+                },
                 'OtherTechnology' : None
             }
 
