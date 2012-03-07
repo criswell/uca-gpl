@@ -106,7 +106,6 @@ if __name__ == "__main__":
         print asset.getAssetXML(hostName)
     else:
         if platformId.IS_WINDOWS:
-            ##daemon = StewardHandler(sys.argv)
             win32serviceutil.HandleCommandLine(StewardHandler)
         else:
             # Linux
