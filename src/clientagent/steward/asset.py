@@ -60,7 +60,10 @@ class EILAsset:
 
                         'DimmSlots' : None,                 # Integer
                         'DimmPopulated' : None,             # Integer
-                        'Dimm' : { None },                  # Array of dim sizes
+                        'Dimm' : [                     # Array of dim sizes
+                            { 'DimSize' : None },
+                            # Other elements as needed
+                        ],
                     },
 
                     'Storage' : [                      # Array of the following
