@@ -113,8 +113,7 @@ class EILAsset:
                     'IsAMTConfigured' : None,               # Boolean
                     'UUID' : None,
                 }
-                'OtherTechnology' : {
-                }
+                'OtherTechnology' : None
             }
 
         # Example showing how to set elements above
