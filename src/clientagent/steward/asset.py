@@ -67,10 +67,11 @@ class EILAsset:
                     },
 
                     'Storage' : [                      # Array of the following
-                        'HardDrive' : {
+                        { 'HardDrive' : [
                             'Name' : None,                  # String
                             'Capacity' : None,              # String
                             'FreeSpace' : None,             # String
+                            ],
                         },
                         # Other elements as needed
                     ],
