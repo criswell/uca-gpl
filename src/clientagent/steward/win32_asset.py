@@ -4,6 +4,7 @@ win32_asset.py
 Derived asset collection class specific to Windows.
 '''
 
+import exceptions
 from clientagent.steward.asset import EILAsset
 
 class Win32_Asset(EILAsset):

@@ -4,6 +4,7 @@ linux_asset.py
 Derived asset collection class specific to Linux.
 '''
 
+import exceptions
 from clientagent.steward.asset import EILAsset
 
 class Linux_Asset(EILAsset):
