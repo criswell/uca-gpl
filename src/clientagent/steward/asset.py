@@ -152,7 +152,8 @@ class EILAsset:
                 if type(obj[element]) == dict or type(obj[element]) == list:
                     self._parseSubElement(obj[element], sub)
                 else:
-                    sub.text = str(obj[element])
+                    if obj[element]:
+                        sub.text = str(obj[element])
         elif type(obj) == list:
             # Okay, so if this thing isn't in the appropriate format, we will
             # REALLY break down here. But hopefully we can keep the data coming
@@ -160,7 +161,8 @@ class EILAsset:
             for element in obj:
                 self._parseSubElement(element, parent)
         else:
-            parent.text = str(obj)
+            if obj:
+                parent.text = str(obj)
 
     def initialize(self):
         '''
