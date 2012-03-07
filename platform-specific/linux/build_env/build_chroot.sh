@@ -63,7 +63,7 @@ deb_build() {
     debootstrap ${DEB_DISTRO} ${CHROOT_PATH}
 
     # copy our items over into the chroot
-    cp -frv gsoap-2.8 ${CHROOT_PATH}/root/.
+    #cp -frv gsoap-2.8 ${CHROOT_PATH}/root/.
     cp -fv deb_setup_env.sh ${CHROOT_PATH}/root/setup_env.sh
     chmod a+x ${CHROOT_PATH}/root/setup_env.sh
 
@@ -104,7 +104,7 @@ suse_build() {
         install --auto-agree-with-licenses zypper
 
     # copy our items over into the chroot
-    cp -frv gsoap-2.8 ${CHROOT_PATH}/root/.
+    #cp -frv gsoap-2.8 ${CHROOT_PATH}/root/.
     cp -fv suse_setup_env.sh ${CHROOT_PATH}/root/setup_env.sh
     chmod a+x ${CHROOT_PATH}/root/setup_env.sh
 

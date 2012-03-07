@@ -88,58 +88,58 @@ aptitude install ${ALL_DEBS}
 
 # Set up gsoap sources in a tmp directory
 
-cat <<EOF
-
- Setting up gSOAP sources in a tmp build directory...
-
-EOF
-
-TMP_BASE=`mktemp -d`
-cp -frv gsoap-2.8 ${TMP_BASE}/.
-cd ${TMP_BASE}/gsoap-2.8/
+#cat <<EOF
+#
+# Setting up gSOAP sources in a tmp build directory...
+#
+#EOF
+#
+#TMP_BASE=`mktemp -d`
+#cp -frv gsoap-2.8 ${TMP_BASE}/.
+#cd ${TMP_BASE}/gsoap-2.8/
 
 # configure and checkinstall
 
-cat <<EOF
+#cat <<EOF
 
- Performing configure and package build for gsoap...
+# Performing configure and package build for gsoap...
+#
+# Answer any questions asked...
 
- Answer any questions asked...
+#EOF
 
-EOF
-
-read -p "Press [Enter] to continue : "
+#read -p "Press [Enter] to continue : "
 
 # This is an ugly hack, but there's a strange heisenbug where sometimes the
 # aclocal is recognized, and sometimes it is not. I've spent a few days trying
 # to trace the exact cause of this bug, and have now given up because I need to
 # move on to other things. So, to side-step it entirely, we do the following
 # symlink. - Sam
-ln -s /usr/bin/aclocal-1.11 /usr/bin/aclocal-1.10
-ln -s /usr/bin/aclocal-1.11 /bin/alocal-1.10
-ln -s /usr/bin/automake-1.11 /usr/bin/automake-1.10
-ln -s /usr/bin/automake-1.11 /bin/automake-1.10
+#ln -s /usr/bin/aclocal-1.11 /usr/bin/aclocal-1.10
+#ln -s /usr/bin/aclocal-1.11 /bin/alocal-1.10
+#ln -s /usr/bin/automake-1.11 /usr/bin/automake-1.10
+#ln -s /usr/bin/automake-1.11 /bin/automake-1.10
 
-chmod a+x configure
+#chmod a+x configure
 
-./configure
-make
-checkinstall
+#./configure
+#make
+#checkinstall
 
-unlink /usr/bin/aclocal-1.10
-unlink /bin/aclocal-1.10
-unlink /usr/bin/automake-1.10
-unlink /bin/automake-1.10
+#unlink /usr/bin/aclocal-1.10
+#unlink /bin/aclocal-1.10
+#unlink /usr/bin/automake-1.10
+#unlink /bin/automake-1.10
 
 # Package install
 
-cat <<EOF
+#cat <<EOF
 
- Installing gSOAP deb package...
+# Installing gSOAP deb package...
 
-EOF
+#EOF
 
-dpkg -i *.deb
+#dpkg -i *.deb
 
 # Cleanup
 
@@ -150,6 +150,6 @@ cat <<EOF
 EOF
 
 cd $MY_CWD
-rm -fr ${TMP_BASE}
+#rm -fr ${TMP_BASE}
 
 # vim:set ai et sts=4 sw=4 tw=80:

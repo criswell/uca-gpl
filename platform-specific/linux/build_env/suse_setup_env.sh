@@ -75,34 +75,34 @@ EOF
 
 zypper -n install --auto-agree-with-licenses ${ALL_RPMS}
 
-cat <<EOF
+#cat <<EOF
+#
+# Setting up gSOAP sources in a tmp build directory...
+#
+#EOF
 
- Setting up gSOAP sources in a tmp build directory...
+#TMP_BASE=`mktemp -d`
+#cp -frv gsoap-2.8 ${TMP_BASE}/.
+#cd ${TMP_BASE}/gsoap-2.8/
 
-EOF
+#cat <<EOF
+#
+# Performing configure and package build for gsoap...
+#
+# Answer any questions asked...
+#
+#EOF
 
-TMP_BASE=`mktemp -d`
-cp -frv gsoap-2.8 ${TMP_BASE}/.
-cd ${TMP_BASE}/gsoap-2.8/
+#read -p "Press [Enter] to continue : "
 
-cat <<EOF
+#aclocal
+#autoconf
+#automake
 
- Performing configure and package build for gsoap...
+#chmod a+x configure
 
- Answer any questions asked...
-
-EOF
-
-read -p "Press [Enter] to continue : "
-
-aclocal
-autoconf
-automake
-
-chmod a+x configure
-
-./configure
-make
+#./configure
+#make
 
 # Cleanup
 
@@ -113,6 +113,6 @@ cat <<EOF
 EOF
 
 cd $MY_CWD
-rm -fr ${TMP_BASE}
+#rm -fr ${TMP_BASE}
 
 # vim:set ai et sts=4 sw=4 tw=80:
