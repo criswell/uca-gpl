@@ -5,6 +5,7 @@ Base-class defining the EIL assets
 '''
 
 import exceptions
+from xml.etree.ElementTree import ElementTree as ET
 from clientagent import ClientAgentState
 
 class EILAsset:
@@ -136,8 +137,30 @@ class EILAsset:
         # Call the local platform's implementation of the asset update
         self.updateAsset()
 
-        # FIXME - Need to parse this stuff using xml.etree and return a string
-        raise exceptions.NotImplementedError()
+        # Build up our XML structure from self.asset
+        root = ET.Element('AssetUpdate')
+        self._parseSubElement(self.asset, root)
+
+        return ET.tostring(root)
+
+    def _parseSubElement(self, obj, parent):
+        '''
+        '''
+        if type(obj) == dict:
+            for element in obj:
+                sub = ET.SubElement(parent, element)
+                if type(obj[element]) == dict or type(obj[element]) == list:
+                    self._parseSubElement(obj[element], sub)
+                else:
+                    sub.text = str(obj[element])
+        elif type(obj) == list:
+            # Okay, so if this thing isn't in the appropriate format, we will
+            # REALLY break down here. But hopefully we can keep the data coming
+            # in sane :-)
+            for element in obj:
+                self._parseSubElement(element, parent)
+        else:
+            parent.text = str(obj)
 
     def initialize(self):
         '''
