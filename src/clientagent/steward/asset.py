@@ -77,12 +77,13 @@ class EILAsset:
                     ],
 
                     'Network' : [                      # Array of the following
-                        'Interface' : {
+                        { 'Interface' : {
                             'Name' : None,                  # String
                             'Mac' : None,                   # String
                             'IP4Address' : None,            # String
                             'IP6Address' : None,            # String
                             'Type' : None,                  # String
+                            },
                         },
                         # Other elements as needed
                     ],
