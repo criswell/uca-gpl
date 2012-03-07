@@ -4,6 +4,7 @@ asset.py
 Base-class defining the EIL assets
 '''
 
+import exceptions
 from clientagent import ClientAgentState
 
 class EILAsset:
