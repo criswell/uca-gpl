@@ -17,6 +17,7 @@ else:
 import logging, time
 
 from clientagent.common.platform_id import PlatformID
+from clientagent.common.utility import getIfInfo
 from clientagent import ClientAgentState
 from clientagent.steward.ccmsupdate import CCMS_Update
 from clientagent.steward.configwatch import ConfigWatch
@@ -26,9 +27,11 @@ platformId = PlatformID()
 if platformId.IS_WINDOWS:
     import win32serviceutil
     from clientagent.steward.libdaemon.windows_service import Service as Daemon
+    from clientagent.steward.win32_asset import Win32_Asset as EILAsset
 else:
     # Linux
     from clientagent.steward.libdaemon.unix_daemon import Daemon
+    from clientagent.steward.linux_asset import Linux_Asset as EILAsset
 
 class StewardHandler(Daemon):
     # TODO - determine if we want this to be variable based upon config
@@ -97,29 +100,34 @@ def usage_win():
     pass
 
 if __name__ == "__main__":
-    if platformId.IS_WINDOWS:
-         ##daemon = StewardHandler(sys.argv)
-         win32serviceutil.HandleCommandLine(StewardHandler)
+    if 'asset' in sys.argv:
+        (mac, hostName) = getIfInfo()
+        asset = EILAsset()
+        print asset.getAssetXML(hostName)
     else:
-        # Linux
-        daemon = StewardHandler()
-        if len(sys.argv) == 2:
-            if 'start' == sys.argv[1]:
-                daemon.start()
-            elif 'stop' == sys.argv[1]:
-                daemon.stop()
-            elif 'restart' == sys.argv[1]:
-                daemon.restart()
-            elif 'debug' == sys.argv[1]:
-                daemon.start(True)
-            elif 'status' == sys.argv[1]:
-                daemon.status()
-            else:
-                print "Unknown command"
-                sys.exit(2)
-            sys.exit(0)
+        if platformId.IS_WINDOWS:
+            ##daemon = StewardHandler(sys.argv)
+            win32serviceutil.HandleCommandLine(StewardHandler)
         else:
-            usage_linux()
-            sys.exit(2)
+            # Linux
+            daemon = StewardHandler()
+            if len(sys.argv) == 2:
+                if 'start' == sys.argv[1]:
+                    daemon.start()
+                elif 'stop' == sys.argv[1]:
+                    daemon.stop()
+                elif 'restart' == sys.argv[1]:
+                    daemon.restart()
+                elif 'debug' == sys.argv[1]:
+                    daemon.start(True)
+                elif 'status' == sys.argv[1]:
+                    daemon.status()
+                else:
+                    print "Unknown command"
+                    sys.exit(2)
+                sys.exit(0)
+            else:
+                usage_linux()
+                sys.exit(2)
 
 # vim:set ai et sts=4 sw=4 tw=80:
