@@ -5,7 +5,7 @@ Base-class defining the EIL assets
 '''
 
 import exceptions
-from xml.etree.ElementTree import ElementTree as ET
+import xml.etree.ElementTree as ET
 from clientagent import ClientAgentState
 
 class EILAsset:
