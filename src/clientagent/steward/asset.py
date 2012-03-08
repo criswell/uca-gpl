@@ -148,7 +148,6 @@ class EILAsset:
         '''
         if type(obj) == dict:
             for element in obj:
-                print element
                 sub = ET.SubElement(parent, element)
                 if type(obj[element]) == dict or type(obj[element]) == list:
                     self._parseSubElement(obj[element], sub)
