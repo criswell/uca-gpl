@@ -134,9 +134,9 @@ class EILAsset:
         Given the hostname of the current system, will process and return an
         updated asset update XML.
 
-        @param hostName The hostname of the system.
+        @param hostName: The hostname of the system.
 
-        @returns A string containing the XML
+        @returns: A string containing the XML
         '''
 
         self.asset['Common']['HostName'] = hostName
@@ -161,6 +161,11 @@ class EILAsset:
 
     def _parseSubElement(self, obj, parent):
         '''
+        Iterative, internal method for parsing sub-elements and converting
+        them to an ElementTree entity.
+
+        @param obj: The object (a dict, list, or general data type) to parse
+        @param parent: the Parent ElementTree entity.
         '''
         if type(obj) == dict:
             for element in obj:
