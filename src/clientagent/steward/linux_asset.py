@@ -6,6 +6,7 @@ Derived asset collection class specific to Linux.
 
 import exceptions
 from clientagent.steward.asset import EILAsset
+from clientagent.common.ordereddict import OrderedDict as OD
 
 class Linux_Asset(EILAsset):
     '''
@@ -32,13 +33,13 @@ class Linux_Asset(EILAsset):
         self.asset['Common']['OSVersion'] = 'Kubuntu 11.10'
         self.asset['Common']['VirtualMachine'] = False
 
-        processor = {
-            'CpuCount' : 4,
-            'CpuModel' : 'Intel',
-            'CoresPerCpu' : 3,
-            'Vt' : True,
-            'VtD' : False,
-        }
+        processor = OD([
+            ('CpuCount' , 4),
+            ('CpuModel' , 'Intel'),
+            ('CoresPerCpu' , 3),
+            ('Vt' , True),
+            ('VtD' , False),
+        ])
         self.asset['Common']['Processor'] = processor
 
 # vim:set ai et sts=4 sw=4 tw=80:
