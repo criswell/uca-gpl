@@ -194,6 +194,8 @@ class EILAsset:
         @param parent: the Parent ElementTree entity.
         '''
         print type(obj)
+        if type(obj) == dict:
+            print str(obj)
         if type(obj) == OD or type(obj) == dict:
             for element in obj:
                 sub = ET.SubElement(parent, element)
