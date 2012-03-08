@@ -24,8 +24,8 @@ class EILAsset:
     '''
 
     def __init__(self):
-        self.asset = OD(
-                ('Common' , OD(
+        self.asset = OD([
+                ('Common' , OD([
                     ('ClientAgentVersion' , None),            # String
                     ('HostName' , None),                      # String
                     ('UUID' , None),                          # String
@@ -90,7 +90,7 @@ class EILAsset:
                         },
                         # Other elements as needed
                     ]),
-                )) ,
+                ])) ,
 
                 ('NodeManager', {
                     'Firmware' : {
@@ -117,7 +117,7 @@ class EILAsset:
                     'UUID' : None,
                 }),
                 ('OtherTechnology' , None)
-            )
+            ])
 
         # Hackish, horrible thing... someone should be fired for what I'm about
         # to do... But since we're not doing this correctly in Portal, I need
