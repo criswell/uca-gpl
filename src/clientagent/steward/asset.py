@@ -120,6 +120,11 @@ class EILAsset:
 
             }
 
+        # Hackish, horrible thing... someone should be fired for what I'm about
+        # to do... But since we're not doing this correctly in Portal, I need
+        # to take matters into my own hands...
+        self.topLevelPriorityTags = [ 'Common', ]
+
         # Example showing how to set elements above
         self.asset['Common']['ClientAgentVersion'] = ClientAgentState.VERSION
         self.initialize()
@@ -141,7 +146,15 @@ class EILAsset:
 
         # Build up our XML structure from self.asset
         root = ET.Element('AssetUpdate')
-        self._parseSubElement(self.asset, root)
+
+        # I hate myself for doing this...
+        for tag in self.topLevelPriorityTags:
+            if self.asset.has_key(tag):
+                self._parseSubElement(self.asset[tag], root)
+
+        for key in self.asset.keys():
+            if key not in self.topLevelPriorityTags:
+                self._parseSubElement(self.asset[key], root)
 
         return ET.tostring(root)
 
