@@ -193,13 +193,10 @@ class EILAsset:
         @param obj: The object (a dict, list, or general data type) to parse
         @param parent: the Parent ElementTree entity.
         '''
-        print type(obj)
-        if type(obj) == dict:
-            print str(obj)
-        if type(obj) == OD or type(obj) == dict:
+        if type(obj) == OD:
             for element in obj:
                 sub = ET.SubElement(parent, element)
-                if type(obj[element]) == OD or type(obj) == dict or type(obj[element]) == list:
+                if type(obj[element]) == OD or type(obj[element]) == list:
                     self._parseSubElement(obj[element], sub)
                 else:
                     if obj[element] != None:
