@@ -92,30 +92,30 @@ class EILAsset:
                     ]),
                 ])) ,
 
-                ('NodeManager', {
-                    'Firmware' : {
-                        'BmcVersion' : None,
-                        'MeVersion' : None,
-                        'NmVersion' : None,
-                        'DcmiVersion' : None,
-                    },
-                    'RemoteCapability' : {
-                        'BmcIpAddress' : None,
-                        'iLo' : None,
-                        'SerialOverLan' : None,
-                    },
-                }) ,
+                ('NodeManager', OD([
+                    ('Firmware' , OD([
+                        ('BmcVersion' , None),
+                        ('MeVersion' , None),
+                        ('NmVersion' , None),
+                        ('DcmiVersion' , None),
+                    ])),
+                    ('RemoteCapability' , OD([
+                        ('BmcIpAddress' , None),
+                        ('iLo' , None),
+                        ('SerialOverLan' , None),
+                    ])),
+                ])) ,
 
-                ('AMT' , {
-                    'AMTConfigurationMode' : None,
-                    'AMTConfigurationState' : None,
-                    'AMTControlMode': None,
-                    'AMTState' : None,
-                    'AMTversion' : None,
-                    'CertificateHashes' : None,
-                    'IsAMTConfigured' : None,               # Boolean
-                    'UUID' : None,
-                }),
+                ('AMT' , OD([
+                    ('AMTConfigurationMode' , None),
+                    ('AMTConfigurationState' , None),
+                    ('AMTControlMode', None),
+                    ('AMTState', None),
+                    ('AMTversion' , None),
+                    ('CertificateHashes' , None),
+                    ('IsAMTConfigured' , None),               # Boolean
+                    ('UUID' , None),
+                ])),
                 ('OtherTechnology' , None)
             ])
 
