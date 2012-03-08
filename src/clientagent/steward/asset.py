@@ -44,7 +44,7 @@ class EILAsset:
                         ('Manufacturer' , None),              # String
                         ('Model' , None),                     # String
                         ('SerialNumber' , None),              # String
-                    ]),
+                    ])),
 
                     ('Processor' , {
                         'CpuCount' : None,                  # Integer
