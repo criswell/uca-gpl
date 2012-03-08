@@ -171,16 +171,17 @@ class EILAsset:
 
         # Build up our XML structure from self.asset
         root = ET.Element('AssetUpdate')
+        self._parseSubElement(self.asset, root)
 
         # I hate myself for doing this...
-        for tag in self.topLevelPriorityTags:
-            if self.asset.has_key(tag):
-                parent = ET.SubElement(root, tag)
-                self._parseSubElement(self.asset[tag], parent)
+        #for tag in self.topLevelPriorityTags:
+        #    if self.asset.has_key(tag):
+        #        parent = ET.SubElement(root, tag)
+        #        self._parseSubElement(self.asset[tag], parent)
 
-        for key in self.asset.keys():
-            if key not in self.topLevelPriorityTags:
-                self._parseSubElement(self.asset[key], root)
+        #for key in self.asset.keys():
+        #    if key not in self.topLevelPriorityTags:
+        #        self._parseSubElement(self.asset[key], root)
 
         return ET.tostring(root)
 
