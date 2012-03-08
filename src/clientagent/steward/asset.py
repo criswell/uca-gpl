@@ -90,7 +90,7 @@ class EILAsset:
                         },
                         # Other elements as needed
                     ]),
-                ) ,
+                )) ,
 
                 ('NodeManager', {
                     'Firmware' : {
