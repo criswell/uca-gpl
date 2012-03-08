@@ -119,40 +119,9 @@ class EILAsset:
                 ('OtherTechnology' , None)
             ])
 
-        # Hackish, horrible thing... someone should be fired for what I'm about
-        # to do... But since we're not doing this correctly in Portal, I need
-        # to take matters into my own hands...
-        #self.order = [ 'Common', 'ClientAgentVersion', 'HostName',
-        #    'UUID', 'DomainName', 'JoinedToDomain', 'OS', 'OSVersion',
-        #    'OSServicePack', 'OSArchitecture', 'BiosVersion', 'VirtualMachine',
-        #    'MachineType', 'Motherboard', 'Manufacturer', 'Model',
-        #    'SerialNumber', 'Processor', 'CpuCount', 'CpuModel', 'CoresPerCpu',
-        #    'Turbo', 'HyperThreading', 'Vt', 'VtD', 'EIST', 'SRIOV', 'Memory',
-        #    'RamTotal', 'DimmSlots', 'DimmPopulated', 'Dimm', 'DimSize',
-        #    'Storage', 'HardDrive', 'Name', 'Capacity', 'FreeSpace', 'Network',
-        #    'Interface', 'Name', 'Mac', 'IP4Address', 'IP6Address', 'Type',
-        #    'NodeManager', 'Firmware', 'BmcVersion', 'MeVersion', 'NmVersion',
-        #    'DcmiVersion', 'RemoteCapability', 'BmcIpAddress', 'iLo',
-        #    'SerialOverLan', 'AMT', 'AMTConfigurationMode',
-        #    'AMTConfigurationState', 'AMTControlMode', 'AMTState',
-        #    'AMTversion', 'CertificateHashes', 'IsAMTConfigured', 'UUID',
-        #    'OtherTechnology' ]
-
-        #self.asset = self._makeOrderFromChaos(tempasset)
-
         # Example showing how to set elements above
         self.asset['Common']['ClientAgentVersion'] = ClientAgentState.VERSION
         self.initialize()
-
-    #def _makeOrderFromChaos(asset):
-        '''
-        Given an unordered asset collection, will return an ordered one based
-        upon whatever is set in self.order.
-
-        @param asset: The unordered asset collection.
-        @returns: An ordered asset collection.
-        '''
-        
 
     def getAssetXML(self, hostName):
         '''
@@ -172,16 +141,6 @@ class EILAsset:
         # Build up our XML structure from self.asset
         root = ET.Element('AssetUpdate')
         self._parseSubElement(self.asset, root)
-
-        # I hate myself for doing this...
-        #for tag in self.topLevelPriorityTags:
-        #    if self.asset.has_key(tag):
-        #        parent = ET.SubElement(root, tag)
-        #        self._parseSubElement(self.asset[tag], parent)
-
-        #for key in self.asset.keys():
-        #    if key not in self.topLevelPriorityTags:
-        #        self._parseSubElement(self.asset[key], root)
 
         return ET.tostring(root)
 
