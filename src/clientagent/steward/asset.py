@@ -6,7 +6,7 @@ Base-class defining the EIL assets
 
 import exceptions
 import xml.etree.ElementTree as ET
-from collections import OrderedDict as OD
+from clientagent.common.ordereddict import OrderedDict as OD
 from clientagent import ClientAgentState
 
 class EILAsset:
