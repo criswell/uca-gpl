@@ -23,7 +23,7 @@ class EILAsset:
     '''
 
     def __init__(self):
-        self.asset = {
+        tempasset = {
                 'Common' : {
                     'ClientAgentVersion' : None,            # String
                     'HostName' : None,                      # String
@@ -117,6 +117,17 @@ class EILAsset:
                 },
                 'OtherTechnology' : None
             }
+            
+        # Try to sort them as best we can
+        tempCommon = {}
+        for item in reversed(tempasset['Common'].keys()):
+            tempCommon[item] = tempasset[item]
+            
+        tempasset['Common'] = tempCommon
+        
+        self.asset = {}
+        for item in reversed(tempasset.keys()):
+            self.asset[item] = tempasset[item]
 
         # Example showing how to set elements above
         self.asset['Common']['ClientAgentVersion'] = ClientAgentState.VERSION
@@ -147,7 +158,7 @@ class EILAsset:
         '''
         '''
         if type(obj) == dict:
-            for element in reversed(obj.keys()):
+            for element in obj:
                 print element
                 sub = ET.SubElement(parent, element)
                 if type(obj[element]) == dict or type(obj[element]) == list:
