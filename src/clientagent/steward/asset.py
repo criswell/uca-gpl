@@ -122,21 +122,21 @@ class EILAsset:
         # Hackish, horrible thing... someone should be fired for what I'm about
         # to do... But since we're not doing this correctly in Portal, I need
         # to take matters into my own hands...
-        self.order = [ 'Common', 'ClientAgentVersion', 'HostName',
-            'UUID', 'DomainName', 'JoinedToDomain', 'OS', 'OSVersion',
-            'OSServicePack', 'OSArchitecture', 'BiosVersion', 'VirtualMachine',
-            'MachineType', 'Motherboard', 'Manufacturer', 'Model',
-            'SerialNumber', 'Processor', 'CpuCount', 'CpuModel', 'CoresPerCpu',
-            'Turbo', 'HyperThreading', 'Vt', 'VtD', 'EIST', 'SRIOV', 'Memory',
-            'RamTotal', 'DimmSlots', 'DimmPopulated', 'Dimm', 'DimSize',
-            'Storage', 'HardDrive', 'Name', 'Capacity', 'FreeSpace', 'Network',
-            'Interface', 'Name', 'Mac', 'IP4Address', 'IP6Address', 'Type',
-            'NodeManager', 'Firmware', 'BmcVersion', 'MeVersion', 'NmVersion',
-            'DcmiVersion', 'RemoteCapability', 'BmcIpAddress', 'iLo',
-            'SerialOverLan', 'AMT', 'AMTConfigurationMode',
-            'AMTConfigurationState', 'AMTControlMode', 'AMTState',
-            'AMTversion', 'CertificateHashes', 'IsAMTConfigured', 'UUID',
-            'OtherTechnology' ]
+        #self.order = [ 'Common', 'ClientAgentVersion', 'HostName',
+        #    'UUID', 'DomainName', 'JoinedToDomain', 'OS', 'OSVersion',
+        #    'OSServicePack', 'OSArchitecture', 'BiosVersion', 'VirtualMachine',
+        #    'MachineType', 'Motherboard', 'Manufacturer', 'Model',
+        #    'SerialNumber', 'Processor', 'CpuCount', 'CpuModel', 'CoresPerCpu',
+        #    'Turbo', 'HyperThreading', 'Vt', 'VtD', 'EIST', 'SRIOV', 'Memory',
+        #    'RamTotal', 'DimmSlots', 'DimmPopulated', 'Dimm', 'DimSize',
+        #    'Storage', 'HardDrive', 'Name', 'Capacity', 'FreeSpace', 'Network',
+        #    'Interface', 'Name', 'Mac', 'IP4Address', 'IP6Address', 'Type',
+        #    'NodeManager', 'Firmware', 'BmcVersion', 'MeVersion', 'NmVersion',
+        #    'DcmiVersion', 'RemoteCapability', 'BmcIpAddress', 'iLo',
+        #    'SerialOverLan', 'AMT', 'AMTConfigurationMode',
+        #    'AMTConfigurationState', 'AMTControlMode', 'AMTState',
+        #    'AMTversion', 'CertificateHashes', 'IsAMTConfigured', 'UUID',
+        #    'OtherTechnology' ]
 
         #self.asset = self._makeOrderFromChaos(tempasset)
 
