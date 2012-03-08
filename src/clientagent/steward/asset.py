@@ -150,7 +150,8 @@ class EILAsset:
         # I hate myself for doing this...
         for tag in self.topLevelPriorityTags:
             if self.asset.has_key(tag):
-                self._parseSubElement(self.asset[tag], root)
+                parent = ET.SubElement(root, tag)
+                self._parseSubElement(self.asset[tag], parent)
 
         for key in self.asset.keys():
             if key not in self.topLevelPriorityTags:
