@@ -6,6 +6,7 @@ Base-class defining the EIL assets
 
 import exceptions
 import xml.etree.ElementTree as ET
+from collections import OrderedDict as OD
 from clientagent import ClientAgentState
 
 class EILAsset:
@@ -23,8 +24,75 @@ class EILAsset:
     '''
 
     def __init__(self):
-        self.asset = {
-                'NodeManager': {
+        self.asset = OD(
+                ('Common' , OD(
+                    ('ClientAgentVersion' , None),            # String
+                    ('HostName' , None),                      # String
+                    ('UUID' , None),                          # String
+                    ('DomainName' , None),                    # String
+                    ('JoinedToDomain' , None),                # Boolean
+
+                    ('OS' , None),                            # String
+                    ('OSVersion' , None),                     # String
+                    ('OSServicePack' , None),                 # String
+                    ('OSArchitecture' , None),                # String
+                    ('BiosVersion' , None),                   # String
+                    ('VirtualMachine' , None),                # Boolean
+                    ('MachineType' , None),                   # String
+
+                    ('Motherboard' , {
+                        'Manufacturer' : None,              # String
+                        'Model' : None,                     # String
+                        'SerialNumber' : None,              # String
+                    }),
+
+                    ('Processor' , {
+                        'CpuCount' : None,                  # Integer
+                        'CpuModel' : None,                  # String
+                        'CoresPerCpu' : None,               # Integer
+                        'Turbo' : None,                     # Boolean
+                        'HyperThreading' : None,            # Boolean
+                        'Vt' : None,                        # Boolean
+                        'VtD' : None,                       # Boolean
+                        'EIST' : None,                      # Boolean
+                        'SRIOV' : None,                     # Boolean
+                    }),
+
+                    ('Memory' , {
+                        'RamTotal' : None,                  # String
+
+                        'DimmSlots' : None,                 # Integer
+                        'DimmPopulated' : None,             # Integer
+                        'Dimm' : [                     # Array of dim sizes
+                            { 'DimSize' : None },
+                            # Other elements as needed
+                        ],
+                    }),
+
+                    ('Storage' , [                      # Array of the following
+                        { 'HardDrive' : {
+                            'Name' : None,                  # String
+                            'Capacity' : None,              # String
+                            'FreeSpace' : None,             # String
+                            },
+                        },
+                            # Other elements as needed
+                    ]),
+
+                    ('Network' , [                      # Array of the following
+                        { 'Interface' : {
+                            'Name' : None,                  # String
+                            'Mac' : None,                   # String
+                            'IP4Address' : None,            # String
+                            'IP6Address' : None,            # String
+                            'Type' : None,                  # String
+                            },
+                        },
+                        # Other elements as needed
+                    ]),
+                ) ,
+
+                ('NodeManager', {
                     'Firmware' : {
                         'BmcVersion' : None,
                         'MeVersion' : None,
@@ -36,98 +104,55 @@ class EILAsset:
                         'iLo' : None,
                         'SerialOverLan' : None,
                     },
-                } ,
+                }) ,
 
-                'AMT' : {
-                    'UUID' : None,
-                    'IsAMTConfigured' : None,               # Boolean
-                    'CertificateHashes' : None,
-                    'AMTversion' : None,
-                    'AMTState' : None,
-                    'AMTControlMode': None,
-                    'AMTConfigurationState' : None,
+                ('AMT' , {
                     'AMTConfigurationMode' : None,
-                },
-
-                'OtherTechnology' : None,
-
-                'Common' : {
-                    'Network' : [                      # Array of the following
-                        { 'Interface' : {
-                            'Type' : None,                  # String
-                            'IP6Address' : None,            # String
-                            'IP4Address' : None,            # String
-                            'Mac' : None,                   # String
-                            'Name' : None,                  # String
-                            },
-                        },
-                        # Other elements as needed
-                    ],
-
-                    'Storage' : [                      # Array of the following
-                        { 'HardDrive' : {
-                            'Name' : None,                  # String
-                            'Capacity' : None,              # String
-                            'FreeSpace' : None,             # String
-                            },
-                        },
-                        # Other elements as needed
-                    ],
-
-                    'Memory' : {
-                        'DimmPopulated' : None,             # Integer
-                        'DimmSlots' : None,                 # Integer
-
-                        'RamTotal' : None,                  # String
-                        'Dimm' : [                     # Array of dim sizes
-                            { 'DimSize' : None },
-                            # Other elements as needed
-                        ],
-                    },
-
-                    'Processor' : {
-                        'SRIOV' : None,                     # Boolean
-                        'EIST' : None,                      # Boolean
-                        'VtD' : None,                       # Boolean
-                        'Vt' : None,                        # Boolean
-                        'HyperThreading' : None,            # Boolean
-                        'Turbo' : None,                     # Boolean
-                        'CoresPerCpu' : None,               # Integer
-                        'CpuModel' : None,                  # String
-                        'CpuCount' : None,                  # Integer
-                    },
-
-                    'Motherboard' : {
-                        'SerialNumber' : None,              # String
-                        'Model' : None,                     # String
-                        'Manufacturer' : None,              # String
-                    },
-
-                    'MachineType' : None,                   # String
-                    'VirtualMachine' : None,                # Boolean
-                    'BiosVersion' : None,                   # String
-                    'OSArchitecture' : None,                # String
-                    'OSServicePack' : None,                 # String
-                    'OSVersion' : None,                     # String
-                    'OS' : None,                            # String
-
-                    'JoinedToDomain' : None,                # Boolean
-                    'DomainName' : None,                    # String
-                    'UUID' : None,                          # String
-                    'HostName' : None,                      # String
-                    'ClientAgentVersion' : None,            # String
-                } ,
-
-            }
+                    'AMTConfigurationState' : None,
+                    'AMTControlMode': None,
+                    'AMTState' : None,
+                    'AMTversion' : None,
+                    'CertificateHashes' : None,
+                    'IsAMTConfigured' : None,               # Boolean
+                    'UUID' : None,
+                }),
+                ('OtherTechnology' , None)
+            )
 
         # Hackish, horrible thing... someone should be fired for what I'm about
         # to do... But since we're not doing this correctly in Portal, I need
         # to take matters into my own hands...
-        self.topLevelPriorityTags = [ 'Common', ]
+        self.order = [ 'Common', 'ClientAgentVersion', 'HostName',
+            'UUID', 'DomainName', 'JoinedToDomain', 'OS', 'OSVersion',
+            'OSServicePack', 'OSArchitecture', 'BiosVersion', 'VirtualMachine',
+            'MachineType', 'Motherboard', 'Manufacturer', 'Model',
+            'SerialNumber', 'Processor', 'CpuCount', 'CpuModel', 'CoresPerCpu',
+            'Turbo', 'HyperThreading', 'Vt', 'VtD', 'EIST', 'SRIOV', 'Memory',
+            'RamTotal', 'DimmSlots', 'DimmPopulated', 'Dimm', 'DimSize',
+            'Storage', 'HardDrive', 'Name', 'Capacity', 'FreeSpace', 'Network',
+            'Interface', 'Name', 'Mac', 'IP4Address', 'IP6Address', 'Type',
+            'NodeManager', 'Firmware', 'BmcVersion', 'MeVersion', 'NmVersion',
+            'DcmiVersion', 'RemoteCapability', 'BmcIpAddress', 'iLo',
+            'SerialOverLan', 'AMT', 'AMTConfigurationMode',
+            'AMTConfigurationState', 'AMTControlMode', 'AMTState',
+            'AMTversion', 'CertificateHashes', 'IsAMTConfigured', 'UUID',
+            'OtherTechnology' ]
+
+        #self.asset = self._makeOrderFromChaos(tempasset)
 
         # Example showing how to set elements above
         self.asset['Common']['ClientAgentVersion'] = ClientAgentState.VERSION
         self.initialize()
+
+    #def _makeOrderFromChaos(asset):
+        '''
+        Given an unordered asset collection, will return an ordered one based
+        upon whatever is set in self.order.
+
+        @param asset: The unordered asset collection.
+        @returns: An ordered asset collection.
+        '''
+        
 
     def getAssetXML(self, hostName):
         '''
