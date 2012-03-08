@@ -24,73 +24,6 @@ class EILAsset:
 
     def __init__(self):
         self.asset = {
-                'Common' : {
-                    'ClientAgentVersion' : None,            # String
-                    'HostName' : None,                      # String
-                    'UUID' : None,                          # String
-                    'DomainName' : None,                    # String
-                    'JoinedToDomain' : None,                # Boolean
-
-                    'OS' : None,                            # String
-                    'OSVersion' : None,                     # String
-                    'OSServicePack' : None,                 # String
-                    'OSArchitecture' : None,                # String
-                    'BiosVersion' : None,                   # String
-                    'VirtualMachine' : None,                # Boolean
-                    'MachineType' : None,                   # String
-
-                    'Motherboard' : {
-                        'Manufacturer' : None,              # String
-                        'Model' : None,                     # String
-                        'SerialNumber' : None,              # String
-                    },
-
-                    'Processor' : {
-                        'CpuCount' : None,                  # Integer
-                        'CpuModel' : None,                  # String
-                        'CoresPerCpu' : None,               # Integer
-                        'Turbo' : None,                     # Boolean
-                        'HyperThreading' : None,            # Boolean
-                        'Vt' : None,                        # Boolean
-                        'VtD' : None,                       # Boolean
-                        'EIST' : None,                      # Boolean
-                        'SRIOV' : None,                     # Boolean
-                    },
-
-                    'Memory' : {
-                        'RamTotal' : None,                  # String
-
-                        'DimmSlots' : None,                 # Integer
-                        'DimmPopulated' : None,             # Integer
-                        'Dimm' : [                     # Array of dim sizes
-                            { 'DimSize' : None },
-                            # Other elements as needed
-                        ],
-                    },
-
-                    'Storage' : [                      # Array of the following
-                        { 'HardDrive' : {
-                            'Name' : None,                  # String
-                            'Capacity' : None,              # String
-                            'FreeSpace' : None,             # String
-                            },
-                        },
-                        # Other elements as needed
-                    ],
-
-                    'Network' : [                      # Array of the following
-                        { 'Interface' : {
-                            'Name' : None,                  # String
-                            'Mac' : None,                   # String
-                            'IP4Address' : None,            # String
-                            'IP6Address' : None,            # String
-                            'Type' : None,                  # String
-                            },
-                        },
-                        # Other elements as needed
-                    ],
-                } ,
-
                 'NodeManager': {
                     'Firmware' : {
                         'BmcVersion' : None,
@@ -106,16 +39,85 @@ class EILAsset:
                 } ,
 
                 'AMT' : {
-                    'AMTConfigurationMode' : None,
-                    'AMTConfigurationState' : None,
-                    'AMTControlMode': None,
-                    'AMTState' : None,
-                    'AMTversion' : None,
-                    'CertificateHashes' : None,
-                    'IsAMTConfigured' : None,               # Boolean
                     'UUID' : None,
+                    'IsAMTConfigured' : None,               # Boolean
+                    'CertificateHashes' : None,
+                    'AMTversion' : None,
+                    'AMTState' : None,
+                    'AMTControlMode': None,
+                    'AMTConfigurationState' : None,
+                    'AMTConfigurationMode' : None,
                 },
-                'OtherTechnology' : None
+
+                'OtherTechnology' : None,
+
+                'Common' : {
+                    'Network' : [                      # Array of the following
+                        { 'Interface' : {
+                            'Type' : None,                  # String
+                            'IP6Address' : None,            # String
+                            'IP4Address' : None,            # String
+                            'Mac' : None,                   # String
+                            'Name' : None,                  # String
+                            },
+                        },
+                        # Other elements as needed
+                    ],
+
+                    'Storage' : [                      # Array of the following
+                        { 'HardDrive' : {
+                            'Name' : None,                  # String
+                            'Capacity' : None,              # String
+                            'FreeSpace' : None,             # String
+                            },
+                        },
+                        # Other elements as needed
+                    ],
+
+                    'Memory' : {
+                        'DimmPopulated' : None,             # Integer
+                        'DimmSlots' : None,                 # Integer
+
+                        'RamTotal' : None,                  # String
+                        'Dimm' : [                     # Array of dim sizes
+                            { 'DimSize' : None },
+                            # Other elements as needed
+                        ],
+                    },
+
+                    'Processor' : {
+                        'SRIOV' : None,                     # Boolean
+                        'EIST' : None,                      # Boolean
+                        'VtD' : None,                       # Boolean
+                        'Vt' : None,                        # Boolean
+                        'HyperThreading' : None,            # Boolean
+                        'Turbo' : None,                     # Boolean
+                        'CoresPerCpu' : None,               # Integer
+                        'CpuModel' : None,                  # String
+                        'CpuCount' : None,                  # Integer
+                    },
+
+                    'Motherboard' : {
+                        'SerialNumber' : None,              # String
+                        'Model' : None,                     # String
+                        'Manufacturer' : None,              # String
+                    },
+
+                    'MachineType' : None,                   # String
+                    'VirtualMachine' : None,                # Boolean
+                    'BiosVersion' : None,                   # String
+                    'OSArchitecture' : None,                # String
+                    'OSServicePack' : None,                 # String
+                    'OSVersion' : None,                     # String
+                    'OS' : None,                            # String
+
+                    'JoinedToDomain' : None,                # Boolean
+                    'DomainName' : None,                    # String
+                    'UUID' : None,                          # String
+                    'HostName' : None,                      # String
+                    'ClientAgentVersion' : None,            # String
+                } ,
+
             }
 
         # Example showing how to set elements above
@@ -152,7 +154,7 @@ class EILAsset:
                 if type(obj[element]) == dict or type(obj[element]) == list:
                     self._parseSubElement(obj[element], sub)
                 else:
-                    if obj[element]:
+                    if obj[element] != None:
                         sub.text = str(obj[element])
         elif type(obj) == list:
             # Okay, so if this thing isn't in the appropriate format, we will
@@ -161,7 +163,7 @@ class EILAsset:
             for element in obj:
                 self._parseSubElement(element, parent)
         else:
-            if obj:
+            if obj != None:
                 parent.text = str(obj)
 
     def initialize(self):
