@@ -46,28 +46,28 @@ class EILAsset:
                         ('SerialNumber' , None),              # String
                     ])),
 
-                    ('Processor' , {
-                        'CpuCount' : None,                  # Integer
-                        'CpuModel' : None,                  # String
-                        'CoresPerCpu' : None,               # Integer
-                        'Turbo' : None,                     # Boolean
-                        'HyperThreading' : None,            # Boolean
-                        'Vt' : None,                        # Boolean
-                        'VtD' : None,                       # Boolean
-                        'EIST' : None,                      # Boolean
-                        'SRIOV' : None,                     # Boolean
-                    }),
+                    ('Processor' , OD([
+                        ('CpuCount' , None),                  # Integer
+                        ('CpuModel' , None),                  # String
+                        ('CoresPerCpu' , None),               # Integer
+                        ('Turbo' , None),                     # Boolean
+                        ('HyperThreading' , None),            # Boolean
+                        ('Vt' , None),                        # Boolean
+                        ('VtD' , None),                       # Boolean
+                        ('EIST' , None),                      # Boolean
+                        ('SRIOV' , None),                     # Boolean
+                    ])),
 
-                    ('Memory' , {
-                        'RamTotal' : None,                  # String
+                    ('Memory' , OD([
+                        ('RamTotal' , None),                  # String
 
-                        'DimmSlots' : None,                 # Integer
-                        'DimmPopulated' : None,             # Integer
+                        ('DimmSlots' , None),                 # Integer
+                        ('DimmPopulated' , None),             # Integer
                         'Dimm' : [                     # Array of dim sizes
                             { 'DimSize' : None },
                             # Other elements as needed
                         ],
-                    }),
+                    ])),
 
                     ('Storage' , [                      # Array of the following
                         { 'HardDrive' : {
