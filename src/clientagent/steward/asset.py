@@ -40,11 +40,11 @@ class EILAsset:
                     ('VirtualMachine' , None),                # Boolean
                     ('MachineType' , None),                   # String
 
-                    ('Motherboard' , {
-                        'Manufacturer' : None,              # String
-                        'Model' : None,                     # String
-                        'SerialNumber' : None,              # String
-                    }),
+                    ('Motherboard' , OD([
+                        ('Manufacturer' , None),              # String
+                        ('Model' , None),                     # String
+                        ('SerialNumber' , None),              # String
+                    ]),
 
                     ('Processor' , {
                         'CpuCount' : None,                  # Integer
