@@ -284,6 +284,7 @@ class Linux_Asset(EILAsset):
                 ('EIST' , eist),
                 ('SRIOV' , sriov),
             ])
+            print str(processor)
             self.asset['Common']['Processor'] = processor
 
 # vim:set ai et sts=4 sw=4 tw=80:
