@@ -240,17 +240,11 @@ class Linux_Asset(EILAsset):
         self.asset['Common']['Motherboard'] = mobo
 
         if self._locateInPath(['cat', 'grep', 'sort', 'uniq', 'wc']):
-            print "HERE I AM JH"
             cpuCount = self._getCommandOutput('cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l', 1)
-            print cpuCount
             tmpCpuModel = self._getCommandOutput('cat /proc/cpuinfo | grep "model name" | sort | uniq', 1)
-            print tmpCpuModel
             cpuModel = ' '.join(tmpCpuModel.split()[3:])
-            print cpuModel
             tmpCores = self._getCommandOutput('cat /proc/cpuinfo | grep "cpu cores" | sort | uniq', 1)
-            print tmpCores
             cores = tmpCores.split(':')[-1].strip()
-            print cores
 
             # Now, we run through the CPU flags to get everything we need
             tmpFlags = self._getCommandOutput('cat /proc/cpuinfo | grep "flags" | sort | uniq', 1).lower()
@@ -284,8 +278,6 @@ class Linux_Asset(EILAsset):
                 ('EIST' , eist),
                 ('SRIOV' , sriov),
             ])
-            print str(processor)
-            print "Anything?"
             self.asset['Common']['Processor'] = processor
 
 # vim:set ai et sts=4 sw=4 tw=80:
