@@ -138,7 +138,7 @@ class Linux_Asset(EILAsset):
 
         @returns: True if all commands are found. False if any one is missing.
         '''
-        if type(obj) = str:
+        if type(obj) == str:
             if locateExecInPath(obj):
                 return True
         else:
