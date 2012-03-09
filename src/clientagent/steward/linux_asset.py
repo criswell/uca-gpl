@@ -11,6 +11,7 @@ import fcntl, socket, struct, os, platform
 import ctypes
 from ctypes.util import find_library
 from ctypes import Structure
+from clientagent.common.utility import locateExecInPath
 
 class DBusError(Structure):
     '''
@@ -138,7 +139,20 @@ class Linux_Asset(EILAsset):
         try:
             return HardwareUuid()
         except:
-            pass
+            # Silly wrong or no hal systems
+            if locateExecInPath('dmidecode') and locateExecInPath('awk') and locateExecInPath('grep'):
+                try:
+                    stream = os.popen("dmidecode | grep UUID | awk '{print $2}'")
+                    output = stream.readlines()
+                    stream.close()
+
+                    if len(output) > 0:
+                        return output[0]
+                except:
+                    return None
+
+        # IF we get here, we haven't found it
+        return None
 
     def _getBiosInfo(self):
         '''
