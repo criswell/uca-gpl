@@ -99,7 +99,7 @@ class Linux_Asset(EILAsset):
         self.SIOCDELMULTI  = 0x8932
         self.SIOCGIFINDEX  = 0x8933          #/* name -> if_index mapping     */
 
-    def _getInfo(ifnum, wireless=False):
+    def _getInfo(self, ifnum, wireless=False):
         '''
         Get the interface information for ifnum.
 
@@ -131,6 +131,12 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
+    def _getBiosInfo(self):
+        '''
+
+        '''
+        pass
+
     def updateAsset(self):
         '''
         Called when we update the asset from getAssetXML
@@ -144,7 +150,9 @@ class Linux_Asset(EILAsset):
         self.asset['Common']['OSArchitecture'] = ' '.join(platform.architecture())
         self.asset['Common']['OSKernel'] = platform.release()
 
-        self.asset['Common']['VirtualMachine'] = False
+        # Until we can figure out a red pill/blue pill method in Python, this is
+        # commented out
+        #self.asset['Common']['VirtualMachine'] = False
 
         processor = OD([
             ('CpuCount' , 4),
