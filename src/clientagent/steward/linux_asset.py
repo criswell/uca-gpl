@@ -239,6 +239,7 @@ class Linux_Asset(EILAsset):
 
         self.asset['Common']['Motherboard'] = mobo
 
+        # Processor information
         if self._locateInPath(['cat', 'grep', 'sort', 'uniq', 'wc']):
             cpuCount = self._getCommandOutput('cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l', 1)
             tmpCpuModel = self._getCommandOutput('cat /proc/cpuinfo | grep "model name" | sort | uniq', 1)
