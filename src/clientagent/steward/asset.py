@@ -4,7 +4,7 @@ asset.py
 Base-class defining the EIL assets
 '''
 
-import exceptions
+import exceptions, logging, traceback
 import xml.etree.ElementTree as ET
 from clientagent.common.ordereddict import OrderedDict as OD
 from clientagent import ClientAgentState
@@ -24,6 +24,7 @@ class EILAsset:
     '''
 
     def __init__(self):
+        self.logger = logging.getLogger('clientagent.steward.asset')
         self.asset = OD([
                 ('Common' , OD([
                     ('ClientAgentVersion' , None),            # String
@@ -137,7 +138,13 @@ class EILAsset:
         self.asset['Common']['HostName'] = hostName
 
         # Call the local platform's implementation of the asset update
-        self.updateAsset()
+        try:
+            self.updateAsset()
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
+            self.logger.critical("There was an error running my platform's updateAsset!!")
 
         # Build up our XML structure from self.asset
         root = ET.Element('AssetUpdate')
