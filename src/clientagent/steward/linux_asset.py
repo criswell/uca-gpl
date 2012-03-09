@@ -143,7 +143,7 @@ class Linux_Asset(EILAsset):
 
             print output, lines
 
-            if len(outpu)t >= lines:
+            if len(output) >= lines:
                 return output[:lines-1]
             else:
                 return None
