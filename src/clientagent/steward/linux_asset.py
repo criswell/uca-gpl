@@ -240,6 +240,7 @@ class Linux_Asset(EILAsset):
         self.asset['Common']['Motherboard'] = mobo
 
         if self._locateInPath(['cat', 'grep', 'sort', 'uniq', 'wc']):
+            print "HERE I AM JH"
             cpuCount = self._getCommandOutput('cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l', 1)
             tmpCpuModel = self._getCommandOutput('cat /proc/cpuinfo | grep "model name" | sort | uniq', 1)
             cpuModel = ' '.join(tmpCpuModel.split()[3:])
