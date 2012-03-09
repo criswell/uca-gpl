@@ -132,7 +132,7 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
-    def _getCommandOutput(cmd):
+    def _getCommandOutput(cmd, lines):
         '''
         Given a command, will get the output
         '''
@@ -141,7 +141,10 @@ class Linux_Asset(EILAsset):
             output = stream.readlines()
             stream.close()
 
-            return output
+            if len(output >= lines)
+                return output[:lines-1]
+            else:
+                return None
         except:
             return None
 
@@ -179,7 +182,12 @@ class Linux_Asset(EILAsset):
             Any fields not found will be None.
         '''
         if locateExecInPath('dmidecode'):
-            
+            biosVersion = self._getCommandOutput('dmidecode -s bios-version', 1)
+            moboManufact = self._getCommandOutput('dmidecode -s baseboard-manufacturer', 1)
+            moboModel = self._getCommandOutput('dmidecode -s baseboard-product-name', 1)
+            moboSerial = self._getCommandOutput('dmidecode -s baseboard-serial-number', 1)
+
+            return (biosVersion, moboManufact, moboModel, moboSerial)
         else:
             return (None, None, None, None)
 
@@ -199,6 +207,17 @@ class Linux_Asset(EILAsset):
         # Until we can figure out a red pill/blue pill method in Python, this is
         # commented out
         #self.asset['Common']['VirtualMachine'] = False
+
+        (biosVersion, moboManufact, moboModel, moboSerial) = self._getBiosInfo()
+        self.asset['Common']['BiosVersion'] = biosVersion
+
+        mobo = OD([
+                ('Manufacturer' , moboManufact),
+                ('Model' , moboModel),
+                ('SerialNumber' , moboSerial),
+            ])
+
+        self.asset['Common']['Motherboard'] = mobo
 
         processor = OD([
             ('CpuCount' , 4),
