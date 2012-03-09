@@ -147,7 +147,7 @@ class Linux_Asset(EILAsset):
                     stream.close()
 
                     if len(output) > 0:
-                        return output[0]
+                        return output[0].strip()
                 except:
                     return None
 
