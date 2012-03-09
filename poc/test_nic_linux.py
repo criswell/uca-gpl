@@ -47,14 +47,20 @@ def getInfo(ifnum, wireless=False):
     except:
         pass
 
-    return (hwaddr, ipaddr)
+    ivp6 = None
+    s.close()
+    s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+    hwinfo = fcntl.ioctl(s.fileno(), SIOCGIFHWADDR, struct.pack('256s', ifname[:15]))
+    ipv6 = ''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1]
+
+    return (hwaddr, ipaddr, ipv6)
 
 print "Wired\n---------------"
 
 for i in range(0, 9):
     try:
-        (a, b) = getInfo(i)
-        print "\teth%s : %s - %s" % (i, a, b)
+        (a, b, c) = getInfo(i)
+        print "\teth%s : %s - %s - %s" % (i, a, b, c)
     except:
         break
 
@@ -62,7 +68,7 @@ print "Wireless\n---------------"
 
 for i in range(0, 9):
     try:
-        (a, b) = getInfo(i, True)
-        print "\twlan%s : %s - %s" % (i, a, b)
+        (a, b, c) = getInfo(i, True)
+        print "\twlan%s : %s - %s - %s" % (i, a, b, c)
     except:
         break

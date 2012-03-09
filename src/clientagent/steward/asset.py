@@ -36,6 +36,7 @@ class EILAsset:
                     ('OSVersion' , None),                     # String
                     ('OSServicePack' , None),                 # String
                     ('OSArchitecture' , None),                # String
+                    ('OSKernel', None),                       # String
                     ('BiosVersion' , None),                   # String
                     ('VirtualMachine' , None),                # Boolean
                     ('MachineType' , None),                   # String
