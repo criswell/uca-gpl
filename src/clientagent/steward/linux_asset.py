@@ -156,9 +156,20 @@ class Linux_Asset(EILAsset):
 
     def _getBiosInfo(self):
         '''
+        Will attempt to get the BIOS information.
 
+        returns: A tuple containing
+            (biosVersion,
+            motherboardManufact,
+            motherboardModel,
+            motherboardSerial)
+
+            Any fields not found will be None.
         '''
-        pass
+        if locateExecInPath('dmidecode'):
+            #
+        else:
+            return (None, None, None, None)
 
     def updateAsset(self):
         '''
