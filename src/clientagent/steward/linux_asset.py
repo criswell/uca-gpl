@@ -177,7 +177,7 @@ class Linux_Asset(EILAsset):
             return HardwareUuid()
         except:
             # Silly wrong or no hal systems
-            if self._locateInPath('dmidecode', 'awk', 'grep'):
+            if self._locateInPath(['dmidecode', 'awk', 'grep']):
                 try:
                     output = self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'")
 
@@ -239,7 +239,7 @@ class Linux_Asset(EILAsset):
 
         self.asset['Common']['Motherboard'] = mobo
 
-        if self._locateInPath('cat', 'grep', 'sort', 'uniq', 'wc'):
+        if self._locateInPath(['cat', 'grep', 'sort', 'uniq', 'wc']):
             cpuCount = self._getCommandOutput('cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l', 1)
             tmpCpuModel = self._getCommandOutput('cat /proc/cpuinfo | grep "model name" | sort | uniq', 1)
             cpuModel = ' '.join(tmpCpuModel.split()[3:])
