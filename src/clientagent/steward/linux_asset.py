@@ -132,7 +132,7 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
-    def _locateInPath(obj):
+    def _locateInPath(self, obj):
         '''
         Given a command or list of commands, try to locate them in path.
 
