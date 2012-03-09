@@ -132,6 +132,20 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
+    def _getCommandOutput(cmd):
+        '''
+        Given a command, will get the output
+        '''
+        try:
+            stream = os.popen(cmd)
+            output = stream.readlines()
+            stream.close()
+
+            return output
+        except:
+            return None
+
+
     def _getUUID(self):
         '''
         Attempts to get and return the UUID
@@ -142,9 +156,7 @@ class Linux_Asset(EILAsset):
             # Silly wrong or no hal systems
             if locateExecInPath('dmidecode') and locateExecInPath('awk') and locateExecInPath('grep'):
                 try:
-                    stream = os.popen("dmidecode | grep UUID | awk '{print $2}'")
-                    output = stream.readlines()
-                    stream.close()
+                    output = self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'")
 
                     if len(output) > 0:
                         return output[0].strip()
@@ -167,7 +179,7 @@ class Linux_Asset(EILAsset):
             Any fields not found will be None.
         '''
         if locateExecInPath('dmidecode'):
-            #
+            
         else:
             return (None, None, None, None)
 
