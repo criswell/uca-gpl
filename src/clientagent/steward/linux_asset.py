@@ -143,7 +143,7 @@ class Linux_Asset(EILAsset):
 
             if len(output) >= lines:
                 if lines == 1:
-                    return output[0]
+                    return output[0].strip()
                 else:
                     return outpit[0:lines]
             else:
