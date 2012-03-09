@@ -132,6 +132,23 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
+    def _locateInPath(obj):
+        '''
+        Given a command or list of commands, try to locate them in path.
+
+        @returns: True if all commands are found. False if any one is missing.
+        '''
+        if type(obj) = str:
+            if locateExecInPath(obj):
+                return True
+        else:
+            retval = True
+            for i in obj:
+                if locateExecInPath(i) == None:
+                    retval = False
+            return retval
+        return False
+
     def _getCommandOutput(self, cmd, lines):
         '''
         Given a command, will get the output
@@ -160,7 +177,7 @@ class Linux_Asset(EILAsset):
             return HardwareUuid()
         except:
             # Silly wrong or no hal systems
-            if locateExecInPath('dmidecode') and locateExecInPath('awk') and locateExecInPath('grep'):
+            if self._locateInPath('dmidecode', 'awk', 'grep'):
                 try:
                     output = self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'")
 
@@ -222,13 +239,45 @@ class Linux_Asset(EILAsset):
 
         self.asset['Common']['Motherboard'] = mobo
 
-        processor = OD([
-            ('CpuCount' , 4),
-            ('CpuModel' , 'Intel'),
-            ('CoresPerCpu' , 3),
-            ('Vt' , True),
-            ('VtD' , False),
-        ])
-        self.asset['Common']['Processor'] = processor
+        if self._locateInPath('cat', 'grep', 'sort', 'uniq', 'wc'):
+            cpuCount = self._getCommandOutput('cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l', 1)
+            tmpCpuModel = self._getCommandOutput('cat /proc/cpuinfo | grep "model name" | sort | uniq', 1)
+            cpuModel = ' '.join(tmpCpuModel.split()[3:])
+            tmpCores = self._getCommandOutput('cat /proc/cpuinfo | grep "cpu cores" | sort | uniq', 1)
+            cores = tmpCores.split(':')[-1].strip()
+
+            # Now, we run through the CPU flags to get everything we need
+            tmpFlags = self._getCommandOutput('cat /proc/cpuinfo | grep "flags" | sort | uniq', 1).lower()
+            flags = tmpCpuModel.split(':')[-1].strip().split()
+            hyperThreading = False
+            vt = False
+            vtd = False
+            eist = False
+            sriov = None
+            trubo = None
+            if ('ht' in flags) or ('htt' in flags):
+                hyperThreading = True
+            if ('vmx' in flags) or ('svm' in flags):
+                vt = True
+            if ('vnmi' in flags) or ('smx' in flags):
+                # NOTE - I'm not 100% certain about this one
+                vtd = True
+            if ('eist' in flags) or ('est' in flags):
+                eist = True
+            # FIXME - I do not know how to check for SRIOV
+            # FIXME - I do not know how to check for Turbo
+
+            processor = OD([
+                ('CpuCount' , cpuCount),
+                ('CpuModel' , cpuModel),
+                ('CoresPerCpu' , cores),
+                ('Turbo' , turbo),
+                ('HyperThreading' , hyperThreading),
+                ('Vt' , vt),
+                ('VtD' , vtd),
+                ('EIST' , eist),
+                ('SRIOV' , sriov),
+            ])
+            self.asset['Common']['Processor'] = processor
 
 # vim:set ai et sts=4 sw=4 tw=80:
