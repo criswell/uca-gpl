@@ -260,7 +260,7 @@ class Linux_Asset(EILAsset):
             vtd = False
             eist = False
             sriov = None
-            trubo = None
+            turbo = None
             if ('ht' in flags) or ('htt' in flags):
                 hyperThreading = True
             if ('vmx' in flags) or ('svm' in flags):
