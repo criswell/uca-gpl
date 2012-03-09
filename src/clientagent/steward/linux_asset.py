@@ -141,7 +141,7 @@ class Linux_Asset(EILAsset):
             output = stream.readlines()
             stream.close()
 
-            if len(output >= lines)
+            if len(output >= lines):
                 return output[:lines-1]
             else:
                 return None
