@@ -132,7 +132,7 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
-    def _getCommandOutput(cmd, lines):
+    def _getCommandOutput(self, cmd, lines):
         '''
         Given a command, will get the output
         '''
