@@ -4,6 +4,7 @@ Basic utilities which we may need multiple times
 
 import os
 from clientagent.common.platform_id import PlatformID
+import exceptions
 
 _platformId = PlatformID()
 if _platformId.IS_WINDOWS:
@@ -33,8 +34,7 @@ def getIfInfo():
     Obtains the hardware address from the first network interface on the
     machine.
 
-    Returns:
-        A tuple containing the (HW_ADDRESS, HOSTNAME)
+    @returns: A tuple containing the (HW_ADDRESS, HOSTNAME)
     '''
     if _platformId.IS_LINUX:
         ifnum = 0
@@ -64,5 +64,24 @@ def getIfInfo():
         Netbios(ncb)
         return (''.join(['%02x:' % ord(char) for char in adapter.adapter_address])[:-1], gethostname())
 
+def locateExecInPath(executable):
+    '''
+    Given an executable, will attempt to locate it in the current PATH.
+
+    @param executable: The name of the executable you are looking for.
+
+    @returns: A string containing the full path to the executable. Or None if not found.
+    '''
+    if _platformId.IS_WINDOWS:
+        # FIXME - Someone else will have to engineer this for Windows when,
+        # and if, we ever need it
+        raise exceptions.NotImplementedError()
+    else:
+        checkPaths = os.environ['PATH'].split(':')
+        for path in checkPaths:
+            if os.path.exists(os.path.join(path, executable)):
+                return os.path.join(path, executable)
+
+    return None
 
 # vim:set ai et sts=4 sw=4 tw=80:

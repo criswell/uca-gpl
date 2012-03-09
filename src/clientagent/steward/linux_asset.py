@@ -131,6 +131,15 @@ class Linux_Asset(EILAsset):
 
         return (hwaddr, ipaddr, ipv6)
 
+    def _getUUID(self):
+        '''
+        Attempts to get and return the UUID
+        '''
+        try:
+            return HardwareUuid()
+        except:
+            pass
+
     def _getBiosInfo(self):
         '''
 
@@ -142,7 +151,7 @@ class Linux_Asset(EILAsset):
         Called when we update the asset from getAssetXML
         '''
         self.asset['Common']['HostName'] = os.uname()[1]
-        self.asset['Common']['UUID'] = HardwareUuid()
+        self.asset['Common']['UUID'] = self._getUUID()
         self.asset['Common']['DomainName'] = socket.getfqdn()
 
         self.asset['Common']['OS'] = platform.system()
