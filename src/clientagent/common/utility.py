@@ -4,7 +4,7 @@ Basic utilities which we may need multiple times
 
 import os
 from clientagent.common.platform_id import PlatformID
-import exceptions
+import exceptions, subprocess
 
 _platformId = PlatformID()
 if _platformId.IS_WINDOWS:
@@ -83,5 +83,21 @@ def locateExecInPath(executable):
                 return os.path.join(path, executable)
 
     return None
+    
+def exec_command(cmd):
+    '''
+    given a command, will execute it in the parent environment
+    
+    @param cmd: The command to execute
+    
+    @returns: List containing the output
+    '''
+    p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = p.stdout.readlines()
+    p.stdin.close()
+    p.stdout.close()
+    return output
+
 
 # vim:set ai et sts=4 sw=4 tw=80:

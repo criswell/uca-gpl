@@ -95,6 +95,8 @@ def usage_linux():
     print "\trestart\t\tRestart the daemon/service"
     print "\tdebug\t\tStart the daemon/service in debug mode"
     print "\tstatus\t\tReturn running status of the daemon/service"
+    print "\tasset\t\tDUmp the system asset XML"
+    print "\tupgrade\t\tForce an auto-upgrade of the agent"
 
 def usage_win():
     pass
@@ -104,6 +106,8 @@ if __name__ == "__main__":
         (mac, hostName) = getIfInfo()
         asset = EILAsset()
         print asset.getAssetXML(hostName)
+    if 'upgrade' in sys.argv:
+        #
     else:
         if platformId.IS_WINDOWS:
             win32serviceutil.HandleCommandLine(StewardHandler)
