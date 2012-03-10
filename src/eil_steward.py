@@ -107,7 +107,7 @@ if __name__ == "__main__":
         asset = EILAsset()
         print asset.getAssetXML(hostName)
     if 'upgrade' in sys.argv:
-        #
+        pass
     else:
         if platformId.IS_WINDOWS:
             win32serviceutil.HandleCommandLine(StewardHandler)
