@@ -272,6 +272,12 @@ def installAt(rootDir, srcDir):
     logger.info('Copying to lib directory')
     logger.info('%s -> %s' % (srcLibDir, libDir))
     copy_tree(srcLibDir, libDir)
+    # Install general tools
+    toolDir = os.path.join(rootDir, 'tools')
+    srcToolDir = os.path.join(srcDir, 'uca', 'tools')
+    logger.info('Copying to tools directory')
+    logger.info('%s -> %s' % (srcToolDir, toolDir))
+    copy_tree(srcToolDir, toolDir)
 
 def exec_command(cmd):
     '''
