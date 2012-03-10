@@ -95,7 +95,7 @@ def usage_linux():
     print "\trestart\t\tRestart the daemon/service"
     print "\tdebug\t\tStart the daemon/service in debug mode"
     print "\tstatus\t\tReturn running status of the daemon/service"
-    print "\tasset\t\tDUmp the system asset XML"
+    print "\tasset\t\tDump the system asset XML"
     print "\tupgrade\t\tForce an auto-upgrade of the agent"
 
 def usage_win():
