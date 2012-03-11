@@ -260,7 +260,7 @@ class Linux_Asset(EILAsset):
                 hyperThreading = True
             if ('vmx' in flags) or ('svm' in flags):
                 vt = True
-            if ('vnmi' in flags) or ('smx' in flags):
+            if ('vnmi' in flags) or ('smx' in flags) or ('vtd' in flags):
                 # NOTE - I'm not 100% certain about this one
                 vtd = True
             if ('eist' in flags) or ('est' in flags):
@@ -280,5 +280,13 @@ class Linux_Asset(EILAsset):
                 ('SRIOV' , sriov),
             ])
             self.asset['Common']['Processor'] = processor
+            
+        # Next up, MEMORY!!!!111!!oneeleventeen
+        if self._locateInPath(['grep', 'awk', 'dmidecode', 'tail']):
+            ramTotal = self._getCommandOutput("dmidecode | grep \"Memory Array\" -A 6 | grep Range | awk '{print $3$4}' | tail -n 1", 1)
+            
+            dimSlots = self._getCommandOutput('dmidecode | grep "Memory Device" | wc -l', 1)
+            dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
+            
 
 # vim:set ai et sts=4 sw=4 tw=80:
