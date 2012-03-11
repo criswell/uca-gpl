@@ -18,6 +18,7 @@ import logging, time
 
 from clientagent.common.platform_id import PlatformID
 from clientagent.common.utility import getIfInfo
+from clientagent.common.utility import exec_command
 from clientagent import ClientAgentState
 from clientagent.steward.ccmsupdate import CCMS_Update
 from clientagent.steward.configwatch import ConfigWatch
@@ -107,7 +108,9 @@ if __name__ == "__main__":
         asset = EILAsset()
         print asset.getAssetXML(hostName)
     if 'upgrade' in sys.argv:
-        pass
+        output = exec_command('python %s' % os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'tools', 'uca-bootstrap.py'))
+        for line in output:
+            print line
     else:
         if platformId.IS_WINDOWS:
             win32serviceutil.HandleCommandLine(StewardHandler)
