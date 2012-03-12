@@ -121,7 +121,7 @@ class CCMS_Update(Atom):
 
         @returns: The updated client
         '''
-        if not action or action not in self.CCMS_COMMANDS.keys()
+        if not action or action not in self.CCMS_COMMANDS.keys():
             action = self.CCMS_COMMANDS['GET_COMMAND']
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
