@@ -127,7 +127,7 @@ class Linux_Asset(EILAsset):
         except:
             pass
 
-        ivp6 = None
+        ipv6 = None
         s.close()
         # FIXME - For now we do nothing
         #s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
