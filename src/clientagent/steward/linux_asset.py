@@ -318,11 +318,11 @@ class Linux_Asset(EILAsset):
         ethDevs = {}
         print "ABOUT TO CYCLE"
         for i in range(0,self.MAX_ETH):
-            #try:
+            try:
                 temp = self._getIfInfo(i)
                 ethDevs[i] = temp
-            #except:
-            #    break
+            except:
+                break
 
         wlanDevs = {}
         for i in range(0,self.MAX_WLAN):
