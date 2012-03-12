@@ -20,6 +20,7 @@ from clientagent.steward.commandhandler import handleUnJoin
 from suds.client import Client
 from suds.sax.element import Element
 from suds.sax.attribute import Attribute
+from suds import WebFault
 
 from clientagent.common.platform_id import PlatformID
 platformId = PlatformID()
