@@ -104,7 +104,7 @@ class Linux_Asset(EILAsset):
         self.MAX_ETH = 10
         self.MAX_WLAN = 10
 
-    def _getInfo(self, ifnum, wireless=False):
+    def _getIfInfo(self, ifnum, wireless=False):
         '''
         Get the interface information for ifnum.
 
@@ -315,6 +315,33 @@ class Linux_Asset(EILAsset):
         # code only partially works... Skipping for now
 
         # Network
+        ethDevs = {}
         for i in range(0,self.MAX_ETH):
+            try:
+                temp = self._getIfInfo(i)
+                ethDevs[i] = temp
+            except:
+                break
+
+        wlanDevs = {}
+        for i in range(0,self.MAX_WLAN):
+            try:
+                temp = self._getIfInfo(i, True)
+                wlanDevs[i] = temp
+            except:
+                break
+
+        totalNICs = []
+        for d in ethDevs.keys():
+            totalNICs.append(OD([
+                    ( 'Interface', OD([
+                        ('Name', '/dev/eth%s' % d),
+                        ('Mac', ethDevs[d][0]),
+                        ('IP4Address', ethDevs[d][1]),
+                        ('IP6Address', ethDevs[d][2]),
+                        ]))
+                ]))
+
+        self.asset['Common']['Network'] = totalNICs
 
 # vim:set ai et sts=4 sw=4 tw=80:
