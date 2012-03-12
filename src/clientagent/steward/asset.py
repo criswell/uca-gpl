@@ -73,7 +73,7 @@ class EILAsset:
                     ])),
 
                     ('Storage' , OD([                      # Array of the following
-                        ( 'HardDrive' : OD([
+                        ( 'HardDrive' , OD([
                             ('Name' : None),                  # String
                             ('Capacity' : None),              # String
                             ('FreeSpace' : None),             # String
