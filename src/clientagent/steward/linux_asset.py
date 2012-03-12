@@ -291,10 +291,15 @@ class Linux_Asset(EILAsset):
             dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
 
             dimSizes = self._getCommandOutput("dmidecode | grep \"Memory Device\" -A 17 | grep \"Size\" | grep -v \"No Module\" | grep -v \"Range\" | awk '{print $2$3}'", None)
+            allDims = []
+            for d in dimSizes:
+                allDims.append(OD([
+                    ('DimSize', d.strip())
+                    ]))
             memory = OD([
                 ('RamTotal' , ramTotal),
                 ('DimmSlots', dimSlots),
-                ('Dimm', dimSizes),
+                ('Dimm', allDims),
             ])
             self.asset['Common']['Memory'] = memory
 
