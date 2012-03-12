@@ -100,6 +100,10 @@ class Linux_Asset(EILAsset):
         self.SIOCDELMULTI  = 0x8932
         self.SIOCGIFINDEX  = 0x8933          #/* name -> if_index mapping     */
 
+        # Upper limits on various things
+        self.MAX_ETH = 10
+        self.MAX_WLAN = 10
+
     def _getInfo(self, ifnum, wireless=False):
         '''
         Get the interface information for ifnum.
@@ -113,12 +117,12 @@ class Linux_Asset(EILAsset):
         if wireless:
             ifname = "wlan%s" % ifnum
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        hwinfo = fcntl.ioctl(s.fileno(), SIOCGIFHWADDR, struct.pack('256s', ifname[:15]))
+        hwinfo = fcntl.ioctl(s.fileno(), self.SIOCGIFHWADDR, struct.pack('256s', ifname[:15]))
         hwaddr = ''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1]
 
         ipaddr = None
         try:
-            hwinfo = fcntl.ioctl(s.fileno(), SIOCGIFADDR, struct.pack('256s', ifname[:15]))
+            hwinfo = fcntl.ioctl(s.fileno(), self.SIOCGIFADDR, struct.pack('256s', ifname[:15]))
             ipaddr = ''.join(['%s.' % ord(char) for char in hwinfo[20:24]])[:-1]
         except:
             pass
@@ -127,7 +131,7 @@ class Linux_Asset(EILAsset):
         s.close()
         # FIXME - For now we do nothing
         #s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-        #hwinfo = fcntl.ioctl(s.fileno(), SIOCGIFHWADDR, struct.pack('256s', ifname[:15]))
+        #hwinfo = fcntl.ioctl(s.fileno(), self.SIOCGIFHWADDR, struct.pack('256s', ifname[:15]))
         #ipv6 = ''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1]
 
         return (hwaddr, ipaddr, ipv6)
@@ -305,5 +309,12 @@ class Linux_Asset(EILAsset):
                 ('Dimm', allDims),
             ])
             self.asset['Common']['Memory'] = memory
+
+        # Now the storage
+        # FIXME - Okay, this is much harder than first blush, and stewart's
+        # code only partially works... Skipping for now
+
+        # Network
+        for i in range(0,self.MAX_ETH):
 
 # vim:set ai et sts=4 sw=4 tw=80:
