@@ -182,10 +182,9 @@ class Linux_Asset(EILAsset):
         # Silly wrong or no hal systems
         if self._locateInPath(['dmidecode', 'awk', 'grep']):
             try:
-                output = self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'")
+                output = self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'", 1)
 
-                if len(output) > 0:
-                    return output[0].strip()
+                return output
             except:
                 return None
 
