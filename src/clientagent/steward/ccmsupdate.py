@@ -41,7 +41,7 @@ class CCMS_Update(Atom):
         self.FIRST_PASS = True
         self.TARGET_TIMEDELTA = 30
         self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
-        self.assetTimer = 0
+        self.assetTimer = self.ASSET_TIMEDELTA + 1 # Force a first time update
         self.MAX_JOIN_RETRIES = 2
 
         # Our various CCMS command interactions
@@ -229,6 +229,7 @@ class CCMS_Update(Atom):
 
     def update(self, timeDelta):
         self.assetTimer += timeDelta
+        self.logger.critical('asset Timer: %s - timeDelta %s' % (self.assetTimer, self.ASSET_TIMEDELTA))
         if self.assetTimer >= self.ASSET_TIMEDELTA:
             self.assetTimer = 0
             txID = self.newMessageID()
