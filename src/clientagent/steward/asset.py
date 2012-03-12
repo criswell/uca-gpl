@@ -83,7 +83,7 @@ class EILAsset:
                     ])),
 
                     ('Network' , OD([                      # Array of the following
-                        ( 'Interface' : {
+                        ( 'Interface' , {
                             'Name' : None,                  # String
                             'Mac' : None,                   # String
                             'IP4Address' : None,            # String
