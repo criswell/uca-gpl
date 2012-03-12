@@ -179,16 +179,16 @@ class Linux_Asset(EILAsset):
         '''
         Attempts to get and return the UUID
         '''
-        try:
-            getUUID = HardwareUuid()
-            return getUUID()
-        except:
+        #try:
+        #    getUUID = HardwareUuid()
+        #    return getUUID()
+        #except:
             # Silly wrong or no hal systems
-            if self._locateInPath(['dmidecode', 'awk', 'grep']):
-                try:
-                    return self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'", 1)
-                except:
-                    return None
+        if self._locateInPath(['dmidecode', 'awk', 'grep']):
+            try:
+                return self._getCommandOutput("dmidecode | grep UUID | awk '{print $2}'", 1)
+            except:
+                return None
 
         # IF we get here, we haven't found it
         return None
