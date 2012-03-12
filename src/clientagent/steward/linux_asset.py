@@ -256,8 +256,8 @@ class Linux_Asset(EILAsset):
             vt = False
             vtd = False
             eist = False
-            sriov = None
-            turbo = None
+            sriov = False
+            turbo = False
             if ('ht' in flags) or ('htt' in flags):
                 hyperThreading = True
             if ('vmx' in flags) or ('svm' in flags):
@@ -267,8 +267,10 @@ class Linux_Asset(EILAsset):
                 vtd = True
             if ('eist' in flags) or ('est' in flags):
                 eist = True
-            # FIXME - I do not know how to check for SRIOV
-            # FIXME - I do not know how to check for Turbo
+            if 'sriov' in flags:
+                sriov = True
+            if 'turbo' in flags:
+                turbo = True
 
             processor = OD([
                 ('CpuCount' , cpuCount),
