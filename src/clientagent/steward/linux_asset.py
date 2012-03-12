@@ -342,6 +342,16 @@ class Linux_Asset(EILAsset):
                         ]))
                 ]))
 
+        for d in wlanDevs.keys():
+            totalNICs.append(OD([
+                    ( 'Interface', OD([
+                        ('Name', '/dev/wlan%s' % d),
+                        ('Mac', wlanDevs[d][0]),
+                        ('IP4Address', wlanDevs[d][1]),
+                        ('IP6Address', wlanDevs[d][2]),
+                        ]))
+                ]))
+
         self.asset['Common']['Network'] = totalNICs
 
 # vim:set ai et sts=4 sw=4 tw=80:
