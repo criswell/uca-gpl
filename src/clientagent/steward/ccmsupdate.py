@@ -81,9 +81,11 @@ class CCMS_Update(Atom):
             # really need to address this!
             headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
             ACKheaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateCommandStatus"'}
+            assetHeaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateAssetInformation"'}
             try:
                 self.client = Client(self.CCMS_WSDL, headers=headers)
                 self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
+                self.assetClient = Client(self.CCMS_WSDL, headers=assetHeaders)
             except:
                 traceback_lines = traceback.format_exc().splitlines()
                 for line in traceback_lines:
@@ -236,8 +238,8 @@ class CCMS_Update(Atom):
         if self.assetTimer >= self.ASSET_TIMEDELTA:
             self.assetTimer = 0
             txID = self.newMessageID()
-            self.client = self.setHeaders(self.client, txID, 'UPDATE_ASSET')
-            ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
+            self.assetClient = self.setHeaders(self.client, txID, 'UPDATE_ASSET')
+            ctx = self.generateContext(self.assetClient, self.MY_HOST, self.MY_HWADDR)
 
             try:
                 self.logger.info('Sending updated asset information to CCMS')
@@ -245,7 +247,7 @@ class CCMS_Update(Atom):
                 assetXML = asset.getAssetXML(self.MY_HOST)
                 self.logger.debug('Asset XML was:')
                 self.logger.debug(assetXML)
-                result = self.client.service.UpdateAssetInformation(self.MY_HOST, self.MY_HWADDR, assetXML)
+                result = self.assetClient.service.UpdateAssetInformation(self.MY_HOST, self.MY_HWADDR, assetXML)
                 if result or result == None:
                     # Yeah, this is confusing due to how SUDS interprets
                     # results from CCMS
