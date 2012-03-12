@@ -316,6 +316,7 @@ class Linux_Asset(EILAsset):
 
         # Network
         ethDevs = {}
+        print "ABOUT TO CYCLE"
         for i in range(0,self.MAX_ETH):
             #try:
                 temp = self._getIfInfo(i)
