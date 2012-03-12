@@ -299,6 +299,7 @@ class Linux_Asset(EILAsset):
             memory = OD([
                 ('RamTotal' , ramTotal),
                 ('DimmSlots', dimSlots),
+                ('DimmPopulated', dimPop),
                 ('Dimm', allDims),
             ])
             self.asset['Common']['Memory'] = memory
