@@ -116,7 +116,7 @@ class CCMS_Update(Atom):
 
         @param client: The client instance to use
         @param messageID: The UUID to use in this interaction
-        @param action: One of self.CCMS_COMMANDS defining the type of
+        @param action: One of self.CCMS_COMMANDS keys defining the type of
             interaction. If action is None, it will default to GET_COMMAND.
 
         @returns: The updated client
@@ -233,7 +233,7 @@ class CCMS_Update(Atom):
         if self.assetTimer >= self.ASSET_TIMEDELTA:
             self.assetTimer = 0
             txID = self.newMessageID()
-            self.client = self.setHeaders(self.client, txID, self.CCMS_COMMANDS['UPDATE_ASSET'])
+            self.client = self.setHeaders(self.client, txID, 'UPDATE_ASSET')
             ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
 
             try:
