@@ -107,7 +107,7 @@ if __name__ == "__main__":
         (mac, hostName) = getIfInfo()
         asset = EILAsset()
         print asset.getAssetXML(hostName)
-    if 'upgrade' in sys.argv:
+    elif 'upgrade' in sys.argv:
         output = exec_command('python %s' % os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'tools', 'uca-bootstrap.py'))
         for line in output:
             print line
