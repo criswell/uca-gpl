@@ -180,7 +180,8 @@ class Linux_Asset(EILAsset):
         Attempts to get and return the UUID
         '''
         try:
-            return HardwareUuid()
+            getUUID = HardwareUuid()
+            return getUUID()
         except:
             # Silly wrong or no hal systems
             if self._locateInPath(['dmidecode', 'awk', 'grep']):
