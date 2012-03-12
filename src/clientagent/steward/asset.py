@@ -68,6 +68,7 @@ class EILAsset:
                         ('Dimm' , [                     # Array of dim sizes
                             { 'DimSize' : None },
                             # Other elements as needed
+                            ],
                         ]),
                     ])),
 

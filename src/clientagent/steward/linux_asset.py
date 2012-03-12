@@ -161,8 +161,10 @@ class Linux_Asset(EILAsset):
             if len(output) >= lines:
                 if lines == 1:
                     return output[0].strip()
+                elif lines == None:
+                    return output
                 else:
-                    return outpit[0:lines]
+                    return output[0:lines]
             else:
                 return None
         except:
@@ -288,5 +290,12 @@ class Linux_Asset(EILAsset):
             dimSlots = self._getCommandOutput('dmidecode | grep "Memory Device" | wc -l', 1)
             dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
             
+            dimSizes = self._getCommandOutput("dmidecode | grep \"Memory Device\" -A 17 | grep \"Size\" | grep -v \"No Module\" | grep -v \"Range\" | awk '{print $2$3}'", None)
+            memory = OD([
+                ('RamTotal' , ramTotal),
+                ('DimmSlots', dimSlots),
+                ('Dimm', dimSizes),
+            ])
+            self.asset['Common']['Memory'] = memory
 
 # vim:set ai et sts=4 sw=4 tw=80:
