@@ -121,8 +121,11 @@ class CCMS_Update(Atom):
 
         @returns: The updated client
         '''
+        CCMSaction = None
         if not action or action not in self.CCMS_COMMANDS.keys():
-            action = self.CCMS_COMMANDS['GET_COMMAND']
+            CCMSaction = self.CCMS_COMMANDS['GET_COMMAND']
+        else:
+            CCMSaction = self.CCMS_COMMANDS[action]
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
         messageID_header = Element('MessageID', ns=wsa_ns).setText(messageID)
@@ -134,8 +137,7 @@ class CCMS_Update(Atom):
         to_header = Element('To',
             ns=wsa_ns).setText('http://%s/CCMS/EILClientOperationsService.svc' % self.CCMS_IP)
         to_header.append(mustAttribute)
-        action_header = Element('Action',
-            ns=wsa_ns).setText(action)
+        action_header = Element('Action', ns=wsa_ns).setText(CCMSaction)
         action_header.append(mustAttribute)
         master_header_list = [
             messageID_header,
