@@ -332,6 +332,8 @@ class Linux_Asset(EILAsset):
                 break
 
         totalNICs = []
+        print ethDevs
+        print wlanDevs
         for d in ethDevs.keys():
             totalNICs.append(OD([
                     ( 'Interface', OD([
