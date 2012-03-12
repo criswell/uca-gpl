@@ -72,27 +72,27 @@ class EILAsset:
                         ]),
                     ])),
 
-                    ('Storage' , [                      # Array of the following
-                        { 'HardDrive' : {
-                            'Name' : None,                  # String
-                            'Capacity' : None,              # String
-                            'FreeSpace' : None,             # String
-                            },
-                        },
+                    ('Storage' , OD([                      # Array of the following
+                        ( 'HardDrive' : OD([
+                            ('Name' : None),                  # String
+                            ('Capacity' : None),              # String
+                            ('FreeSpace' : None),             # String
+                            ]),
+                        ),
                             # Other elements as needed
-                    ]),
+                    ])),
 
-                    ('Network' , [                      # Array of the following
-                        { 'Interface' : {
+                    ('Network' , OD([                      # Array of the following
+                        ( 'Interface' : {
                             'Name' : None,                  # String
                             'Mac' : None,                   # String
                             'IP4Address' : None,            # String
                             'IP6Address' : None,            # String
                             'Type' : None,                  # String
                             },
-                        },
+                        ),
                         # Other elements as needed
-                    ]),
+                    ])),
                 ])) ,
 
                 ('NodeManager', OD([
