@@ -48,7 +48,7 @@ class StewardHandler(Daemon):
         self.atoms = [
             ConfigWatch(),
             CCMS_Update(),
-            AssetUpdate(),
+            #AssetUpdate(),
         ]
 
     def local_shutdown(self):

@@ -21,6 +21,14 @@ from suds.client import Client
 from suds.sax.element import Element
 from suds.sax.attribute import Attribute
 
+from clientagent.common.platform_id import PlatformID
+platformId = PlatformID()
+if platformId.IS_WINDOWS:
+    from clientagent.steward.win32_asset import Win32_Asset as EILAsset
+else:
+    # Linux
+    from clientagent.steward.linux_asset import Linux_Asset as EILAsset
+
 class CCMS_Update(Atom):
     '''
     This is the main CCMS interaction interface. This manages the core
@@ -32,7 +40,15 @@ class CCMS_Update(Atom):
         self.config = get_config()
         self.FIRST_PASS = True
         self.TARGET_TIMEDELTA = 30
+        self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
+        self.assetTimer = 0
         self.MAX_JOIN_RETRIES = 2
+
+        # Our various CCMS command interactions
+        self.CCMS_COMMANDS = {
+            "UPDATE_ASSET" :'http://tempuri.org/IEILClientOperations/UpdateAssetInformation',
+            "GET_COMMAND" : 'http://tempuri.org/IEILClientOperations/GetCommandToExecute',
+            }
 
         self.logger = logging.getLogger('clientagent.steward.ccmsupdate')
         self.logger.info("CCMS Update atom startup");
@@ -93,11 +109,20 @@ class CCMS_Update(Atom):
                 message_id += "-"
         return message_id
 
-    def setHeaders(self, client, messageID):
+    def setHeaders(self, client, messageID, action=None):
         '''
         Sets the headers for the next exchange. Should be called every time we start
         a new exchange
+
+        @param client: The client instance to use
+        @param messageID: The UUID to use in this interaction
+        @param action: One of self.CCMS_COMMANDS defining the type of
+            interaction. If action is None, it will default to GET_COMMAND.
+
+        @returns: The updated client
         '''
+        if not action or action not in self.CCMS_COMMANDS.keys()
+            action = self.CCMS_COMMANDS['GET_COMMAND']
         wsa_ns = ('wsa', 'http://www.w3.org/2005/08/addressing')
         mustAttribute = Attribute('SOAP-ENV:mustUnderstand', 'true')
         messageID_header = Element('MessageID', ns=wsa_ns).setText(messageID)
@@ -110,7 +135,7 @@ class CCMS_Update(Atom):
             ns=wsa_ns).setText('http://%s/CCMS/EILClientOperationsService.svc' % self.CCMS_IP)
         to_header.append(mustAttribute)
         action_header = Element('Action',
-            ns=wsa_ns).setText('http://tempuri.org/IEILClientOperations/GetCommandToExecute')
+            ns=wsa_ns).setText(action)
         action_header.append(mustAttribute)
         master_header_list = [
             messageID_header,
@@ -203,6 +228,34 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
+        self.assetTimer += timeDelta
+        if self.assetTimer >= self.ASSET_TIMEDELTA:
+            self.assetTimer = 0
+            txID = self.newMessageID()
+            self.client = self.setHeaders(self.client, txID, self.CCMS_COMMANDS['UPDATE_ASSET'])
+            ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
+
+            try:
+                self.logger.info('Sending updated asset information to CCMS')
+                asset = EILAsset()
+                assetXML = asset.getAssetXML(self.MY_HOST)
+                self.logger.debug('Asset XML was:')
+                self.logger.debug(assetXML)
+                result = self.client.service.UpdateAssetInformation(self.MY_HOST, self.MY_HWADDR, assetXML)
+                if result or result == None:
+                    # Yeah, this is confusing due to how SUDS interprets
+                    # results from CCMS
+                    self.logger.info('CCMS updated with asset information')
+                else:
+                    self.logger.info('CCMS reported error when asset information was sent')
+            except:
+                # TODO this will be the catch-all once we've identified the ones
+                # we want to handle
+                #exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
+
         if timeDelta >= self.TARGET_TIMEDELTA:
             txID = self.newMessageID()
             self.client = self.setHeaders(self.client, txID)
