@@ -238,7 +238,7 @@ class CCMS_Update(Atom):
         if self.assetTimer >= self.ASSET_TIMEDELTA:
             self.assetTimer = 0
             txID = self.newMessageID()
-            self.assetClient = self.setHeaders(self.client, txID, 'UPDATE_ASSET')
+            self.assetClient = self.setHeaders(self.assetClient, txID, 'UPDATE_ASSET')
             ctx = self.generateContext(self.assetClient, self.MY_HOST, self.MY_HWADDR)
 
             try:
