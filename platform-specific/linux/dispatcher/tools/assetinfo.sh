@@ -20,21 +20,54 @@ if [ -e /etc/rc.d/rc.myipmisetup ]; then
   /etc/rc.d/rc.myipmisetup &> /dev/null
 fi
 
-IPMITOOL=/usr/local/bin/ipmitool
-DCMITOOL=/usr/local/bin/ipmitool
+IPMITOOL=ipmitool
+DCMITOOL=ipmitool
 DMIDECODE=/usr/sbin/dmidecode
-
+ASSET_FILE=/opt/intel/assetinfo
 DOIPMI=0
+DONM=0
+BRIDGE=""
+TRANSPORT=""
+		
+GROUP_ARRAY=("chassisGroup" "processorGroup" "memoryGroup" "firmwareGroup" "storageGroup" "networkGroup" "remoteGroup")
 
-FUNCT_ARRAY=("turbo" "hyperthreading" "vt" "vtd" "Xd" "UUID" "c6state" "c2c4state"
-             "nmver" "dcmiver" "eist" "dimmslots" "dimmspop" "ramtotal" "dimm"
-             "sriov" "niccount" "nicspeed" "fibercount" "fiberspeed" "sol"
-             "remote" "hdcount" "raid" "oem")
+CHASSIS_GROUP=("manufacturer" "model" "serialNumber")	 
+PROCESSOR_GROUP=("cpuCount" "cpuModel" "corePerCpu" "turbo" "hyperThreading" "vt" "vtd" "Xd" "UUID" "eist" "sriov")
+MEMORY_GROUP=("dimmSlots" "dimmsPop" "ramTotal" "dimm")
+FIRMWARE_GROUP=("biosVersion" "bmcVersion" "meVersion" "nmVersion" "dcmiVersion")
+STORAGE_GROUP=("hardDriveCount" "raid")
+NETWORK_GROUP=("nicCount" "macs" "fiberCount")
+REMOTE_GROUP=("ipAddress" "iLo" "sol")
+
+CHAN_ARRAY=("0" "6");
+TRAN_ARRAY=("0x2c" "0x88");
+
+brute_force() {
+ control=0;
+ for chan in "${CHAN_ARRAY[@]}"; do
+  if [ $control -eq 1 ]; then
+   break;
+  fi
+  for tran in "${TRAN_ARRAY[@]}"; do
+   res=`$ipmitool -b $chan -t $tran mc info 2>&1`;
+   if grep -q Timeout <<< $res &> /dev/null; then
+    continue
+   else
+    CHAN=$chan
+    TRAN=$tran
+    control=1
+    DONM=1
+    break;
+   fi
+  done
+ done
+}
 
 checkIpmi() { 
  ipmitool mc info > /tmp/ipmitest;
  if grep "Device ID" /tmp/ipmitest &> /dev/null; then
   DOIPMI=1;
+  brute_force
  fi
 }
 
@@ -45,222 +78,303 @@ printend() {
  echo "</Attributes>"
 }
 
-turbo() { #<Turbo>Enabled/Disabled</Turbo>
- echo "<Key>Turbo</Key><Value>N/A</Value>" 
+chassisGroup() {
+ echo -e "\t<Chassis>" >> $ASSET_FILE
+ for funct in "${CHASSIS_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</Chassis>" >> $ASSET_FILE
 }
 
-hyperthreading() { #<HyperThreading>Enabled/Disabled</HyperThreading>
- echo -n "<Key>HyperThreading</Key><Value>"
+manufacturer() {
+ manf=`$DMIDECODE -s system-manufacturer | sed 's/  */ /g'`
+ echo -e "\t\t<Manufacturer>$manf</Manufacturer>"
+}
+
+model() {
+ mod=`$DMIDECODE  -s system-product-name | sed 's/  */ /g'`
+ echo -e "\t\t<Model>$mod</Model>"
+}
+
+serialNumber() {
+ serial=`$DMIDECODE -s system-serial-number | sed 's/  */ /g'`
+ echo -e "\t\t<SerialNumber>$serial</SerialNumber>"
+}
+
+processorGroup() {
+ echo -e "\t<Processor>" >> $ASSET_FILE
+ for funct in "${PROCESSOR_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</Processor>" >> $ASSET_FILE
+} 
+
+cpuCount() {
+ ccount=`grep "physical id" /proc/cpuinfo | sort -u | wc -l`
+ echo -e "\t\t<CpuCount>$ccount</CpuCount>"
+}
+
+cpuModel() {
+ cmodel=`grep "model name" /proc/cpuinfo | sort -u | cut -d ":" -f 2| sed 's/  */ /g'`
+ echo -e "\t\t<CpuModel>$cmodel</CpuModel>"
+}
+
+corePerCpu() {
+ ccount=`grep "processor" /proc/cpuinfo | wc -l`
+ pcount=`grep "physical id" /proc/cpuinfo|sort -u|wc -l`
+ cpc=$((ccount / pcount))
+ echo -e "\t\t<CorePerCpu>$cpc</CorePerCpu>"
+}
+
+turbo() {
+ echo -en "\t\t<Turbo>"
+ if grep turbo /proc/cpuinfo &> /dev/null; then
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</Turbo>"
+}
+
+hyperThreading() {
+ echo -en "\t\t<HyperThreading>"
  if grep ht /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</HyperThreading>"
+}
+
+vt() {
+ echo -en "\t\t<Vt>"
+ if grep vt /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</Vt>"
+}
+
+vtd() {
+ echo -en "\t\t<VtD>"
+ if grep vtd /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</VtD>"
+}
+
+Xd() { 
+ echo -en "\t\t<VtD>"
+ if grep vtd /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</VtD>"
+}
+
+UUID() {
+ echo -en "\t\t<UUID>"
+ uuid=`$DMIDECODE| grep UUID | awk '{print $2}'`
+ echo -n "$uuid"
+ echo "</UUID>"
+}
+
+eist() {
+ echo -en "\t\t<EIST>"
+ if grep eist /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</EIST>"
+}
+
+sriov() {
+ echo -en "\t\t<SRIOV>"
+ if grep sriov /proc/cpuinfo &> /dev/null; then 
+  echo -n "Enabled"
+ else
+  echo -n "N/A"
+ fi
+ echo "</SRIOV>"
+}
+
+memoryGroup() {
+ echo -e "\t<Memory>" >> $ASSET_FILE
+ for funct in "${MEMORY_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</Memory>" >> $ASSET_FILE
+}
+
+dimmSlots() {
+ cnt=`$DMIDECODE | grep "Memory Device" | wc -l`
+ echo -e "\t\t<DimmSlots>$cnt</DimmSlots>"
+}
+
+dimmsPop() {
+ cnt=`$DMIDECODE | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l`
+ echo -e "\t\t<DimmPopulated>$cnt</DimmPopulated>"
+}
+
+ramTotal() {
+ result=`$DMIDECODE | grep "Memory Array" -A 6 | grep Range | awk '{print $3$4}' | tail -n 1`
+ echo -e "\t\t<RamTotal>$result</RamTotal>"
+}
+
+dimm() {
+ echo -en "\t\t<Dimm>\n"
+ for dimm in `$DMIDECODE | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module" | grep -v "Range" | awk '{print $2$3}'`; do
+  echo -en "\t\t\t<DimmSize>"
+  echo -en "$dimm"
+  echo    "</DimmSize>"  
+ done
+ echo -e "\t\t</Dimm>"
+}
+
+firmwareGroup() {
+ echo -e "\t<Firmware>" >> $ASSET_FILE
+ for funct in "${FIRMWARE_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</Firmware>" >> $ASSET_FILE
+}
+
+biosVersion() {
+ bv=`$DMIDECODE -s bios-version`
+ echo -e "\t\t<BiosVersion>$bv</BiosVersion>"
+}
+
+bmcVersion() {
+ bv="N/A"
+ if [ $DOIPMI -gt 0 ]; then
+  bv=`$IPMITOOL mc info | grep Firmware | grep -v Aux | awk '{print $4}'`
+ fi
+ echo -e "\t\t<BmcVersion>$bv</BmcVersion>"
+}
+
+meVersion() {
+ mv="N/A"
+ if [ $DOIPMI -gt 0 ]; then
+  if [ $DONM -gt 0 ]; then
+   mv=`$IPMITOOL -b $BRIDGE -t $TRANSPORT mc info | grep "Firmware Revision" | awk '{print $4}'`
+  fi
+ fi
+ echo -e "\t\t<MeVersion>$mv</MeVersion>"
+}
+
+nmVersion() {
+nv="N/A"
+if [ $DOIPMI -gt 0 ]; then
+if [ $DONM -gt 0 ]; then
+nv="N/A"
+tmp=`ipmitool  -b 06 -t 0x2c raw 0x2e 0xca 0x57 0x01 0x00 | awk '{print $4}'`
+case $tmp in
+01)
+  nv="1.0"
+  ;;
+02)
+  nv="1.5"
+  ;;
+03)
+  nv="2.0"
+  ;;
+esac
+fi
+fi
+echo -e "\t\t<NmVersion>$nv</NmVersion>"
+}
+
+dcmiVersion() {
+ echo -e "\t\t<DcmiVersion>N/A</DcmiVersion>"
+}
+
+storageGroup() {
+ echo -e "\t<Storage>" >> $ASSET_FILE
+ for funct in "${STORAGE_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</Storage>" >> $ASSET_FILE
+}
+
+hardDriveCount() {
+ cnt=` fdisk -l | grep "^Disk" | cut -f 1 -d ',' | cut -f 3- -d '/' | wc -l`
+ echo -e "\t\t<HardDriveCount>$cnt</HardDriveCount>"
+}
+
+raid() {
+ echo -en "\t\t<Raid>"
+ if dmesg | grep raid| grep PCI &> /dev/null; then
   echo -n "Enabled"
  else
   echo -n "Disabled"
  fi
- echo "</Value>"
+ echo "</Raid>"
 }
 
-vt() { #<Vt>Enabled/Disabled</Vt>
- echo "<Key>Vt</Key><Value>N/A</Value>"
-}
-
-vtd() { #<Vt-d>Enabled/Disabled</Vt-d>
- echo "<Key>Vt-d</Key><Value>N/A</Value>"
-}
-
-Xd() { #<Xd>Enabled/Disabled</Xd>
- echo "<Key>Xd</Key><Value>N/A</Value>"
-}
-
-UUID() { #<UUID>Urbanna</UUID>                
- echo -n "<Key>UUID</Key><Value>"
- uuid=`$DMIDECODE| grep UUID | awk '{print $2}'`
- echo -n "$uuid"
- echo "</Value>"
-}
-
-c6state() { #<C6State>Enabled/Disabled</C6State>
- echo "<Key>C6State</Key><Value>N/A</Value>"
-}
-
-c2c4state() { #<C2C3>Enabled/Disabled</C2C3>
- echo "<Key>C2C3</Key><Value>N/A</Value>"
-}
-
-nmver() { #<NMVersion>1.5</NMVersion>
- if [ $DOIPMI -eq 0 ]; then
-  echo "<Key>NMVersion</Key><Value>Disabled</Value>"
- else
-  echo -n "<Key>NMVersion</Key><Value>"
-  bmc_v=`$IPMITOOL mc info | grep IPMI | awk '{print $4}' 2>/dev/null`
-  BMC_VER="Disabled"
-  if [ "$bmc_v" == "2.0" ]; then
-   BMC_VER="1.5"
-  fi
-  if [ "$bmc_v" == "2" ]; then
-   BMC_VER="1.5"
-  fi
-  if [ "$bmc_v" == "3.0" ]; then
-   BMC_VER="2.0"
-  fi
-  echo  -n "$BMC_VER"
-  echo "</Value>"
- fi
-}
-
-dcmiver() { #<DCMIVersion>1.5</DCMIVersion>
- if [ $DOIPMI -eq 0 ];then 
-  echo "<Key>DCMIVersion</Key><Value>Disabled</Value>"
- else
-  echo -n "<Key>DCMIVersion</Key><Value>"
-  v=`$DCMITOOL  raw 0x2c 0x01 0xdc 0x01 | awk '{print $2"."$3}'`
-  echo -n "$v"
-  echo "</Value>"
- fi
-}
-
-eist() { #<EIST>Enabled/Disabled</EIST>
- echo "<Key>EIST</Key><Value>N/A</Value>"
-}
-
-dimmslots() { #<DimmSlots>4</DimmSlots>
- echo -n "<Key>DimmSlots</Key><Value>"
- cnt=`$DMIDECODE | grep "Memory Device" | wc -l`
- echo -n "$cnt"
- echo "</Value>"
-}
-
-dimmspop() { #<DimmPopulated>4</DimmPopulated>
- echo -n "<Key>DimmPopulated</Key><Value>"
- cnt=`$DMIDECODE | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l`
- echo -n "$cnt"
- echo "</Value>"
-}
-
-ramtotal() { #<RamTotal>12</RamTotal>
- echo -n "<Key>RamTotal</Key><Value>"
- result=`$DMIDECODE | grep "Memory Array" -A 6 | grep Range | awk '{print $3$4}'`
- echo -n "$result"
- echo "</Value>"
-}
-
-dimm() { #<Dimm><DimmSpeed>1066</DimmSpeed><DimmSize>2</DimmSize></Dimm>
- echo -en "<Key>Dimm</Key>\n<Value>\n"
- for dimm in `$DMIDECODE | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module" | grep -v "Range" | awk '{print $2$3}'`; do
-  echo -en "\t<Key>DimmSize</Key><Value>"
-  echo -en "$dimm"
-  echo    "</Value>"  
+networkGroup() {
+ echo -e "\t<Network>" >> $ASSET_FILE
+ for funct in "${NETWORK_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
  done
- echo "</Value>"
+ echo -e "\t</Network>" >> $ASSET_FILE
 }
 
-sriov() { #<SR-IOV>Enabled/Disabled</SR-IOV>
- echo "<Key>SR-IOV</Key><Value>N/A</Value>"
+nicCount() {
+ cnt=`ifconfig -a | grep HWaddr | wc -l`
+ echo -e "\t\t<NicCount>$cnt</NicCount>"
 }
 
-niccount() { #<NicCount>2</NicCount>
- echo -n "<Key>NicCount</Key><Value>"
- cnt=`ifconfig -a| grep eth | wc -l`
- echo -n "$cnt"
- echo "</Value>"
-}
-
-nicspeed() { #<NicSpeed>1Gb</NicSpeed>
- for i in "`dmesg | grep eth | grep Mbps`"; do
-  speed=`echo $i | awk '{print $7 " " $8}'` 
-  echo "<Key>NicSpeed</Key><Value>$speed</Value>"
+macs() {
+ echo -e "\t\t<Macs>"
+ for i in `ifconfig -a | grep HWaddr | awk '{print $5}'`; do
+  echo -e "\t\t\t<WiredMacAddress>$i</WiredMacAddress>"
  done
+ echo -e "\t\t</Macs>"
 }
 
-FC_DIR=/sys/class/fc_host
-
-fibercount() { #<FiberCount>2</FiberCount>
- echo -n "<Key>FiberCount</Key><Value>"
- if [ ! -d $FC_DIR ]; then
-  echo -n "0"
- else
-  PORT_CNT=`ls -1 $FC_DIR| wc -l`
-  echo -n "$PORT_CNT"
+fiberCount() {
+ FC_DIR=/sys/class/fc_host
+ fc=0
+ if [ -d $FC_DIR ]; then
+  fc=`ls -1 $FC_DIR | wc -l`
  fi
- echo "</Value>"
+ echo -e "\t\t<FiberCount>$fc</FiberCount>"
 }
 
-fiberspeed() { #<FiberSpeed>1Gb</FiberSpeed>
- if [ -d $FC_DIR ]; then 
-  for i in `ls -1 $FC_DIR`; do
-   echo -n "<Key>FiberSpeed</Key><Value>"
-   SPEEDS=`cat $FC_DIR/$i/supported_speeds`
-   echo -n "$SPEEDS"
-   echo "</Value>"
-  done
- else
-  echo "<Key>FiberSpeed</Key><Value>Disabled</Value>"
+remoteGroup() {
+ echo -e "\t<RemoteCapability>" >> $ASSET_FILE
+ for funct in "${REMOTE_GROUP[@]}"; do
+  ${funct} >> $ASSET_FILE
+ done
+ echo -e "\t</RemoteCapability>" >> $ASSET_FILE
+}
+
+ipAddress() {
+ ip="N/A"
+ if [ $DOIPMI -gt 0 ]; then
+  ip=`$IPMITOOL lan print | grep "IP Addr" | grep -v Source | awk '{print $4}'`
  fi
+ echo -e "\t\t<BmcIpAddress>$ip</BmcIpAddress>"
 }
 
-sol() { #<SerialOverLan>Enabled/Disabled</SerialOverLan>
- if [ $DOIPMI -eq 0 ]; then 
-  echo "<Key>SerialOverLan</Key><Value>Disabled</Value>"
- else
-  echo -n "<Key>SerialOverLan</Key><Value>"
+iLo() {
+ echo -e "\t\t<iLo>N/A</iLo>"
+}
+
+sol() {
+ result="N/A"
+ if [ $DOIPMI -gt 0 ]; then
   test=` $IPMITOOL sol info 1 | grep Enabled | awk '{print $3}'`
   if [ "$test" == "true" ]; then
-   echo -n "Enabled"
-  else
-   echo -n "Disabled"
+   result="Enabled"
   fi
-  echo "</Value>"
  fi
-}
-
-remote() { #<RemoteCapability><IPaddress>10.19.253.1</IPaddress><Weblink>http://10.19.253.1</Weblink><iLO></iLO></RemoteCapability> 
- echo -en "<Key>RemoteCapability</Key>\n<Value>\n"
-  echo -en "\t<Key>IPaddress</Key><Value>"
-  ip=""
-  if [ $DOIPMI -eq 0 ]; then
-   ip="N/A"
-  else
-   ip=`$IPMITOOL lan print | grep "IP Addr" | grep -v Source | awk '{print $4}'`
-  fi
-  echo -en "$ip"
-  echo "</Value>"
-  echo -e "\t<Key>Weblink</Key><Value>http://$ip</Value>"
-  echo -e "\t<Key>iLO</Key><Value>N/A</Value>"
- echo "</Value>"
-}
-
-hdcount() { #<HardDriveCount>3</HardDriveCount>
- echo -n "<Key>HardDriveCount</Key><Value>"
- cnt=` fdisk -l | grep "^Disk" | cut -f 1 -d ',' | cut -f 3- -d '/' | wc -l`
- echo -n "$cnt"
- echo "</Value>"
-}
-
-raid() { #<Raid>Enabled/Disabled</Raid>
- echo  "<Key>Raid</Key><Value>Disabled</Value>"
-# if dmesg | grep raid| grep PCI &> /dev/null; then 
-#33333  echo -n "Enabled"
-# else
-#  echo -n "Disabled"
-#33 fi
-# echo "</Value>"
-}
-
-oem() { #<OEMInventory><Bios>1.5</Bios><BMC>2.11</BMC></OEMInventory>
- echo -en "<Key>OEMInventory</Key>\n<Value>\n\t"
- echo -n "<Key>Bios</Key><Value>"
- bv=`$DMIDECODE -s bios-version`
- echo  "$bv</Value>"
- echo -en "\t<Key>BMC</Key><Value>"
- ver=""
- if [ $DOIPMI -eq 0 ]; then
-  ver="N/A"
- else
-  ver=` $IPMITOOL mc info | grep Firmware | grep -v Aux | awk '{print $4}'`
- fi
- echo -n "$ver"
- echo "</Value>"
- 
- echo "</Value>"
+ echo -e "\t\t<SerialOverLan>$result</SerialOverLan>"
 }
 
 collectInfo() {
@@ -268,13 +382,14 @@ collectInfo() {
  if [ ! -d /opt/intel ]; then
   mkdir -p /opt/intel
  fi
- ASSET_FILE=/opt/intel/assetinfo
  printstart > $ASSET_FILE
- for funct in "${FUNCT_ARRAY[@]}"; do
-  ${funct} >> $ASSET_FILE
+ for group in "${GROUP_ARRAY[@]}"; do
+  ${group}
  done
  printend >> $ASSET_FILE
 }
+
+
 
 if [ -f /lib/lsb/init-functions ]; then
  . /lib/lsb/init-functions 
