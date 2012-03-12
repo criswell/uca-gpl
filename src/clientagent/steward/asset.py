@@ -69,7 +69,7 @@ class EILAsset:
                             { 'DimSize' : None },
                             # Other elements as needed
                             ],
-                        ]),
+                        ),
                     ])),
 
                     ('Storage' , OD([                      # Array of the following
