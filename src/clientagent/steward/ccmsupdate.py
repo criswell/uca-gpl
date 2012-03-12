@@ -252,7 +252,7 @@ class CCMS_Update(Atom):
                     self.logger.info('CCMS updated with asset information')
                 else:
                     self.logger.info('CCMS reported error when asset information was sent')
-            except suds.WebFault as e:
+            except WebFault as e:
                 traceback_lines = traceback.format_exc().splitlines()
                 for line in traceback_lines:
                     self.logger.critical(line)
