@@ -37,6 +37,8 @@ SCRIPTS_DIR=$INSTALL_DIR/scripts
 
 EIL_VERSION=$(cat ${LIB_DIR}/VERSION)
 
+BOOTSTRAP="uca-bootstrap.py"
+
 TMP_WORKSPACE=`mktemp -d /tmp/eil-XXXXXX`
 
 cd $TMP_WORKSPACE
@@ -49,9 +51,9 @@ if [ "$EIL_UPDATE_VERSION" != "$EIL_VERSION" ]; then
     trace "Update available - Old version '${EIL_VERSION}', New version '${EIL_UPDATE_VERSION}'"
     trace "Attempting to fetch update..."
     # Update available
-    wget -q "${URL_RELEASE}/clientagent-bootstrap.sh"
-    chmod a+x clientagent-bootstrap.sh
-    ./clientagent-bootstrap.sh
+    wget -q "${URL_RELEASE}/${BOOTSTRAP}"
+    chmod a+x ${BOOTSTRAP}
+    ./${BOOTSTRAP}
     rm -fr ${TMP_WORKSPACE}
 fi
 
