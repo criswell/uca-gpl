@@ -148,7 +148,7 @@ class EILAsset:
             self.logger.critical("There was an error running my platform's updateAsset!!")
 
         # Build up our XML structure from self.asset
-        root = ET.Element('AssetUpdate')
+        root = ET.Element('Attributes')
         self._parseSubElement(self.asset, root)
 
         return ET.tostring(root)
