@@ -21,6 +21,7 @@ class ConfigWatch(Atom):
         self.timer += timeDelta
         if self.timer >= self.TARGET_TIMEDELTA:
             self.config.recheck()
+            self.timer = 0
 
     def shutdown(self):
         # Nothing to do
