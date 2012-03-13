@@ -108,7 +108,7 @@ if __name__ == "__main__":
     elif 'upgrade' in sys.argv:
         output = exec_command('python %s' % os.path.join(ClientAgentState.CLIENTAGENT_ROOT, 'tools', 'uca-bootstrap.pyc'))
         for line in output:
-            print line
+            print line.rstrip()
     else:
         if platformId.IS_WINDOWS:
             win32serviceutil.HandleCommandLine(StewardHandler)
