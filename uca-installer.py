@@ -44,6 +44,8 @@ else:
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
+WIN32_SAVED_DIRS = [ '7za465', 'tools', 'wget', 'scripts', 'SCS', 'Log' ]
+
 # Windows specific functions
 def win32_checkServiceRunning(name):
     '''
@@ -139,6 +141,36 @@ def win32_startService():
     exec_command('sc failure EILClientAgent reset= 30 actions= restart/5000')
     exec_command('sc start EILClientAgent')
     exec_command('sc queryex EILClientAgent')
+
+def win32_backups(eilDir, backupDir):
+    '''
+    Will back-up specific directories for retention between installs.
+
+    @param eilDir: The base directory for the EIL install.
+    @param backupDir: The directory to backup the files to.
+    '''
+    for d in WIN32_SAVED_DIRS:
+        srcDir = os.path.join(eilDir, d)
+        dstDir = os.path.join(backupDir, d)
+        if os.path.isdir(srcDir):
+            logger.info('Backing up Windows directory "%s"' % srcDir)
+            mkdir_p(dstDir)
+            copy_tree(srcDir, dstDir, preserve_mode=1, preserve_times=1, preserve_symlinks=1)
+
+def win32_restore(eilDir, backupDir):
+    '''
+    Will restore specific directories we backed up before install.
+
+    @param eilDir: The base directory for the EIL install.
+    @param backupDir: The directory where the backed up files are.
+    '''
+    for d in WIN32_SAVED_DIRS:
+        dstDir = os.path.join(eilDir, d)
+        srcDir = os.path.join(backupDir, d)
+        if os.path.isdir(srcDir):
+            logger.info('Restoring Windows directory "%s"' % dstDir)
+            mkdir_p(dstDir)
+            copy_tree(srcDir, dstDir, preserve_mode=1, preserve_times=1, preserve_symlinks=1, update=1)
 
 # Linux specific functions
 def linux_stopPreviousDaemons():
@@ -415,6 +447,9 @@ if len(sys.argv) == 2:
         # Back-up home
         tempdir = tempfile.mkdtemp()
         copyHome('C:\\eil', tempdir)
+        # Backup various windows items
+        backUpTemp - tempfile.mkdtemp()
+        win32_backups('C:\\eil', backUpTemp)
         # Clean up previous install tree, then re-create proper format
         cleanUpPreviousTree('C:\\eil')
         createTreeAt('C:\\eil')
@@ -426,6 +461,8 @@ if len(sys.argv) == 2:
         win32_installTools('C:\\eil')
         # Restore home
         copyHome(tempdir, 'C:\\eil')
+        # Restore windows backups
+        win32_restore('C:\\eil', backUpTemp)
         # Start the agent
         win32_startService()
         recursive_delete(tempdir)
