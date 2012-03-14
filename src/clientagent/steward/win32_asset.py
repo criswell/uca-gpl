@@ -69,7 +69,7 @@ class Win32_Asset(EILAsset):
         try:
             ujresult = 0                        ## this is test only
             ##                                  #  comment only for testing to save SCS 7 minute process time
-            #ujresult = os.system(ujcmd)         ## this is real and should be uncommented
+            ujresult = os.system(ujcmd)         ## this is real and should be uncommented
         finally:
             ujresult = 0
 
@@ -131,8 +131,12 @@ class Win32_Asset(EILAsset):
         thisCertificateHashes = " "
         thisIsAMTConfigured = "false"
         #UUID
-
-      
+        thisNetwork = None
+        thisInterface = None
+        thisName = None
+        thisIP6Address = None
+        thisType = None
+     
         sb = "  "
         if thisJoinedToDomain == True:
             thisJoined = "True"
@@ -282,20 +286,15 @@ class Win32_Asset(EILAsset):
         self.asset['Common']['OSKernel'] = platform.release()
         #self.asset['Common']['Network']['Interface'](int('0')[IP4Address] = MyIPnbr
 
-        nic = ('Network' , [                     # Array of the following
-               { 'Interface' : {
-                 'Name' : None,                  # String
-                 'Mac' : MY_HWADDR,              # String
-                 'IP4Address' : MyIPnbr,         # String
-                 'IP6Address' : None,            # String
-                 'Type' : None,                  # String
-                            },
-                        },
-                        # Other elements as needed
-                  ])
+        nic = OD([
+                 ('Name' , thisName),
+                 ('Mac' , MY_HWADDR),
+                 ('IP4Address' , MyIPnbr),
+                 ('IP6Address' , thisIP6Address),
+                 ('Type' , thisType),
+                 ])
 
-
-        self.asset['Common']['Network'] = nic
+        self.asset['Common']['Network']['Interface'] = nic
 
         theAMT = OD([
                     ('AMTConfigurationMode' , thisAMTConfigurationMode),
@@ -310,10 +309,7 @@ class Win32_Asset(EILAsset):
                     
         #print theAMT
         self.asset['Common']['AMT'] = theAMT
-        self.logger.info("AMTConfigurationState :" +  thisAMTConfigurationState);
-        self.logger.info("AMTConfigurationMode :" +  thisAMTConfigurationMode);
-        self.logger.info("AMTversion: " + thisAMTversion);
-        self.logger.info("AMTver: " + thisAMTVer);
+        self.logger.info("Finished with Win32_asset function updateAsset :") 
     def endthis():
         thisen = ' '
 # vim:set ai et sts=4 sw=4 tw=80:
