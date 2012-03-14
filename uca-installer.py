@@ -155,7 +155,7 @@ def win32_backups(eilDir, backupDir):
         if os.path.isdir(srcDir):
             logger.info('Backing up Windows directory "%s"' % srcDir)
             mkdir_p(dstDir)
-            copy_tree(srcDir, dstDir, preserve_mode=1, preserve_times=1, preserve_symlinks=1)
+            copy_tree(srcDir, dstDir)
 
 def win32_restore(eilDir, backupDir):
     '''
@@ -170,7 +170,7 @@ def win32_restore(eilDir, backupDir):
         if os.path.isdir(srcDir):
             logger.info('Restoring Windows directory "%s"' % dstDir)
             mkdir_p(dstDir)
-            copy_tree(srcDir, dstDir, preserve_mode=1, preserve_times=1, preserve_symlinks=1, update=1)
+            copy_tree(srcDir, dstDir)
 
 # Linux specific functions
 def linux_stopPreviousDaemons():
