@@ -308,7 +308,7 @@ class Win32_Asset(EILAsset):
                     ])
                     
         #print theAMT
-        self.asset['Common']['AMT'] = theAMT
+        self.asset['AMT'] = theAMT
         self.logger.info("Finished with Win32_asset function updateAsset :") 
     def endthis():
         thisen = ' '
