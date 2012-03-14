@@ -8,7 +8,7 @@ bootstrapper during installation.
 '''
 
 import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
-import compileall, re
+import compileall, re, errno
 from distutils.dir_util import copy_tree
 
 # Platform determination
