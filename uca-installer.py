@@ -448,7 +448,7 @@ if len(sys.argv) == 2:
         tempdir = tempfile.mkdtemp()
         copyHome('C:\\eil', tempdir)
         # Backup various windows items
-        backUpTemp - tempfile.mkdtemp()
+        backUpTemp = tempfile.mkdtemp()
         win32_backups('C:\\eil', backUpTemp)
         # Clean up previous install tree, then re-create proper format
         cleanUpPreviousTree('C:\\eil')
