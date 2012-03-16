@@ -29,7 +29,7 @@ HOSTS = {
     }
 
 WIN32_TOOLS = [
-        'http://172.16.3.10/Someplace/EILTools.zip'
+        'http://172.16.3.10/EILUCA/Wintools.zip'
     ]
 
 '''  The directories to create in the root tree '''

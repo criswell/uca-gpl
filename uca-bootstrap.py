@@ -77,7 +77,7 @@ if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
 else:
     # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
     try:
-        url = 'http://%s/ucaPhase2/uca.zip' % STAGING_IP
+        url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP #STAGING_IP
         logger.info('Pulling UCA zipfile: %s' % url)
         (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
