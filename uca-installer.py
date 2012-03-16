@@ -8,7 +8,7 @@ bootstrapper during installation.
 '''
 
 import os, logging, dircache, shutil, traceback, sys, tempfile, subprocess
-import compileall, re, errno
+import compileall, re, errno, urllib, zipfile
 from distutils.dir_util import copy_tree
 
 # Platform determination
@@ -27,6 +27,10 @@ HOSTS = {
         'eilauto01' : { '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'] },
         'nmsa01' : { '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01'] }
     }
+
+WIN32_TOOLS = [
+        'http://172.16.3.10/Someplace/EILTools.zip'
+    ]
 
 '''  The directories to create in the root tree '''
 DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
@@ -128,8 +132,20 @@ def win32_installTools(rootDir):
     Given the rootDir, will install the Windows-specific tools.
     '''
     logger.info('Installing tools...')
-    # FIXME - Add items here
-    pass
+    for tool in WIN32_TOOLS:
+        try:
+            logger.info('Trying to install "%s"' % tool)
+            (filename, headers) = urllib.urlretrieve(tool)
+            logger.info('Downloaded to "%s"' % filename)
+            toolZip = zipfile.ZipFile(filename, 'r')
+            toolZip.extractall('C:\\')
+            toolZip.close()
+            logger.info('Extracted...')
+        except:
+            logger.critical('Problem installing tool!')
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                logger.info(line)
 
 def win32_startService():
     '''
