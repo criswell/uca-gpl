@@ -272,7 +272,7 @@ do
 done
 
 # Set up the version info
-cp -f ../VERSION $LIB_DIR/.
+#cp -f ../VERSION $LIB_DIR/.
 
 # Install the tools
 for TOOL_FILE in $ALL_TOOLS

@@ -36,7 +36,14 @@ WIN32_TOOLS = [
 DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
 
 ''' A list of any Python scripts we should not pre-compile '''
-PRECOMPILE_EXCEPTIONS = [ 'eil_steward.py', 'uca-installer.py' ]
+PRECOMPILE_EXCEPTIONS = [
+    'eil_steward.py',
+    'uca-installer.py',
+    'nmsa_handler.py',
+    'nmsa_daemon.py',
+    'nmsa_conf.py',
+    'nmsa_main.py',
+    ]
 
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
