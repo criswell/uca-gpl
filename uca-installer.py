@@ -25,7 +25,7 @@ HOSTS = {
         'eilportal' :  { '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'] },
         'rmssrvr01' : { '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'] },
         'eilauto01' : { '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'] },
-        'nmsa01' : { '10.4.0.123' : [' nmsa01.eil-infra.com', 'nmsa01'] }
+        'nmsa01' : { '10.4.0.123' : ['nmsa01.eil-infra.com', 'nmsa01'] }
     }
 
 WIN32_TOOLS = [
