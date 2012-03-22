@@ -15,3 +15,7 @@
 * Finish installer/updated on Linux-side (currently stubbed).
 
 * Some sort of fallback for IP address changes for CCMS.
+
+* Do something less "frightening looking" with uca-bootstrap when normal/
+  expected things (like home not being there when we do a fresh install)
+  happen.
