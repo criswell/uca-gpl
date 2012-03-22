@@ -234,7 +234,7 @@ class CCMS_Update(Atom):
 
     def update(self, timeDelta):
         self.assetTimer += timeDelta
-
+        self.logger.debug('asset Timer: %s - timeDelta %s' % (self.assetTimer, self.ASSET_TIMEDELTA))
         if self.assetTimer >= self.ASSET_TIMEDELTA:
             self.assetTimer = 0
             txID = self.newMessageID()
