@@ -19,3 +19,7 @@
 * Do something less "frightening looking" with uca-bootstrap when normal/
   expected things (like home not being there when we do a fresh install)
   happen.
+
+* Need update logic, for bootstrap (old bootstrap) to check for updates and if
+  present will switch to UCA, but only if Python is present on system (e.g.,
+  XenClient support).
