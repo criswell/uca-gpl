@@ -6,7 +6,7 @@ Abstract interface to the system-level functions.
 
 import logging
 from clientagent.common.platform_id import PlatformID
-import os
+import os, traceback
 
 platformId = PlatformID()
 if platformId.IS_WINDOWS:
@@ -95,11 +95,17 @@ class Dispatcher:
         jresult = 0
         jcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call JoinDomainOrWorkgroup FJoinOptions=35 Name=\"" + domain + "\" Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
 
+        self.logger.debug('Join command is:')
+        self.logger.debug(jcmd)
+
         self.__AdjustPrivilege(SE_SHUTDOWN_NAME)
         try:
 
             jresult = os.system(jcmd)
-
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
         finally:
             # Now we remove the privilege we just added.
             self.__AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
@@ -112,9 +118,16 @@ class Dispatcher:
         '''
         ujresult = 0
         ujcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call UnJoinDomainOrWorkgroup FUnJoinOptions=0 Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
+
+        self.logger.debug('Unjoin command is:')
+        self.logger.debug(ujcmd)
         self.__AdjustPrivilege(SE_SHUTDOWN_NAME)
         try:
             ujresult = os.system(ujcmd)
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
         finally:
             # Now we remove the privilege we just added.
             self.__AdjustPrivilege(SE_SHUTDOWN_NAME, 0)
@@ -151,6 +164,10 @@ class Dispatcher:
         try:
             wrbcode = True
             win32api.InitiateSystemShutdown(None, message, timeout, bForce, bReboot)
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
         finally:
             # Now we remove the privilege we just added.
             self.__AdjustPrivilege(SE_SHUTDOWN_NAME, 0)

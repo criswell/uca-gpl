@@ -5,6 +5,8 @@ Contains the command hanlding routines which previously were cluttering up
 the CCMS Update loop.
 '''
 
+import time
+
 def handleReboot(ccmsUpdate, ctx, result, txID):
     '''
     Handles the reboot requests and acknowledgements.
@@ -38,8 +40,10 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
 
 def handleJoin(ccmsUpdate, ctx, result, txID):
-    domain = 'dl.inteleil.com'
+    domain = 'd1.inteleil.com'
     retry = 1
+
+    ccmsUpdate.logging.getLogger('commandhandler.handleJoin')
 
     commandName = result.CommandName
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
@@ -55,6 +59,8 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
                 parmidx = nbrparms + 1
             else:
                 parmidx += 1
+
+    ccmsUpdate.logger.info('Domain name requested "%s", attempting to join...' % domain)
 
     joinExitCode = ccmsUpdate.dispatcher.join(domain)
     ##      ******  in CCMS they are:     *******
@@ -75,6 +81,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     ##                                        RC - ver.Nov 2011
 
     if joinExitCode == 0:
+        ccmsUpdate.logger.info('Command execution complete, no errors reported')
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -85,6 +92,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr, rOID, rmt)
     elif joinExitCode == 1355:
         # do nothing
+        ccmsUpdate.logger.critical('Command execution failed, but marked complete anyway due to 1355 error...')
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -97,6 +105,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
         # Multiple sessions to a server- disconnect all previous
         # sessions and try again?? will need to add the RETRY
         # logic from Mahdu TAF client agent
+        ccmsUpdate.logger.info('Error code 1219, multiple sessions to a server, retry...')
         rstat = 'COMMAND_RETRY'
         rsuc = False
         rresult = 1219
@@ -118,6 +127,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
             joinExitCode = ccmsUpdate.dispatcher.join(commandName, domain)
             RetryReturn(joinExitCode, rerr, rtime, rOID, rmt)
     else:
+        ccmsUpdate.logger.critical('Domain join command failed!')
         rstat = 'COMMAND_FAILED'
         rsuc = False
         rresult = None
@@ -141,6 +151,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
     urtncode = ccmsUpdate.dispatcher.unJoin()
 
     if urtncode == 0:
+        ccmsUpdate.logger.info('Commanmd execution complete')
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -151,6 +162,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
     elif urtncode == 2692:
         # already unjoined from a domain
+        ccmsUpdate.logger.info('Already unjoined from domain, reporting command execution complete')
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
         rresult = 0
@@ -160,6 +172,7 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         rmt= result.SetMachineType
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
     else:
+        ccmsUpdate.logger.critical('Command execution failed!')
         rstat = 'COMMAND_FAILED'
         rsuc = False
         rresult = None

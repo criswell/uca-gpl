@@ -290,13 +290,17 @@ class CCMS_Update(Atom):
                     if commandName == None:
                         self.logger.info('CCMS Command was "None"')
                     elif commandName == 'reboot':
+                        self.logger.info('CCMS Command "reboot"')
                         handleReboot(self, ctx, result, txID)
                     elif commandName == 'join domain':
+                        self.logger.info('CCMS Command "join domain"')
                         handleJoin(self, ctx, result, txID)
                     elif commandName == 'unjoin domain':
+                        self.logger.info('CCMS Command "unjoin domain"')
                         handleUnJoin(self, ctx, result, txID)
                     else:
                         # FIXME TODO
+                        self.logger.critical('CCMS Command unhandled! "%s"', commandName)
                         pass
             except urllib2.URLError as e:
                 traceback_lines = traceback.format_exc().splitlines()
