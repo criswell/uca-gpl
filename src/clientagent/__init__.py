@@ -48,6 +48,9 @@ def updateLogger():
 
     Logger.info('Log level set to %d' % debug_level)
 
+    # FIXME - Temp debugging suds client items
+    logging.getLogger('suds.client').setLevel(logging.DEBUG)
+
 if not ClientAgentState.INIT_SETUP:
     platformID = PlatformID()
 
