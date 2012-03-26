@@ -43,8 +43,6 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     domain = 'd1.inteleil.com'
     retry = 1
 
-    ccmsUpdate.logging.getLogger('commandhandler.handleJoin')
-
     commandName = result.CommandName
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
 
