@@ -69,6 +69,7 @@ class CCMS_Update(Atom):
         Various initialization setup items.
         '''
         self.HOST_KNOWN = False
+        self.ACTIVE = True
         (self.MY_HWADDR, self.MY_HOST) = (None, None)
         try:
             self.logger.info('Obtaining HWADDR and HOSTNAME')
