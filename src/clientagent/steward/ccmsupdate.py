@@ -43,7 +43,7 @@ class CCMS_Update(Atom):
         self.SUDS_ONLINE = False
         self.RETRY = 0
         self.MAX_RETRIES = 10
-        self.MIN_DELAY = 20
+        self.MIN_DELAY = 5
         self.MAX_DELAY = 60
         self.TARGET_TIMEDELTA = 30
         self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
