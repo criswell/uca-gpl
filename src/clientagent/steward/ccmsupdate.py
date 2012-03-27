@@ -80,7 +80,7 @@ class CCMS_Update(Atom):
             self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
             self.logger.critical('Setting CCMS_Update atom inactive..')
         else:
-            getSuds()
+            self.getSuds()
 
     def getSuds(self):
         '''
@@ -338,6 +338,6 @@ class CCMS_Update(Atom):
                     for line in traceback_lines:
                         self.logger.critical(line)
         else:
-            getSuds()
+            self.getSuds()
 
 # vim:set ai et sts=4 sw=4 tw=80:
