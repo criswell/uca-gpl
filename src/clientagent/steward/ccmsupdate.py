@@ -90,7 +90,6 @@ class CCMS_Update(Atom):
             self.logger.critical('Bailing on CCMS operations!')
 
         if not self.MY_HOST and not self.MY_HWADDR:
-            self.ACTIVE = False
             self.HOST_KNOWN = False
             self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
             self.logger.critical('Setting CCMS_Update atom inactive..')
