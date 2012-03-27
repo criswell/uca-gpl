@@ -64,39 +64,39 @@ class CCMS_Update(Atom):
 
         self.setUp()
 
-def setUp(self):
-    '''
-    Various initialization setup items.
-    '''
-    self.HOST_KNOWN = False
-    (self.MY_HWADDR, self.MY_HOST) = (None, None)
-    try:
-        self.logger.info('Obtaining HWADDR and HOSTNAME')
-        (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
-        self.logger.info('HWADDR: %s' % self.MY_HWADDR)
-        self.logger.info('HOSTNAME: %s' % self.MY_HOST)
-    except RuntimeError:
-        # Well, this is unfortunate, we cannot run. Log an error and bail
-        traceback_lines = traceback.format_exc().splitlines()
-        for line in traceback_lines:
-            self.logger.critical(line)
-        self.logger.critical('RuntimeError during attempt to find network interface hardware address!')
-        self.logger.critical('Bailing on CCMS operations!')
-    except:
-        traceback_lines = traceback.format_exc().splitlines()
-        for line in traceback_lines:
-            self.logger.critical(line)
-        self.logger.critical('Could not obtain network interface hardware address for some unknown reason')
-        self.logger.critical('Bailing on CCMS operations!')
-
-    if not self.MY_HOST and not self.MY_HWADDR:
-        self.ACTIVE = False
+    def setUp(self):
+        '''
+        Various initialization setup items.
+        '''
         self.HOST_KNOWN = False
-        self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
-        self.logger.critical('Setting CCMS_Update atom inactive..')
-    else:
-        self.HOST_KNOWN = True
-        self.getSuds()
+        (self.MY_HWADDR, self.MY_HOST) = (None, None)
+        try:
+            self.logger.info('Obtaining HWADDR and HOSTNAME')
+            (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
+            self.logger.info('HWADDR: %s' % self.MY_HWADDR)
+            self.logger.info('HOSTNAME: %s' % self.MY_HOST)
+        except RuntimeError:
+            # Well, this is unfortunate, we cannot run. Log an error and bail
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
+            self.logger.critical('RuntimeError during attempt to find network interface hardware address!')
+            self.logger.critical('Bailing on CCMS operations!')
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
+            self.logger.critical('Could not obtain network interface hardware address for some unknown reason')
+            self.logger.critical('Bailing on CCMS operations!')
+
+        if not self.MY_HOST and not self.MY_HWADDR:
+            self.ACTIVE = False
+            self.HOST_KNOWN = False
+            self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
+            self.logger.critical('Setting CCMS_Update atom inactive..')
+        else:
+            self.HOST_KNOWN = True
+            self.getSuds()
 
     def getSuds(self):
         '''
