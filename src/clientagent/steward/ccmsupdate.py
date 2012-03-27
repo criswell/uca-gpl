@@ -69,9 +69,15 @@ class CCMS_Update(Atom):
             self.logger.info('HOSTNAME: %s' % self.MY_HOST)
         except RuntimeError:
             # Well, this is unfortunate, we cannot run. Log an error and bail
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
             self.logger.critical('RuntimeError during attempt to find network interface hardware address!')
             self.logger.critical('Bailing on CCMS operations!')
         except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
             self.logger.critical('Could not obtain network interface hardware address for some unknown reason')
             self.logger.critical('Bailing on CCMS operations!')
 
