@@ -40,6 +40,11 @@ class CCMS_Update(Atom):
         self.dispatcher = Dispatcher()
         self.config = get_config()
         self.FIRST_PASS = True
+        self.SUDS_ONLINE = False
+        self.RETRY = 0
+        self.MAX_RETRIES = 10
+        self.MIN_DELAY = 20
+        self.MAX_DELAY = 60
         self.TARGET_TIMEDELTA = 30
         self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
         self.assetTimer = self.ASSET_TIMEDELTA + 1 # Force a first time update
@@ -75,26 +80,42 @@ class CCMS_Update(Atom):
             self.logger.critical('Error obtaining HWADDR and HOSTNAME!')
             self.logger.critical('Setting CCMS_Update atom inactive..')
         else:
-            self.ACTIVE = True
-            self.logger.info('Creating SUDS SOAP client...')
-            # FIXME - We're still not caching the WSDL, before production, we
-            # really need to address this!
-            headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
-            ACKheaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateCommandStatus"'}
-            assetHeaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateAssetInformation"'}
-            try:
-                self.client = Client(self.CCMS_WSDL, headers=headers)
-                self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
-                self.assetClient = Client(self.CCMS_WSDL, headers=assetHeaders)
-            except:
-                traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
+            getSuds()
+
+    def getSuds(self):
+        '''
+        Attempts to get a new suds client
+        '''
+        self.ACTIVE = True
+        self.logger.info('Creating SUDS SOAP client...')
+        # FIXME - We're still not caching the WSDL, before production, we
+        # really need to address this!
+        headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
+        ACKheaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateCommandStatus"'}
+        assetHeaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateAssetInformation"'}
+        try:
+            self.client = Client(self.CCMS_WSDL, headers=headers)
+            self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
+            self.assetClient = Client(self.CCMS_WSDL, headers=assetHeaders)
+            self.SUDS_ONLINE = True
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                self.logger.critical(line)
                 # FIXME we will need better error checking here, but for now,
                 # we use a catch-all
+            self.SUDS_ONLINE = False
+            self.RETRY += 1
+            if self.RETRY > self.MAX_RETRIES:
                 self.logger.critical('Unknown error trying to contact CCMS!')
                 self.logger.critical('Bailing on CCMS operations!')
                 self.ACTIVE = False
+            else:
+                self.logger.critical('Error connecting CCMS, assuming we have a concurrency problem')
+                self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
+                delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
+                self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...')
+                time.sleep(delay)
 
     def newMessageID(self):
         '''
@@ -233,87 +254,90 @@ class CCMS_Update(Atom):
         pass
 
     def update(self, timeDelta):
-        self.assetTimer += timeDelta
-        self.logger.debug('asset Timer: %s - timeDelta %s' % (self.assetTimer, self.ASSET_TIMEDELTA))
-        if self.assetTimer >= self.ASSET_TIMEDELTA:
-            self.assetTimer = 0
-            txID = self.newMessageID()
-            self.assetClient = self.setHeaders(self.assetClient, txID, 'UPDATE_ASSET')
-            ctx = self.generateContext(self.assetClient, self.MY_HOST, self.MY_HWADDR)
+        if self.SUDS_ONLINE:
+            self.assetTimer += timeDelta
+            self.logger.debug('asset Timer: %s - timeDelta %s' % (self.assetTimer, self.ASSET_TIMEDELTA))
+            if self.assetTimer >= self.ASSET_TIMEDELTA:
+                self.assetTimer = 0
+                txID = self.newMessageID()
+                self.assetClient = self.setHeaders(self.assetClient, txID, 'UPDATE_ASSET')
+                ctx = self.generateContext(self.assetClient, self.MY_HOST, self.MY_HWADDR)
 
-            try:
-                self.logger.info('Sending updated asset information to CCMS')
-                asset = EILAsset()
-                assetXML = asset.getAssetXML(self.MY_HOST)
-                self.logger.debug('Asset XML was:')
-                self.logger.debug(assetXML)
-                result = self.assetClient.service.UpdateAssetInformation(self.MY_HOST, self.MY_HWADDR, assetXML)
-                if result or result == None:
-                    # Yeah, this is confusing due to how SUDS interprets
-                    # results from CCMS
-                    self.logger.info('CCMS updated with asset information')
-                else:
-                    self.logger.info('CCMS reported error when asset information was sent')
-            except WebFault as e:
-                traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
-                self.logger.critical(str(e))
-            except:
-                # TODO this will be the catch-all once we've identified the ones
-                # we want to handle
-                #exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
-
-        if timeDelta >= self.TARGET_TIMEDELTA:
-            txID = self.newMessageID()
-            self.client = self.setHeaders(self.client, txID)
-            ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
-
-            try:
-                self.logger.info('Checking for command from CCMS')
-                # FIXME - How do we handle situations where there is no
-                # hostname set? See TODO
-                result = self.client.service.GetCommandToExecute(ctx)
-                self.logger.debug('CCMS Result:')
-                self.logger.debug(result)
-
-                commandName = None
-                if result == None:
-                    self.logger.info('No CCMS command found to execute')
-                else:
-                    if 'lower' in dir(result.CommandName):
-                        commandName = result.CommandName.lower()
-
-                    if commandName == None:
-                        self.logger.info('CCMS Command was "None"')
-                    elif commandName == 'reboot':
-                        self.logger.info('CCMS Command "reboot"')
-                        handleReboot(self, ctx, result, txID)
-                    elif commandName == 'join domain':
-                        self.logger.info('CCMS Command "join domain"')
-                        handleJoin(self, ctx, result, txID)
-                    elif commandName == 'unjoin domain':
-                        self.logger.info('CCMS Command "unjoin domain"')
-                        handleUnJoin(self, ctx, result, txID)
+                try:
+                    self.logger.info('Sending updated asset information to CCMS')
+                    asset = EILAsset()
+                    assetXML = asset.getAssetXML(self.MY_HOST)
+                    self.logger.debug('Asset XML was:')
+                    self.logger.debug(assetXML)
+                    result = self.assetClient.service.UpdateAssetInformation(self.MY_HOST, self.MY_HWADDR, assetXML)
+                    if result or result == None:
+                        # Yeah, this is confusing due to how SUDS interprets
+                        # results from CCMS
+                        self.logger.info('CCMS updated with asset information')
                     else:
-                        # FIXME TODO
-                        self.logger.critical('CCMS Command unhandled! "%s"', commandName)
-                        pass
-            except urllib2.URLError as e:
-                traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
-                self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
-                self.dispatcher.tcpDiag()
-            except:
-                # TODO this will be the catch-all once we've identified the ones
-                # we want to handle
-                #exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback_lines = traceback.format_exc().splitlines()
-                for line in traceback_lines:
-                    self.logger.critical(line)
+                        self.logger.info('CCMS reported error when asset information was sent')
+                except WebFault as e:
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        self.logger.critical(line)
+                    self.logger.critical(str(e))
+                except:
+                    # TODO this will be the catch-all once we've identified the ones
+                    # we want to handle
+                    #exc_type, exc_value, exc_traceback = sys.exc_info()
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        self.logger.critical(line)
+
+            if timeDelta >= self.TARGET_TIMEDELTA:
+                txID = self.newMessageID()
+                self.client = self.setHeaders(self.client, txID)
+                ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
+
+                try:
+                    self.logger.info('Checking for command from CCMS')
+                    # FIXME - How do we handle situations where there is no
+                    # hostname set? See TODO
+                    result = self.client.service.GetCommandToExecute(ctx)
+                    self.logger.debug('CCMS Result:')
+                    self.logger.debug(result)
+
+                    commandName = None
+                    if result == None:
+                        self.logger.info('No CCMS command found to execute')
+                    else:
+                        if 'lower' in dir(result.CommandName):
+                            commandName = result.CommandName.lower()
+
+                        if commandName == None:
+                            self.logger.info('CCMS Command was "None"')
+                        elif commandName == 'reboot':
+                            self.logger.info('CCMS Command "reboot"')
+                            handleReboot(self, ctx, result, txID)
+                        elif commandName == 'join domain':
+                            self.logger.info('CCMS Command "join domain"')
+                            handleJoin(self, ctx, result, txID)
+                        elif commandName == 'unjoin domain':
+                            self.logger.info('CCMS Command "unjoin domain"')
+                            handleUnJoin(self, ctx, result, txID)
+                        else:
+                            # FIXME TODO
+                            self.logger.critical('CCMS Command unhandled! "%s"', commandName)
+                            pass
+                except urllib2.URLError as e:
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        self.logger.critical(line)
+                    self.logger.info('VLAN switch, running TCP diagnostics to pump interface')
+                    self.dispatcher.tcpDiag()
+                except:
+                    # TODO this will be the catch-all once we've identified the ones
+                    # we want to handle
+                    #exc_type, exc_value, exc_traceback = sys.exc_info()
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        self.logger.critical(line)
+        else:
+            getSuds()
 
 # vim:set ai et sts=4 sw=4 tw=80:

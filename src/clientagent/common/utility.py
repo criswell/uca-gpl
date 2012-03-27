@@ -83,13 +83,13 @@ def locateExecInPath(executable):
                 return os.path.join(path, executable)
 
     return None
-    
+
 def exec_command(cmd):
     '''
     given a command, will execute it in the parent environment
-    
+
     @param cmd: The command to execute
-    
+
     @returns: List containing the output
     '''
     p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
