@@ -55,19 +55,19 @@ if [ -f "$LASTREBOOT" ]; then
             trace_error "${OUTPUT}"
         else
             # We're still within limits, handle our reboot
-            normal_reboot
+            normal_reboot &
         fi
     else
         # Okay, we're fine, just reboot
         rm -f $LASTREBOOT
         rm -f $NUMREBOOTS
-        normal_reboot
+        normal_reboot &
     fi
 else
     # Okay, no last reboot, let's touch it and reboot then
     rm -f $LASTREBOOT
     rm -f $NUMREBOOTS
-    normal_reboot
+    normal_reboot &
 fi
 
 # vim:set ai et sts=4 sw=4 tw=80:
