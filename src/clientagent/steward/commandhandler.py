@@ -17,7 +17,8 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     '''
     commandName = result.CommandName
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
-    rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
+    #rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
+    '''
     if rebcode:
         rstat = 'COMMAND_EXECUTION_COMPLETE'
         rsuc = True
@@ -36,8 +37,17 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
         rOID = result.OperationID
         rmt= result.SetMachineType
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr,  rOID, rmt)
-
+    '''
+    rstat = 'COMMAND_EXECUTION_COMPLETE'
+    rsuc = True
+    rresult = 0
+    rerr = result.ErrorCode
+    rtime = result.ExpectedTimeOut
+    rOID = result.OperationID
+    rmt= result.SetMachineType
+    cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr,  rOID, rmt)
     ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+    rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
 
 def handleJoin(ccmsUpdate, ctx, result, txID):
     domain = 'd1.inteleil.com'
