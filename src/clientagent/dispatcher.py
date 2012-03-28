@@ -179,7 +179,8 @@ class Dispatcher:
         '''
         Reboots a Linux system
         '''
-        return linux_ExecuteCommand('reboot')
+        linux_ExecuteCommand('reboot')
+        return True
 
     def __LinuxTcpDiag(self):
         throwAwayResult = linux_ExecuteCommand('tcp_diag')
