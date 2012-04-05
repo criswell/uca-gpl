@@ -18,6 +18,7 @@ make
 nano
 perl
 libopenssl-devel
+zip
 EOF
 )
 
