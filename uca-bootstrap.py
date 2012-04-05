@@ -22,6 +22,12 @@ else:
 PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
 
+USERZIPFILE = None
+# If called with a parameter, it is assumed that parameter is the local location
+# of the zipfile
+if len(sys.argv) == 2:
+    USERZIPFILE = sys.argv[1]
+
 ROOT_DIR = 'C:\\eil'
 if IS_LINUX:
     ROOT_DIR = '/opt/intel/eil/clientagent'
@@ -67,7 +73,7 @@ def unZip(filename, tempDir):
         ucaZip.close()
         logger.info('Extracted...')
 
-if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
+if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX and not USERZIPFILE:
     # Default to old LCA
     url = 'http://172.16.3.10/EILLinuxAgent/latest/clientagent-bootstrap.sh'
     logger.info('Pulling LCA bootsrap: %s' % url)
@@ -77,9 +83,13 @@ if sys.version_info[0] < 3 and sys.version_info[1] < 6 and IS_LINUX:
 else:
     # Start out by grabbing the latest UCA - NOTE we're pulling from staging here
     try:
-        url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP #STAGING_IP
-        logger.info('Pulling UCA zipfile: %s' % url)
-        (filename, headers) = urllib.urlretrieve(url)
+        filename = None
+        if USERZIPFILE:
+            filename = USERZIPFILE
+        else:
+            url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP #STAGING_IP
+            logger.info('Pulling UCA zipfile: %s' % url)
+            (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
 
         tempDir = tempfile.mkdtemp()
