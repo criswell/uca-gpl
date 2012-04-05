@@ -11,6 +11,12 @@ MY_CWD=`pwd`
 # just know that you will need to make sure everything else works.
 DEB_DISTRO="lucid"
 
+# In order to have a more proper development environment, we give you and option
+# to specify the distro
+if [ -n "$2" ]; then
+    DEB_DISTRO=$2
+fi
+
 SUSE_DISTRO="11.3"
 
 # Must be run as root
