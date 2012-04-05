@@ -11,6 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 .. automodule:: clientagent
+.. automodule:: clientagent.steward.ccmsupdate
 
 Indices and tables
 ==================
