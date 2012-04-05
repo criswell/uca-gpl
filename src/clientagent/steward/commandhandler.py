@@ -12,8 +12,9 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     Handles the reboot requests and acknowledgements.
 
     @param ccmsUpdate The CCMS Update atom caller.
-    @param dispatcher The dispatcher instanct.
-    @param result The result from the CCMS update call
+    @param ctx The SOAP context parameter.
+    @param result The result from the CCMS update call.
+    @param txID The transaction UUID.
     '''
     commandName = result.CommandName
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
@@ -50,6 +51,14 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
 
 def handleJoin(ccmsUpdate, ctx, result, txID):
+    '''
+    Handles the domain join requests and acknowledgements.
+
+    @param ccmsUpdate The CCMS Update atom caller.
+    @param ctx The SOAP context parameter.
+    @param result The result from the CCMS update call.
+    @param txID The transaction UUID.
+    '''
     domain = 'd1.inteleil.com'
     retry = 1
 
@@ -153,6 +162,14 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: %s' % ACKresult)
 
 def handleUnJoin(ccmsUpdate, ctx, result, txID):
+    '''
+    Handles the domain unjoin requests and acknowledgements.
+
+    @param ccmsUpdate The CCMS Update atom caller.
+    @param ctx The SOAP context parameter.
+    @param result The result from the CCMS update call.
+    @param txID The transaction UUID.
+    '''
     ccmsUpdate.logger.info('domain unjoin requested')
     cmdName = result.CommandName
     ccmsUpdate.ACKclient = ccmsUpdate.setStatusUpdateHeaders(ccmsUpdate.ACKclient, txID)
