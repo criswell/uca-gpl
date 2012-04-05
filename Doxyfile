@@ -725,7 +725,7 @@ FILTER_SOURCE_FILES    = YES
 # using *.ext= (so without naming a filter). This option only has effect when
 # FILTER_SOURCE_FILES is enabled.
 
-FILTER_SOURCE_PATTERNS = README.md=
+FILTER_SOURCE_PATTERNS = *.md=
 
 #---------------------------------------------------------------------------
 # configuration options related to source browsing
