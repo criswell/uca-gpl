@@ -7,7 +7,7 @@ Base-class from which other steward sub-classes are derived.
 import exceptions
 
 class Atom:
-    '''
+    """
     All atomic steward sub-classes must be derived from this base class.
 
     The way this works is as follows:
@@ -22,11 +22,11 @@ class Atom:
     guaranteed to finish within the next 30 second window. Each could
     potentially be blocking. It's left up to the developer to make their sub-
     classes thread-safe if this is a concern.
-    '''
+    """
 
-    '''
+    """
     @var ACTIVE Determines whether this atom is active or not.
-    '''
+    """
     ACTIVE = False
 
     def __init__(self):
