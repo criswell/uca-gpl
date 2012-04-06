@@ -83,4 +83,9 @@ going on in it.
 ## Python considerations
 
 The Unified Agent was developed against Python 2.x with Python 2.5 being the
-minimum version required.
+minimum version required. The Unified Agent currently has not been tested
+against Python 3.x, and it is safe to assume it will not run correctly there.
+
+### virtualenv development
+
+http://www.virtualenv.org/en/latest/index.html
