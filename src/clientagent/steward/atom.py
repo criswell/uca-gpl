@@ -11,12 +11,9 @@ class Atom:
     All atomic steward sub-classes must be derived from this base class.
 
     The way this works is as follows:
-
         * Each atom sub-class is added to a queue in the steward.
-
         * Every 30 seconds, this queue is ran through and the atom sub-classes
             are updated.
-
         * It is up to the sub-class to determine what (if anything) it needs to
             do.
 
@@ -28,7 +25,7 @@ class Atom:
     '''
 
     '''
-    Determines whether this atom is active or not.
+    @var ACTIVE Determines whether this atom is active or not.
     '''
     ACTIVE = False
 
