@@ -1,9 +1,7 @@
 My Main Page                         {#mainpage}
 ============
 
-[TOC]
-
-Introduction
+Introduction [TOC]
 ============
 
 This is the documentation for the EIL Unified Client Agent (UCA). The Unified
@@ -18,7 +16,11 @@ following features:
 
  * Manages platform-specific utilities and features associated with the Portal.
 
-## Project History
+## Project History [TOC]
 
-Development Environment
+Todo
+
+Development Environment [TOC]
 =======================
+
+Todo
