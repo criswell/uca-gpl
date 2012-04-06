@@ -1,4 +1,7 @@
-Introduction                         {#mainpage}
+EIL Unified Client Agent Documentation                         {#mainpage}
+======================================
+
+Introduction
 ============
 
 This is the documentation for the EIL Unified Client Agent (UCA). The Unified
@@ -76,3 +79,7 @@ changes that might break the code. The general branch
 can be re-used, provided no active development is currently
 going on in it.
 
+## Python considerations
+
+The Unified Agent was developed against Python 2.x with Python 2.5 being the
+minimum version required.
