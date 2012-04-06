@@ -34,7 +34,8 @@ prevented each agent from being successfully ported to the other platform.
 In September 2011, plans were formed to create a new Unified Agent which could
 be platform agnostic. After researching options, it was decided that writing
 this Unified Agent in Python and heavily reusing platform-specific code from
-the previous agents made the most sense, and in November 2011 work began.
+the previous agents made the most sense, and in November 2011 work began. The
+first production release of the Unified Client Agent was on March 28, 2012.
 
 Development Environment
 =======================
