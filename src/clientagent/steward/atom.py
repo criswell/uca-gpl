@@ -11,11 +11,12 @@ class Atom:
     All atomic steward sub-classes must be derived from this base class.
 
     The way this works is as follows:
-        * Each atom sub-class is added to a queue in the steward.
-        * Every 30 seconds, this queue is ran through and the atom sub-classes
-            are updated.
-        * It is up to the sub-class to determine what (if anything) it needs to
-            do.
+
+    * Each atom sub-class is added to a queue in the steward.
+    * Every 30 seconds, this queue is ran through and the atom sub-classes
+      are updated.
+    * It is up to the sub-class to determine what (if anything) it needs to
+      do.
 
     The sub-classes thus will have a minimum resolution of 30 seconds, however,
     this is not guaranteed. Due to each class being atomic, they are not
