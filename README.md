@@ -196,3 +196,9 @@ Design Choices and Development Overview                         {#design}
 
 The main documentation for the development overview can be found in the
 section (@ref devdoc) or in the file "DEVELOPMENT.md".
+
+Installation                                                    {#install}
+============
+
+The documentation describing the installation procedures and software can be
+found in the section (@ref installdoc) or in the file "INSTALL.md".
