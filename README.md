@@ -1,7 +1,9 @@
-EIL Unified Client Agent Documentation                         {#mainpage}
+EIL Unified Client Agent Documentation                          {#mainpage}
 ======================================
 
-Introduction
+[TOC]
+
+Introduction                                                    {#intro}
 ============
 
 This is the documentation for the EIL Unified Client Agent (UCA). The Unified
@@ -16,7 +18,7 @@ following features:
 
  * Manages platform-specific utilities and features associated with the Portal.
 
-## Project History
+## Project History                                              {#history}
 
 Originally the EIL project  had two client agents, one for Linux and one for
 Windows. The Windows client came first and was written as a monolithic C#
@@ -37,7 +39,7 @@ this Unified Agent in Python and heavily reusing platform-specific code from
 the previous agents made the most sense, and in November 2011 work began. The
 first production release of the Unified Client Agent was on March 28, 2012.
 
-Development Environment
+Development Environment                                         {#devenv}
 =======================
 
 The Unified Agent is not developed in any specific IDE. It is meant to be
@@ -48,7 +50,7 @@ fact, should be added to the ignore file (for example, if someone wishes to use
 VisualStudio under Windows, then the project files should probably not be
 tracked).
 
-## Mercurial (Source Code Management and Version Control)
+## Mercurial (Source Code Management and Version Control)       {#hg}
 
 Mercurial (hg) was chosen as the distributed version control system (DVCS)
 because of its cross-platform nature and ease of use. It should be available on
@@ -66,7 +68,7 @@ the guides and tutorials available on the following pages:
 
 * <http://hgbook.red-bean.com/read/>
 
-### Branches, tags and naming conventions
+### Branches, tags and naming conventions                       {#branches}
 
 Inside of our Mercurial repository, we will adhere to the following naming
 conventions:
@@ -80,13 +82,13 @@ changes that might break the code. The general branch
 can be re-used, provided no active development is currently
 going on in it.
 
-## Python considerations
+## Python considerations                                        {#python}
 
 The Unified Agent was developed against Python 2.x with Python 2.5 being the
 minimum version required. The Unified Agent currently has not been tested
 against Python 3.x, and it is safe to assume it will not run correctly there.
 
-### virtualenv development
+### virtualenv development                                      {#virtualenv}
 
 It's generally a good idea to isolate the development environment. One possible
 tool to help isolate it is the [virtualenv][] tool. See the documentation on
@@ -97,7 +99,7 @@ Environment.
 
 virtualenv can be used under both Windows and Linux to isolate development.
 
-### Linux development
+### Linux development                                           {#linuxdev}
 
 Under Linux you can either use virtualenv to isolate your development
 environment, or you can use the classic Unix chroot. If you choose to use
@@ -109,7 +111,7 @@ valid and useful for the Unified Agent.
 All of these tools can be found in the Linux subdirectory of the platform-
 specific code.
 
-#### Using the build chroot script
+#### Using the build chroot script                              {#chroot}
 
 Included in the repository is a script which will set up a chroot build and
 development environment in either a Debian/Ubuntu install, or a openSUSE/SLES
@@ -126,7 +128,7 @@ distribution to use. This is helpful if you wish a newer distribution than
 
         # ./build_chroot.sh /path/to/work/chroots/lucid-buildenv testing
 
-#### Using the setup environment scripts
+#### Using the setup environment scripts                        {#setupenv}
 
 Included in the build_env directory are several scripts for setting up
 development environments on various Linux platforms. These scripts are named:
@@ -143,7 +145,7 @@ they are designed for. Running on another system  will have undefined results.
 The scripts are not entirely automated, and will require some user intervention
 during key moments. It is recommended that you read the instructions carefully.
 
-#### Using the chroot wrap script
+#### Using the chroot wrap script                               {#chw}
 
 Maintaining and changing into your chroot build environment can be tedious,
 especially if you are working from a laptop or an otherwise isolated development
@@ -159,7 +161,7 @@ completed, you will be left inside the chroot environment ready to work.
         chroot-env /# _
         ... (everything is now in the chroot)
 
-### Windows development
+### Windows development                                         {#windev}
 
 Under Windows, there really are a lot fewer tools and requirements. It is
 highly recommended that Windows developers read the virtualenv section above,
@@ -178,7 +180,7 @@ Other tools and items that are suggested, but not required, include:
 * <http://tortoisehg.bitbucket.org/>
 * <http://sourceforge.net/projects/pywin32/>
 
-Design Choices and Development Overview
+Design Choices and Development Overview                         {#design}
 =======================================
 
 TODO
