@@ -158,3 +158,27 @@ completed, you will be left inside the chroot environment ready to work.
         ... (script runs)
         chroot-env /# _
         ... (everything is now in the chroot)
+
+### Windows development
+
+Under Windows, there really are a lot fewer tools and requirements. It is
+highly recommended that Windows developers read the virtualenv section above,
+as virtualenv is the only tool available for isolating your development
+environment in Windows (other than running a Windows virtual machine,
+obviously).
+
+On Windows, you will need to have [ActivePython][] installed and setup for your
+virtualenv. It is recommended that you use the 2.7 version of ActivePython.
+
+  [ActivePython]: http://www.activestate.com/activepython
+
+Other tools and items that are suggested, but not required, include:
+
+    * <http://notepad-plus-plus.org/>
+    * <http://tortoisehg.bitbucket.org/>
+    * <http://sourceforge.net/projects/pywin32/>
+
+Design Choices and Development Overview
+=======================================
+
+TODO
