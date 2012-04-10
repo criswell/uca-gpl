@@ -1,9 +1,7 @@
 EIL Unified Client Agent Documentation                         {#mainpage}
 ======================================
 
-[TOC]
-
-Introduction @section Introduction
+Introduction
 ============
 
 This is the documentation for the EIL Unified Client Agent (UCA). The Unified
@@ -39,7 +37,7 @@ this Unified Agent in Python and heavily reusing platform-specific code from
 the previous agents made the most sense, and in November 2011 work began. The
 first production release of the Unified Client Agent was on March 28, 2012.
 
-Development Environment @section Development Environment
+Development Environment
 =======================
 
 The Unified Agent is not developed in any specific IDE. It is meant to be
