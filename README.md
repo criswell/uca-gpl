@@ -12,11 +12,9 @@ and a variety of Linux distributions to provide interaction with the central
 EIL Portal through a system known as "CCMS" or "RMS". The Unified Agent has the
 following features:
 
- * Performs post-provisioning setup and configuration.
-
- * Accepts and executes commands sent from Portal through CCMS.
-
- * Manages platform-specific utilities and features associated with the Portal.
+* Performs post-provisioning setup and configuration.
+* Accepts and executes commands sent from Portal through CCMS.
+* Manages platform-specific utilities and features associated with the Portal.
 
 ## Project History                                              {#history}
 
@@ -63,9 +61,7 @@ If you are new to hg, then you should probably familiarize yourself with
 the guides and tutorials available on the following pages:
 
 * <http://mercurial.selenic.com/guide/>
-
 * <http://mercurial.selenic.com/wiki/Tutorial>
-
 * <http://hgbook.red-bean.com/read/>
 
 ### Branches, tags and naming conventions                       {#branches}
