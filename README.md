@@ -194,4 +194,5 @@ Other tools and items that are suggested, but not required, include:
 Design Choices and Development Overview                         {#design}
 =======================================
 
-TODO
+The main documentation for the development overview can be found in the
+section ["Development Overview"](#devdoc) or in the file DEVELOPMENT.md.
