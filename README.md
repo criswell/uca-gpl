@@ -13,6 +13,7 @@ EIL Unified Client Agent Documentation                          {#mainpage}
         * [Using the chroot wrap script](#chw)
     * [Windows development](#windev)
 * [Design Choices and Development Overview](#design)
+* [Installation](#install)
 
 Documentation authors: *Sam Hart, Stewart Dale, Rich Chauvet*
 
