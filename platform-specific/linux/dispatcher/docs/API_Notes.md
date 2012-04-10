@@ -6,7 +6,7 @@ EIL Dispatcher API Documentation                            {#shellapi}
 * [The Dispatcher APIs](#sh_2)
     * ["dispatcher.sh"](#sh_2a)
     * ["globals.sh"](#sh_2b)
-    * ["helper.sh")(#sh_2c)
+    * ["helper.sh"](#sh_2c)
         * [Platform specification](#sh_2c1)
         * [Logging functions](#sh_2c2)
         * [Date functions](#sh_2c3)
@@ -153,22 +153,22 @@ applications can be found through the logger.sh script. This script is located
 in the tools/ directory under the install directory (typically
 /opt/intel/eil/clientagent/tools). The usage for this script is as follows:
 
-  Usage: logger.sh [OPTION] <log message>
-  Where:
-    <log message>   - is your log message
-    [OPTION]        - is one of the following
+    Usage: logger.sh [OPTION] <log message>
+    Where:
+        <log message>   - is your log message
+        [OPTION]        - is one of the following
 
-    --std           Log the message to the standard client agent dispatcher log
-                    (default when called with no options).
+        --std           Log the message to the standard client agent dispatcher log
+                        (default when called with no options).
 
-    --err           Log the message to the client agent dispatcher error log.
+        --err           Log the message to the client agent dispatcher error log.
 
-    --echo          Echo the message back to STDOUT in addition to whatever
-                    else it may be doing.
+        --echo          Echo the message back to STDOUT in addition to whatever
+                        else it may be doing.
 
-    --nostd         Disable standard client agent dispatcher logging (use in
-                    combination with '--echo' if you wish you only log to
-                    STDOUT)
+        --nostd         Disable standard client agent dispatcher logging (use in
+                        combination with '--echo' if you wish you only log to
+                        STDOUT)
 
 So, if you wanted to log the message "Error during operation FOO" to the
 client agent's error logs from an external application, you would call the
