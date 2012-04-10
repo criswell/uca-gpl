@@ -1,9 +1,9 @@
 EIL Unified Client Agent Documentation                         {#mainpage}
 ======================================
 
-* [Introduction](#intro)
+[TOC]
 
-Introduction <a id="intro" />
+Introduction
 ============
 
 This is the documentation for the EIL Unified Client Agent (UCA). The Unified
