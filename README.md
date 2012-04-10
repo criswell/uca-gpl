@@ -1,7 +1,10 @@
 EIL Unified Client Agent Documentation                          {#mainpage}
 ======================================
 
-[TOC]
+* [Introduction](#intro)
+* [Development Environment](#devenv)
+    * [Mercurial](#hg)
+        * [Branches, tags and naming conventions](#branches)
 
 Introduction                                                    {#intro}
 ============
