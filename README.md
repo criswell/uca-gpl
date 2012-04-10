@@ -13,6 +13,7 @@ EIL Unified Client Agent Documentation                          {#mainpage}
         * [Using the chroot wrap script](#chw)
     * [Windows development](#windev)
 * [Design Choices and Development Overview](#design)
+    * [API Documentation](#apilinks)
 * [Installation](#install)
 
 Documentation authors: *Sam Hart, Stewart Dale, Rich Chauvet*
@@ -197,6 +198,23 @@ Design Choices and Development Overview                         {#design}
 
 The main documentation for the development overview can be found in the
 section (@ref devdoc) or in the file "DEVELOPMENT.md".
+
+## API Documentation                                            {#apilinks}
+
+The following can be thought of as a ordered overview of the project from an
+API perspective.
+
+* Unified Client Agent
+* Platform Specific Code
+    * Windows
+    * Linux
+        * NMSA/LAF
+            * @ref NMSA_Master
+            * @ref nmsa_handler
+            * @ref nmsa_conf
+            * @ref nmsa_daemon.Daemon
+        * Dispatcher
+            * @ref shellapi "Shell API"
 
 Installation                                                    {#install}
 ============
