@@ -174,9 +174,9 @@ virtualenv. It is recommended that you use the 2.7 version of ActivePython.
 
 Other tools and items that are suggested, but not required, include:
 
-    * <http://notepad-plus-plus.org/>
-    * <http://tortoisehg.bitbucket.org/>
-    * <http://sourceforge.net/projects/pywin32/>
+* <http://notepad-plus-plus.org/>
+* <http://tortoisehg.bitbucket.org/>
+* <http://sourceforge.net/projects/pywin32/>
 
 Design Choices and Development Overview
 =======================================
