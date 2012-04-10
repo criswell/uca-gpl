@@ -14,6 +14,8 @@ EIL Unified Client Agent Documentation                          {#mainpage}
     * [Windows development](#windev)
 * [Design Choices and Development Overview](#design)
 
+Documentation authors: *Sam Hart, Stewart Dale, Rich Chauvet*
+
 -------------------------------------------------------------------------------
 
 Introduction                                                    {#intro}
