@@ -195,4 +195,4 @@ Design Choices and Development Overview                         {#design}
 =======================================
 
 The main documentation for the development overview can be found in the
-section ["Development Overview"](#devdoc) or in the file DEVELOPMENT.md.
+section (@ref devdoc) or in the file "DEVELOPMENT.md".
