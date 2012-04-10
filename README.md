@@ -5,6 +5,16 @@ EIL Unified Client Agent Documentation                          {#mainpage}
 * [Development Environment](#devenv)
     * [Mercurial](#hg)
         * [Branches, tags and naming conventions](#branches)
+    * [Python considerations](#python)
+        * [virtualenv development](#virtualenv)
+    * [Linux development](#linuxdev)
+        * [Using the build chroot script](#chroot)
+        * [Using the setup environment scripts](#setupenv)
+        * [Using the chroot wrap script](#chw)
+    * [Windows development](#windev)
+* [Design Choices and Development Overview](#design)
+
+-------------------------------------------------------------------------------
 
 Introduction                                                    {#intro}
 ============
@@ -98,7 +108,7 @@ Environment.
 
 virtualenv can be used under both Windows and Linux to isolate development.
 
-### Linux development                                           {#linuxdev}
+## Linux development                                           {#linuxdev}
 
 Under Linux you can either use virtualenv to isolate your development
 environment, or you can use the classic Unix chroot. If you choose to use
@@ -110,7 +120,7 @@ valid and useful for the Unified Agent.
 All of these tools can be found in the Linux subdirectory of the platform-
 specific code.
 
-#### Using the build chroot script                              {#chroot}
+### Using the build chroot script                              {#chroot}
 
 Included in the repository is a script which will set up a chroot build and
 development environment in either a Debian/Ubuntu install, or a openSUSE/SLES
@@ -127,7 +137,7 @@ distribution to use. This is helpful if you wish a newer distribution than
 
         # ./build_chroot.sh /path/to/work/chroots/lucid-buildenv testing
 
-#### Using the setup environment scripts                        {#setupenv}
+### Using the setup environment scripts                        {#setupenv}
 
 Included in the build_env directory are several scripts for setting up
 development environments on various Linux platforms. These scripts are named:
@@ -144,7 +154,7 @@ they are designed for. Running on another system  will have undefined results.
 The scripts are not entirely automated, and will require some user intervention
 during key moments. It is recommended that you read the instructions carefully.
 
-#### Using the chroot wrap script                               {#chw}
+### Using the chroot wrap script                               {#chw}
 
 Maintaining and changing into your chroot build environment can be tedious,
 especially if you are working from a laptop or an otherwise isolated development
@@ -160,7 +170,7 @@ completed, you will be left inside the chroot environment ready to work.
         chroot-env /# _
         ... (everything is now in the chroot)
 
-### Windows development                                         {#windev}
+## Windows development                                         {#windev}
 
 Under Windows, there really are a lot fewer tools and requirements. It is
 highly recommended that Windows developers read the virtualenv section above,
