@@ -127,10 +127,10 @@ specific code.
 ### Using the build chroot script                              {#chroot}
 
 Included in the repository is a script which will set up a chroot build and
-development environment in either a Debian/Ubuntu install, or a openSUSE/SLES
-install. The script's name is
-"build_chroot.sh", and takes a single parameter specifying the path to the
-chroot to build, e.g.:
+development environment in either a Debian/Ubuntu install, a Red Hat
+derived install (such as CentOS, RHEL, or Fedora), or an openSUSE/SLES
+install. The script's name is "build_chroot.sh", and takes a single
+parameter specifying the path to the chroot to build, e.g.:
 
         # ./build_chroot.sh /path/to/work/chroots/lucid-buildenv
 

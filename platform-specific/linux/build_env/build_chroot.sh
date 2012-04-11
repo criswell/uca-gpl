@@ -119,6 +119,42 @@ suse_build() {
     run_setupenv $CHROOT_PATH
 }
 
+yum_build() {
+    local TARGET=$1
+
+    # Just making sure this is here
+    yum install -y links
+
+    local RELEASE_RPM=$(links -dump http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/ | grep fedora-release-rawhide | awk {'print $1'})
+
+    if [ ! -d "$TARGET" ]; then
+        mkdir -p ${TARGET}
+    fi
+
+    mkdir -p ${TARGET}/var/lib/rpm
+    rpm --rebuilddb --root=${TARGET}
+
+    rpm -i --root=${TARGET} --nodeps ${RELEASE_RPM}
+
+    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip
+
+    mount --bind /proc ${TARGET}/proc
+    mount --bind /dev ${TARGET}/dev
+
+    cp /etc/resolv.conf ${TARGET}/etc/resolv.conf
+
+    local INITDB="${TARGET}/db_reinit.sh"
+    touch $INITDB
+    echo "rm -f /var/lib/rpm/*" >> $INITDB
+    echo "rpm --initdb" >> $INITDB
+    chmod 700 ${INITDB}
+
+    # jump here into chroot environment ...
+    chroot ${TARGET} /db_reinit.sh
+
+    rm -f $INITDB
+}
+
 # Get our chroot path
 if [ -n "$1" ]; then
     # determine which distro we're running
@@ -126,6 +162,8 @@ if [ -n "$1" ]; then
         deb_build "${1}"
     elif [ -f "/etc/SuSE-release" ]; then
         suse_build "${1}"
+    elif [ -f "/etc/redhat-release" ]; then
+        yum_build "${1}"
     else
         error_wrongDistro
         exit 1
