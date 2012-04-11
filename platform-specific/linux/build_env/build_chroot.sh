@@ -123,9 +123,15 @@ yum_build() {
     local TARGET=$1
 
     # Just making sure this is here
-    yum install -y links
+    yum install -y links curl wget
 
-    local RELEASE_RPM=$(links -dump http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/ | grep fedora-release-rawhide | awk {'print $1'})
+    local RAWHIDE_RPMS="http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/"
+
+    local RELEASE_RPM=`links -dump http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/ | grep fedora-release-rawhide | awk {'print $1'}`
+
+    local TMPDIR=$(mktemp -d)
+
+    wget ${RAWHIDE_RPMS}${RELEASE_RPM} -O ${TMPDIR}/${RELEASE_RPM}
 
     if [ ! -d "$TARGET" ]; then
         mkdir -p ${TARGET}
@@ -134,9 +140,9 @@ yum_build() {
     mkdir -p ${TARGET}/var/lib/rpm
     rpm --rebuilddb --root=${TARGET}
 
-    rpm -i --root=${TARGET} --nodeps ${RELEASE_RPM}
+    rpm -i --root=${TARGET} --nodeps ${TMPDIR}/${RELEASE_RPM}
 
-    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip gcc perl python
+    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip gcc perl python wget curl
 
     mount --bind /proc ${TARGET}/proc
     mount --bind /dev ${TARGET}/dev
@@ -153,6 +159,8 @@ yum_build() {
     chroot ${TARGET} /db_reinit.sh
 
     rm -f $INITDB
+    rm -f ${TMPDIR}/${RELEASE_RPM}
+    rmdir ${TMPDIR}
 }
 
 # Get our chroot path
