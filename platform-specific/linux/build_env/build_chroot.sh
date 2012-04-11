@@ -136,7 +136,7 @@ yum_build() {
 
     rpm -i --root=${TARGET} --nodeps ${RELEASE_RPM}
 
-    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip
+    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip gcc perl python
 
     mount --bind /proc ${TARGET}/proc
     mount --bind /dev ${TARGET}/dev

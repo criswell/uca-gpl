@@ -141,6 +141,10 @@ distribution to use. This is helpful if you wish a newer distribution than
 
         # ./build_chroot.sh /path/to/work/chroots/lucid-buildenv testing
 
+If you are running on a Red Hat derived system, the "build_chroot.sh" script
+requires that the path to the chroot is an absolute path. This is a yum
+requirement, and out of our hands.
+
 ### Using the setup environment scripts                        {#setupenv}
 
 Included in the build_env directory are several scripts for setting up
