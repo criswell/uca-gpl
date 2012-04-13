@@ -22,6 +22,7 @@ libssl-dev
 shunit2
 mercurial
 m4
+zip
 EOF
 )
 

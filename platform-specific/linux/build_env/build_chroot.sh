@@ -11,6 +11,12 @@ MY_CWD=`pwd`
 # just know that you will need to make sure everything else works.
 DEB_DISTRO="lucid"
 
+# In order to have a more proper development environment, we give you and option
+# to specify the distro
+if [ -n "$2" ]; then
+    DEB_DISTRO=$2
+fi
+
 SUSE_DISTRO="11.3"
 
 # Must be run as root
@@ -113,6 +119,50 @@ suse_build() {
     run_setupenv $CHROOT_PATH
 }
 
+yum_build() {
+    local TARGET=$1
+
+    # Just making sure this is here
+    yum install -y links curl wget
+
+    local RAWHIDE_RPMS="http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/"
+
+    local RELEASE_RPM=`links -dump http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/i386/os/Packages/f/ | grep fedora-release-rawhide | awk {'print $1'}`
+
+    local TMPDIR=$(mktemp -d)
+
+    wget ${RAWHIDE_RPMS}${RELEASE_RPM} -O ${TMPDIR}/${RELEASE_RPM}
+
+    if [ ! -d "$TARGET" ]; then
+        mkdir -p ${TARGET}
+    fi
+
+    mkdir -p ${TARGET}/var/lib/rpm
+    rpm --rebuilddb --root=${TARGET}
+
+    rpm -i --root=${TARGET} --nodeps ${TMPDIR}/${RELEASE_RPM}
+
+    yum --installroot=${TARGET} install -y yum bash links mercurial nano make less zip gcc perl python wget curl
+
+    mount --bind /proc ${TARGET}/proc
+    mount --bind /dev ${TARGET}/dev
+
+    cp /etc/resolv.conf ${TARGET}/etc/resolv.conf
+
+    local INITDB="${TARGET}/db_reinit.sh"
+    touch $INITDB
+    echo "rm -f /var/lib/rpm/*" >> $INITDB
+    echo "rpm --initdb" >> $INITDB
+    chmod 700 ${INITDB}
+
+    # jump here into chroot environment ...
+    chroot ${TARGET} /db_reinit.sh
+
+    rm -f $INITDB
+    rm -f ${TMPDIR}/${RELEASE_RPM}
+    rmdir ${TMPDIR}
+}
+
 # Get our chroot path
 if [ -n "$1" ]; then
     # determine which distro we're running
@@ -120,6 +170,8 @@ if [ -n "$1" ]; then
         deb_build "${1}"
     elif [ -f "/etc/SuSE-release" ]; then
         suse_build "${1}"
+    elif [ -f "/etc/redhat-release" ]; then
+        yum_build "${1}"
     else
         error_wrongDistro
         exit 1
