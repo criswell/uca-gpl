@@ -28,7 +28,19 @@ agent codebase.
 In the previous Linux client agent we had a tight, central loop which
 managed the processing of the agent's commands. The downside to this
 design was that expanding it or adding new features was difficult and
-required reworking the central loop. For the Unified agent, we tried
-to avoid this problem by using entities we call "atoms".
+required reworking the central loop. In the Windows client, we had multiple
+processes for handling basic interactions with CCMS. For the Unified agent,
+we tried to avoid these problems by using entities we call "atoms".
 
-Each atom is derived from the atom base class, @ref clientagent.steward.atom.Atom
+An "atom" is an object which defines some activity in the client agent which
+we desire to execute atomically.
+
+> It should be noted that the client agent does not ensure atomicity in the
+> atoms defined in its queue. Instead, it assumes the atom's developer is
+> properly executing and setting atomic flags as necessary. The client agent
+> will simply treat each atom as if it is atomic. The actual atomicity is
+> an implimentation detail.
+
+Each atom is derived from the atom base class,
+@ref clientagent.steward.atom.Atom . This base class defines a specific way to
+interface with atoms in the system.
