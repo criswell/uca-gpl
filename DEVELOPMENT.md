@@ -2,7 +2,7 @@ Development Overview                                            {#devdoc}
 ====================
 
 * [Design Philosophy](#phil)
-* [Design Patterns}(#pattern)
+* [Design Patterns](#pattern)
     * [Atoms](#atoms)
 
 Documentation authors: *Sam Hart*
@@ -31,4 +31,4 @@ design was that expanding it or adding new features was difficult and
 required reworking the central loop. For the Unified agent, we tried
 to avoid this problem by using entities we call "atoms".
 
-Each atom is derived from the atom base class, @ref atoms
+Each atom is derived from the atom base class, @ref clientagent.steward.atom.Atom
