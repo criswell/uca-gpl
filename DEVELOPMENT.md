@@ -18,6 +18,29 @@ agent is separation of platform-specific code from platform-agnostic code.
 When it's at all possible, code that is specific to a given platform
 should be isolated from more general code that runs on multiple platforms.
 
+A great example of where this philosophy can be seen is in the
+[EILAsset](@ref clientagent.steward.asset.EILAsset) class and the two, platform-
+specific classes derived from it.
+
+The [EILAsset](@ref clientagent.steward.asset.EILAsset) class defines base,
+platform agnostic code which describes the asset data structure and methods
+for interfacing with CCMS. However, it does not define any logic for collecting
+asset information and populating the asset data structure as that logic would
+be highly platform-specific. Instead, it defines two abstract methods,
+[EILAsset.initialize](@ref clientagent.steward.asset.EILAsset.initialize) and
+[EILAsset.updateAsset](@ref clientagent.steward.asset.EILAsset.updateAsset),
+which should be overridden with the platform-specific logic for asset
+collection.
+
+Meanwhile, the derived classes
+[Linux_Asset](@ref clientagent.steward.linux_asset.Linux_Asset) and
+[Win32_Asset](@ref clientagent.steward.win32_asset.Win32_Asset) derive from
+[EILAsset](@ref clientagent.steward.asset.EILAsset) and override the initialize
+and updateAsset methods with logic specific to Linux and Windows respectively.
+
+By abstracting out the agnostic logic from platform-specific logic, we hope
+that we will both produce cleaner code as well as reduce code duplication.
+
 Design Patterns                                                 {#pattern}
 ===============
 
