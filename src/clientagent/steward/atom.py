@@ -24,11 +24,10 @@ this is not guaranteed. Due to each class being atomic, they are not
 guaranteed to finish within the next 30 second window. Each could
 potentially be blocking. It's left up to the developer to make their sub-
 classes thread-safe if this is a concern.
+
+The @var ACTIVE flag determines whether the atom is active or not.
     """
 
-    """
-    @var ACTIVE Determines whether this atom is active or not.
-    """
     ACTIVE = False
 
     def __init__(self):
