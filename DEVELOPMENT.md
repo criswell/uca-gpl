@@ -5,6 +5,7 @@ Development Overview                                            {#devdoc}
 * [Design Patterns](#pattern)
     * [Client agent state machine](#statemachine)
     * [Atoms](#atoms)
+    * [CCMS Update Steward and Dispatcher](#stewdisp)
 
 Documentation authors: *Sam Hart*
 
@@ -126,3 +127,42 @@ way to interface with atoms in the system. These interfaces are as follows:
       should go. The update method will try to be called once every 30 seconds,
       although this is not guaranteed. The timeDelta parameter gives the true
       time elapsed since last update was called.
+
+## CCMS Update Steward and Dispatcher                          {#stewdisp}
+
+The CCMS update operation, which is arguably the most significant feature of
+the client agent, is split between two major code-blocks:
+
+* Steward:
+    * The steward defines the basic interactions with CCMS. Its logic can be
+      found in the [CCMS_Update](@ref clientagent.steward.ccmsupdate.CCMS_Update)
+      class. The steward should be as platform-agnostic as possible.
+* Dispatcher:
+    * The dispatcher handles the platform-specific command executions when the
+      steward receives commands from CCMS. The abstract dispatcher interfaces
+      can be found in the [Dispatcher](@ref clientagent.dispatcher.Dispatcher)
+      class, but some additional, platform-specific code can be found in
+      [dispatcher_helper](@ref clientagent.dispatcher_helper) and in
+      [commandhandler](@ref clientagent.steward.commandhandler).
+
+> The steward/dispatcher distinction is partially legacy from the Linux client
+> agent and partially required for full Linux support.
+>
+> Linux is an inhomogeneous platform, and we aim to support a very wide-range of
+> Linux distributions. Thus, operations that might be simple under a more
+> homogeneous platform like Windows can become much more bifurcated under Linux.
+>
+> To accomodate this, the Linux-agnostic operations were split out into the
+> steward and the Linux-specific operations were handled by a series of shell
+> scripts known as the dispatcher. This is how the previous Linux client agent
+> worked.
+>
+> Today, the unified agent re-uses all of the Linux client agent dispatcher
+> shell scripts for handling commands passed down from CCMS in much the same
+> way they were used previously, however since the agent is unified some
+> dispatcher logic can be found inside the above files for both Windows and
+> Linux.
+>
+> Basically, anything that can be easily handled in the unifed agent's Python
+> code-base should, but anything that reflects the bifurcated nature detailed
+> previously will be offloaded to the Linux dispatcher scripts.
