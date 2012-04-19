@@ -147,22 +147,22 @@ the client agent, is split between two major code-blocks:
 
 > The steward/dispatcher distinction is partially legacy from the Linux client
 > agent and partially required for full Linux support.
->
+
 > Linux is an inhomogeneous platform, and we aim to support a very wide-range of
 > Linux distributions. Thus, operations that might be simple under a more
 > homogeneous platform like Windows can become much more bifurcated under Linux.
->
+
 > To accomodate this, the Linux-agnostic operations were split out into the
 > steward and the Linux-specific operations were handled by a series of shell
 > scripts known as the dispatcher. This is how the previous Linux client agent
 > worked.
->
+
 > Today, the unified agent re-uses all of the Linux client agent dispatcher
 > shell scripts for handling commands passed down from CCMS in much the same
 > way they were used previously, however since the agent is unified some
 > dispatcher logic can be found inside the above files for both Windows and
 > Linux.
->
+
 > Basically, anything that can be easily handled in the unifed agent's Python
 > code-base should, but anything that reflects the bifurcated nature detailed
 > previously will be offloaded to the Linux dispatcher scripts.
