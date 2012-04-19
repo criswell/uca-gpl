@@ -207,7 +207,7 @@ section (@ref devdoc) or in the file "DEVELOPMENT.md".
 
 The following can be thought of as a ordered overview of the project from an
 API perspective. It is not intended to be complete- for the full listing, see
-the full generated doxygen documentation, @ref namespaces.
+the full generated doxygen documentation, @ref namespaces.html.
 
 * Unified Client Agent
     * @ref clientagent.ClientAgentState
