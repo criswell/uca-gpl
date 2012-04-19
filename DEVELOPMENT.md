@@ -17,7 +17,6 @@ The major cross-platform design philosophy utilized in the Unified client
 agent is separation of platform-specific code from platform-agnostic code.
 When it's at all possible, code that is specific to a given platform
 should be isolated from more general code that runs on multiple platforms.
-
 A great example of where this philosophy can be seen is in the
 [EILAsset](@ref clientagent.steward.asset.EILAsset) class and the two, platform-
 specific classes derived from it.
