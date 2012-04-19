@@ -3,6 +3,7 @@ Development Overview                                            {#devdoc}
 
 * [Design Philosophy](#phil)
 * [Design Patterns](#pattern)
+    * [Client agent state machine](#statemachine)
     * [Atoms](#atoms)
 
 Documentation authors: *Sam Hart*
@@ -22,6 +23,38 @@ Design Patterns                                                 {#pattern}
 
 This section describes various design patterns we've used in the Unified
 agent codebase.
+
+## Client agent state machine                                   {#statemachine}
+
+The client agent state machine,
+[ClientAgentState](@ref clientagent.ClientAgentState), is where anything that
+must be available for random sub-systems of the client agent should go. In
+many regards, it can be thought of as a global state machine for the client
+agent. It is intended to be a static class and treated as if it were singleton,
+however it is not a real singleton.
+
+ClientAgentState should be treated as read-only. Those properties defined which
+will be of most use are as follows:
+
+* CLIENTAGENT_ROOT
+    * The root directory for the client agent's installation.
+* CONFIG
+    * The configuration instance for the client agent. If you are expanding
+      the client agent's features through the use of an [atom](#atoms}, please
+      do not use your own configuration system. Instead, add a sub-section to
+      the client agent's configuration instance and use it. This way all of
+      the client agent's settings can be found in the same place.
+* SRV_NAME, SRV_DISPLAY_NAME, SRV_DESCRIPTION
+    * These are strings used primarily in the Windows Service definitions.
+      However, since they may be used elsewhere in the future, they are defined
+      in the ClientAgentState.
+* VERSION
+    * The current unified client agent version string.
+* COMDIR, BINDIR
+    * These are largely used for compatibility under Linux for the dispatcher
+      scripts. They define the commands directory as well as the binary
+      directory for the client agent. They currently have no meaning under
+      Windows, however they are kept in the ClientAgentState for future use.
 
 ## Atoms                                                        {#atoms}
 
@@ -49,6 +82,11 @@ Each atom is derived from the atom base class,
 [Atom](@ref clientagent.steward.atom.Atom). This base class defines a specific
 way to interface with atoms in the system. These interfaces are as follows:
 
+* [Atom.ACTIVE](@ref clientagent.steward.atom.Atom.ACTIVE)
+    * The ACTIVE flag determines whether or not the atom is active. As the
+      client agent runs, it is constantly checking the ACTIVE flag for each atom
+      in its queue. If no atoms are active, that tells the client agent it is
+      time to exit.
 * [Atom.__init__()](@ref clientagent.steward.atom.Atom.__init__)
     * The constructor for the atom. This is, obviously, called at process start
       up. It is safe to assume that the various client agent properties have
@@ -60,3 +98,9 @@ way to interface with atoms in the system. These interfaces are as follows:
       the system running the client agent can be restarted or halted. The
       shutdown method should be considered a "best case scenario" type of
       operation.
+* [Atom.update(timeDelta)](@ref clientagent.steward.atom.Atom.update)
+    * This method is called every loop and should be the entry point for your
+      atom's activities. It is here where the majority of your atom's logic
+      should go. The update method will try to be called once every 30 seconds,
+      although this is not guaranteed. The timeDelta parameter gives the true
+      time elapsed since last update was called.

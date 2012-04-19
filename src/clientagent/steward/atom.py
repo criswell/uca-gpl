@@ -27,7 +27,7 @@ classes thread-safe if this is a concern.
     """
 
     """
-@var ACTIVE Determines whether this atom is active or not.
+The @var ACTIVE Determines whether this atom is active or not.
     """
     ACTIVE = False
 
