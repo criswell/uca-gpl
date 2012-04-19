@@ -33,7 +33,11 @@ processes for handling basic interactions with CCMS. For the Unified agent,
 we tried to avoid these problems by using entities we call "atoms".
 
 An "atom" is an object which defines some activity in the client agent which
-we desire to execute atomically.
+we desire to execute atomically. Example activities include interacting with
+CCMS to obtain commands, submitting asset information, and communicating with
+the NMSA. The client agent holds the atoms in a queue and every loop executes
+those atoms which are still active/alive. Using this atom model, we can define
+an arbitrary number of activities for the client agent to manage.
 
 > It should be noted that the client agent does not ensure atomicity in the
 > atoms defined in its queue. Instead, it assumes the atom's developer is
@@ -43,4 +47,9 @@ we desire to execute atomically.
 
 Each atom is derived from the atom base class,
 @ref clientagent.steward.atom.Atom . This base class defines a specific way to
-interface with atoms in the system.
+interface with atoms in the system. These interfaces are as follows:
+
+* @ref clientagent.steward.atom.Atom.__init__
+    * The constructor for the atom. This is, obviously, called at process start
+      up. It is safe to assume that the various client agent properties have
+      been set in [ClientAgentState](@ref clientagent.ClientAgentState).

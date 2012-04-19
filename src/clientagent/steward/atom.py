@@ -31,6 +31,11 @@ class Atom:
     ACTIVE = False
 
     def __init__(self):
+        '''
+        Standard atom constructor. Place any initialization code here. Note that
+        the ACTIVE flag should be set to true here if you want the atom to
+        execute at all.
+        '''
         raise exceptions.NotImplementedError()
 
     def update(self, timeDelta):
