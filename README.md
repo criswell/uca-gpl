@@ -206,14 +206,28 @@ section (@ref devdoc) or in the file "DEVELOPMENT.md".
 ## API Documentation                                            {#apilinks}
 
 The following can be thought of as a ordered overview of the project from an
-API perspective.
+API perspective. It is not intended to be complete- for the full listing, see
+the full generated doxygen documentation.
 
 * Unified Client Agent
+    * @ref clientagent.ClientAgentState
+        * @ref utility.py
+    * @ref clientagent.steward.libdaemon.unix_daemon.Daemon
+        * @ref clientagent.steward.libdaemon.windows_service.Service
+        * @ref clientagent.steward.libdaemon.unix_daemon.Daemon
+    * @ref eil_steward.StewardHandler
+        * @ref clientagent.steward.ccmsupdate.CCMS_Update
+        * @ref clientagent.steward.commandhandler
+        * @ref clientagent.steward.asset.EILAsset
+            * @ref clientagent.steward.linux_asset.Linux_Asset
+            * @ref clientagent.steward.linux_asset.Win32_Asset
+    * @ref clientagent.dispatcher.Dispatcher
+        * @ref clientagent.dispatcher_helper
 * Platform Specific Code
     * Windows
     * Linux
         * NMSA/LAF
-            * @ref NMSA_Master
+            * @ref nmsa_main.NMSA_Master
             * @ref nmsa_handler
             * @ref nmsa_conf
             * @ref nmsa_daemon.Daemon
