@@ -6,6 +6,9 @@ Development Overview                                            {#devdoc}
     * [Client agent state machine](#statemachine)
     * [Atoms](#atoms)
     * [CCMS Update Steward and Dispatcher](#stewdisp)
+* [Miscellany](#devmisc)
+    * [PlatformID](#platid)
+    * [Utilities](#utils)
 
 Documentation authors: *Sam Hart*
 
@@ -166,3 +169,25 @@ the client agent, is split between two major code-blocks:
 > Basically, anything that can be easily handled in the unifed agent's Python
 > code-base should, but anything that reflects the bifurcated nature detailed
 > previously will be offloaded to the Linux dispatcher scripts.
+
+Miscellany                                                  {#devmisc}
+==========
+
+## PlatformID                                               {#platid}
+
+The [PlatformID](@ref clientagent.common.platform_id.PlatformID) class is a
+Pythonic-singleton (see [Borg State](http://code.activestate.com/recipes/66531/)
+). It defines platform identification data for whatever operating system
+platform the unified agent is running on (or, at least it tries to). Currently
+it defines two flags, and then optional variant identification data as needed.
+
+* [PlatformID.IS_WINDOWS](@ref clientagent.common.platform_id.PlatformID.IS_WINDOWS)
+    * True if the platform is Windows-based.
+* [PlatformID.IS_LINUX](@ref clientagent.common.platform_id.PlatformID.IS_LINUX)
+    * True if the platform is Linux-based.
+* [PlatformID.VARIANT](@ref clientagent.common.platform_id.PlatformID.VARIANT)
+    * This is defined by the class
+      [PlatformID.__PlatformVariant](clientagent.common.platform_id.PlatformID.__PlatformVariant),
+      which is an internal class intended to only be instantiated by PlatformID.
+      The variant information is currently only used under Linux.
+
