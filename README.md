@@ -220,7 +220,7 @@ the full generated doxygen documentation.
         * @ref clientagent.steward.commandhandler
         * @ref clientagent.steward.asset.EILAsset
             * @ref clientagent.steward.linux_asset.Linux_Asset
-            * @ref clientagent.steward.linux_asset.Win32_Asset
+            * @ref clientagent.steward.win32_asset.Win32_Asset
     * @ref clientagent.dispatcher.Dispatcher
         * @ref clientagent.dispatcher_helper
 * Platform Specific Code
