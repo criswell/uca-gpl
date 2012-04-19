@@ -46,10 +46,17 @@ an arbitrary number of activities for the client agent to manage.
 > an implimentation detail.
 
 Each atom is derived from the atom base class,
-@ref clientagent.steward.atom.Atom . This base class defines a specific way to
-interface with atoms in the system. These interfaces are as follows:
+[Atom](@ref clientagent.steward.atom.Atom). This base class defines a specific
+way to interface with atoms in the system. These interfaces are as follows:
 
-* @ref clientagent.steward.atom.Atom.__init__
+* [Atom.__init__()](@ref clientagent.steward.atom.Atom.__init__)
     * The constructor for the atom. This is, obviously, called at process start
       up. It is safe to assume that the various client agent properties have
       been set in [ClientAgentState](@ref clientagent.ClientAgentState).
+* [Atom.shutdown()](@ref clientagent.steward.atom.Atom.shutdown)
+    * This method is called when the client agent is shutting down. It will not
+      be called when the atom is set inactive. Note that you cannot assume your
+      shutdown method will always be called due to the various ways in which
+      the system running the client agent can be restarted or halted. The
+      shutdown method should be considered a "best case scenario" type of
+      operation.
