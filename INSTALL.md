@@ -175,3 +175,30 @@ path to the extracted zip file. The installer is not intended to be used by
 hand, instead it should be executed by the bootstrap tool. The installer is
 defined in the [uca-installer](@ref uca-installer) package.
 
+Inside the installer are four very specific sections:
+
+* Windows specific code
+    * Inside this section are any and all Windows specific functions to be
+      used during the installation. These functions are all named with the
+      prefix "win32_".
+* Linux specific code
+    * Inside this section are any and all Linux specific functions to be used
+      during the installation. These functions are all named with the prefix
+      "linux_".
+* Generic code
+    * Inside this section are functions which are platform agnostic and can
+      be used on either Linux or Windows. There is no special naming convention
+      here.
+    * Some noteworthy functions include:
+        * [uca-installer.precompilePy](@ref uca-installer.precompilePy)
+            * This is used to precompile the Python modules for installation.
+              Those modules defined in
+              [uca-installer.PRECOMPILE_EXCEPTIONS](@ref uca-installer.PRECOMPILE_EXCEPTIONS)
+              will be excluded from this process.
+        * [uca-installer.copyHome](@ref uca-installer.copyHome)
+            * This attempts to backup the previous installation's configuration
+              and log directory. It is also used to restore the backup (by
+              swapping the parameters).
+* Main installation logic
+    * Finally, at the end of the file, you will find the main installation
+      logic.
