@@ -22,6 +22,8 @@ else:
 PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
 
+IS_PRODUCTION = True
+
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
 # of the zipfile
@@ -87,7 +89,9 @@ else:
         if USERZIPFILE:
             filename = USERZIPFILE
         else:
-            url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP #STAGING_IP
+            url = 'http://%s/EILUCA/uca.zip' % STAGING_IP
+            if IS_PRODUCTION:
+                url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP
             logger.info('Pulling UCA zipfile: %s' % url)
             (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
