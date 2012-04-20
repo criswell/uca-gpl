@@ -8,6 +8,11 @@ Installation Overview                                            {#installdoc}
     * [uca-bootstrap.py](#bootstrap)
         * [uca.zip](#zipfile)
     * [uca-installer.py](#installer)
+* [Release building](#relbuild)
+    * [Format of the release directory](#relformat)
+    * [Scripts to help automate the release process](#relscripts)
+        * [Release builder](#relbuildsh)
+        * [Release script](#releasesh)
 
 Documentation authors: *Sam Hart*
 
@@ -202,3 +207,83 @@ Inside the installer are four very specific sections:
 * Main installation logic
     * Finally, at the end of the file, you will find the main installation
       logic.
+
+Release building                                                {#relbuild}
+================
+
+In order to make a release (production or staging) you can manually build the
+release, or you can utilize the release building scripts. Either way, this
+section will explain how it is done.
+
+## Format of the release directory                              {#relformat}
+
+The release is intended to be a specially formatted web directory which the
+bootstrap tool and installer expect. The general format of this is as follows:
+
+        -rw-r--r-- 1 root root     13 Apr 20 16:29 VERSION.txt
+        -rwxr-xr-x 1 root root   4909 Apr 20 16:29 uca-bootstrap.py
+        -rw-r--r-- 1 root root 859645 Apr 20 16:29 uca.zip
+
+* "VERSION.txt"
+    * The version file for this release. This is used as an update checker.
+* "uca-bootstrap.py"
+    * The latest bootstrapper. Note that it shouldn't change much, see
+      documentation for the bootstrap tool above.
+* "uca.zip"
+    * The latest zip file archive (as defined above).
+
+In addition to these, the production release should include the Windows EIL
+tools, which are described elsewhere and are beyond the scope of this
+document.
+
+## Scripts to help automate the release process                 {#relscripts}
+
+There are two scripts currently used to automate the release process. These
+scripts are BASH shell scripts, which means they must be run under Linux, or
+under CYGWIN in Windows.
+
+In order to use them, you need to have the release directory mounted locally.
+For example, if this is a production release and I were working under Linux
+I might have the following entry in my fstab file:
+
+    //172.16.3.10/EILuca /mnt/EILuca      smbfs   username=shart2x,password=myPass,uid=sam,gid=sam 0 0
+
+which would mount the EILuca directory under "/mnt/EILuca".
+
+### Release builder                                             {#relbuildsh}
+
+The release builder, "uca-builder.sh", should be run from within the unified
+agent's repository. It will take the current version of the agent, create a
+properly formatted zip file (see "uca.zip" above) and place it in your current
+working directory.
+
+This script is actually pretty blunt and rough. It is advised you do not use it
+directly unless you know what you are doing. It is better to use the release
+script (described below) which wraps this builder.
+
+### Release script                                              {#releasesh}
+
+The release script, "uca-release.sh", is the general release building and
+deployment tool for the unified agent. It should be used for staging and
+production releases. Its usage is as follows:
+
+    Usage: uca-release.sh /path/to/release [branch]
+
+    Parameters:
+        - /path/to/release should be an absolute path to where the release goes.
+
+        - [branch] is an optional named branch for the Mercurial repository.
+
+    This release tool should be ran from within a current, working, Mercurial
+    repository of the UCA. It will clone the current directory to a temp directory,
+    and build the release there.
+
+    If your release needs to be built from a specific named branch from the
+    repository, then you can give that branch name with the optional parameter
+    [branch].
+
+Thus, if I was making a release using the branch "production" into the directory
+I had mounted above, I would use "uca-release.sh" this way:
+
+    $ cd /path/to/my/repository
+    $ ./uca-release.sh /mnt/EILuca production
