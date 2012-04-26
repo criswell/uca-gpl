@@ -127,7 +127,7 @@ class CCMS_Update(Atom):
             if self.IP_INDEX < len(self.ALL_CCMS_IPS):
                 self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
                 self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
-                self.logger.info("Failed to contact CCMS for WSDL scan. Trying a different IP.")
+                self.logger.info("Failed to contact CCMS for WSDL scan. Trying a different IP: '%s'" % self.CCMS_IP)
             else:
                 self.IP_INDEX = 0
                 self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
