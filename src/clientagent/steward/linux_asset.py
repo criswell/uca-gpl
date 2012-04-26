@@ -104,6 +104,12 @@ class Linux_Asset(EILAsset):
         self.MAX_ETH = 10
         self.MAX_WLAN = 10
 
+        self.NMSA_ENABLE = False
+        try:
+            self.NMSA_ENABLE = os.path.isfile('/opt/intel/eil/clientagent/home/.nmsa_enable')
+        except:
+            self.NMSA_ENABLE = False
+
     def _getIfInfo(self, ifnum, wireless=False):
         '''
         Get the interface information for ifnum.
@@ -351,5 +357,25 @@ class Linux_Asset(EILAsset):
                 ]))
 
         self.asset['Common']['Network'] = totalNICs
+
+        # Node manager items
+        if self.NMSA_ENABLE and self._locateInPath(['ipmitool', 'dmidecode']):
+            # FIXME Currently we do not have a reliable way to get at the
+            # firmware information for the node manager. So we just skip it.
+            bmcIpAddress = self._getCommandOutput("$IPMITOOL lan print | grep \"IP Addr\" | grep -v Source | awk '{print $4}'", 1)
+            nm = OD([
+                    ('Firmware' , OD([
+                        ('BmcVersion' , None),
+                        ('MeVersion' , None),
+                        ('NmVersion' , None),
+                        ('DcmiVersion' , None),
+                    ])),
+                    ('RemoteCapability' , OD([
+                        ('BmcIpAddress' , bmcIpAddress),
+                        ('iLo' , None),
+                        ('SerialOverLan' , None),
+                    ]))
+                ])
+            self.asset['Common']['NodeManager'] = nm
 
 # vim:set ai et sts=4 sw=4 tw=80:
