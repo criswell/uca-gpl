@@ -44,6 +44,7 @@ class CCMS_Update(Atom):
         self.HOST_KNOWN = False
         self.RETRY = 0
         self.MAX_RETRIES = 10
+        self.IP_INDEX = 0
         self.MIN_DELAY = 5
         self.MAX_DELAY = 30
         self.TARGET_TIMEDELTA = 30
@@ -59,7 +60,8 @@ class CCMS_Update(Atom):
 
         self.logger = logging.getLogger('clientagent.steward.ccmsupdate')
         self.logger.info("CCMS Update atom startup");
-        self.CCMS_IP = self.config.C.get('main', 'CCMS')
+        self.ALL_CCMS_IPS = self.config.C.get('main', 'CCMS').split()
+        self.CCMS_IP = self.ALL_CCMS_IPS[0]
         self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
 
         self.setUp()
@@ -121,17 +123,26 @@ class CCMS_Update(Atom):
                 # FIXME we will need better error checking here, but for now,
                 # we use a catch-all
             self.SUDS_ONLINE = False
-            self.RETRY += 1
-            if self.RETRY > self.MAX_RETRIES:
-                self.logger.critical('Unknown error trying to contact CCMS!')
-                self.logger.critical('Bailing on CCMS operations!')
-                self.ACTIVE = False
+            self.IP_INDEX += 1
+            if self.IP_INDEX < len(self.ALL_CCMS_IPS):
+                self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
+                self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
+                self.logger.info("Failed to contact CCMS for WSDL scan. Trying a different IP.")
             else:
-                self.logger.critical('Error connecting CCMS, assuming we have a concurrency problem')
-                self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
-                delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
-                self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...')
-                time.sleep(delay)
+                self.IP_INDEX = 0
+                self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
+                self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
+                self.RETRY += 1
+                if self.RETRY > self.MAX_RETRIES:
+                    self.logger.critical('Unknown error trying to contact CCMS!')
+                    self.logger.critical('Bailing on CCMS operations!')
+                    self.ACTIVE = False
+                else:
+                    self.logger.critical('Error connecting CCMS, assuming we have a concurrency problem')
+                    self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
+                    delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
+                    self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...')
+                    time.sleep(delay)
 
     def newMessageID(self):
         '''
