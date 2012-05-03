@@ -76,6 +76,8 @@ class CCMS_Update(Atom):
         try:
             self.logger.info('Obtaining HWADDR and HOSTNAME')
             (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
+            if self.MY_HOST == 'localhost':
+	        self.MY_HOST = None
             self.logger.info('HWADDR: %s' % self.MY_HWADDR)
             self.logger.info('HOSTNAME: %s' % self.MY_HOST)
         except RuntimeError:
@@ -242,12 +244,13 @@ class CCMS_Update(Atom):
         hwaddr = client.factory.create('ns2:KeyValueOfstringstring')
         hwaddr.Key = 'MAC_ADDR'
         hwaddr.Value = MY_HWADDR
-        host = client.factory.create('ns2:KeyValueOfstringstring')
-        host.Key = 'HOST_NAME'
-        host.Value = MY_HOST
         mParams.KeyValueOfstringstring.append(order_num)
         mParams.KeyValueOfstringstring.append(hwaddr)
-        mParams.KeyValueOfstringstring.append(host)
+        if MY_HOST:
+            host = client.factory.create('ns2:KeyValueOfstringstring')
+            host.Key = 'HOST_NAME'
+            host.Value = MY_HOST
+            mParams.KeyValueOfstringstring.append(host)
         ctx.mParams = mParams
         mType = client.factory.create('ns0:MachineType')
         ctx.mType = mType.HOST
