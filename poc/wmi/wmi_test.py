@@ -55,3 +55,15 @@ if mobo:
     print "\t Manufacturer: %s" % manufacturer
     print "\t Model: %s" % model
     print "\t SerialNumber: %s" % serialNum
+
+# Processor
+allProcs = c.Win32_Processor()
+if len(allProcs) > 0:
+    cpuCount = len(allProcs)
+    cpuModel = allProcs[0].Caption
+    coresPerCpu = allProcs[0].NumberOfCores
+    
+    print "Processor"
+    print "\t CpuCount : %s" % cpuCount
+    print "\t CpuModel : %s" % cpuModel
+    print "\t CoresPerCpu : %s" % coresPerCpu
