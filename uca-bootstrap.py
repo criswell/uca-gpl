@@ -22,7 +22,7 @@ else:
 PRODUCTION_IP = '172.16.3.10'
 STAGING_IP = '10.4.0.66'
 
-IS_PRODUCTION = True
+IS_PRODUCTION = False
 
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
