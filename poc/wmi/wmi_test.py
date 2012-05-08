@@ -62,8 +62,10 @@ if len(allProcs) > 0:
     cpuCount = len(allProcs)
     cpuModel = allProcs[0].Caption
     coresPerCpu = allProcs[0].NumberOfCores
-    
+
     print "Processor"
     print "\t CpuCount : %s" % cpuCount
     print "\t CpuModel : %s" % cpuModel
     print "\t CoresPerCpu : %s" % coresPerCpu
+
+# Memory
