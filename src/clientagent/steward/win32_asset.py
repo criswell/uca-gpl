@@ -86,7 +86,7 @@ class Win32_Asset(EILAsset):
                     serialNum = mobo.SerialNumber
 
                     moboOrd = OD([
-                        ('Manufacturer' , manufacturer,
+                        ('Manufacturer' , manufacturer),
                         ('Model' , model),
                         ('SerialNumber' , serialNum),
                     ])
