@@ -105,7 +105,7 @@ if len(nics) > 0:
 
         nicName = nics[n].Name
         nicMac = nics[n].MACAddress
-        nicType = nic[s].AdapterType
+        nicType = nics[n].AdapterType
         ip = None
         if equalNics:
             ip = string(ips[n].IPAddress)
