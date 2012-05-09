@@ -50,7 +50,7 @@ if mobo:
     manufacturer = mobo.Manufacturer
     model = mobo.Model
     serialNum = mobo.SerialNumber
-    
+
     print "Motherboard"
     print "\t Manufacturer: %s" % manufacturer
     print "\t Model: %s" % model
@@ -87,16 +87,16 @@ nics = []
 for n in allNet:
     if n.PhysicalAdapter:
         nics.append(n)
-        
+
 if len(nics) > 0:
     print "Network"
     for nic in nics:
         print "\t Interface-"
-        
+
         nicName = nic.Name
         nicMac = nic.MACAddress
         nicType = nic.AdapterType
-        
+
         print "\t\t Name: %s" % nicName
         print "\t\t Mac: %s" % nicMac
         print "\t\t IP4:"
