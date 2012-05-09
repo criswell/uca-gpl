@@ -127,27 +127,45 @@ class Win32_Asset(EILAsset):
                     self.asset['Common']['Memory'] = memory
 
                 # Storage
+                # FIXME - Just like Linux, this is a harder problem than on
+                # first blush
 
                 # Networking
+                totalNICs = []
                 allNet = c.Win32_NetworkAdapter()
                 allIPs = c.Win32_NetworkAdapterConfiguration()
                 nics = []
-                for n in allNet:
-                    if n.PhysicalAdapter:
-                        nics.append(n)
+                ips = []
+                equalNics = (len(allNet) == len(allIPs))
+
+                for n in range(len(allNet)):
+                    if allNet[n].PhysicalAdapter:
+                        nics.append(allNet[n])
+                        if equalNics:
+                            ips.append(allIPs[n])
 
                 if len(nics) > 0:
-                    print "Network"
-                    for nic in nics:
-                        print "\t Interface-"
+                    for n in range(len(nics)):
 
-                        nicName = nic.Name
-                        nicMac = nic.MACAddress
-                        nicType = nic.AdapterType
+                        nicName = nics[n].Name
+                        nicMac = nics[n].MACAddress
+                        nicType = nics[n].AdapterType
+                        ip = None
+                        if equalNics:
+                            try:
+                                ip = ips[n].IPAddress[0]
+                            except:
+                                ip = None
 
-                        print "\t\t Name: %s" % nicName
-                        print "\t\t Mac: %s" % nicMac
-                        print "\t\t IP4:"
-                        print "\t\t Type: %s" % nicType
+                        totalNICs.append(OD([
+                            ( 'Interface', OD([
+                                ('Name', nicName),
+                                ('Mac', nicMac),
+                                ('IP4Address', ip),
+                                ('IP6Address', None),
+                                ]))
+                        ]))
+
+                self.asset['Common']['Network'] = totalNICs
 
 # vim:set ai et sts=4 sw=4 tw=80:
