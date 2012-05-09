@@ -69,3 +69,14 @@ if len(allProcs) > 0:
     print "\t CoresPerCpu : %s" % coresPerCpu
 
 # Memory
+mem = c.Win32_PhysicalMemory()
+if len(mem) > 0:
+    # Let's put this in M
+    ramTotal = int(mem[0].Capacity) / 1048576 # * 0.000001
+    dimmSlots = len(mem)
+
+    print "Memory"
+    print "\t RamTotal: %sM" % ramTotal
+    print "\t DimmSlots: %s" % dimmSlots
+
+# Storage
