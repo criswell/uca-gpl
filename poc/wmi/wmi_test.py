@@ -23,6 +23,10 @@ if NTDomain:
     print "domain : %s " % domain
     print "joinedToDomain: %s" % joinedToDomain
 
+productID = hasResult(c.Win32_ComputerSystemProduct())
+if productID:
+    print "UUID : %s" % productID.UUID
+
 OS = hasResult(c.Win32_OperatingSystem())
 if OS:
     osName = OS.Caption
