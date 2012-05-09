@@ -87,21 +87,30 @@ if len(mem) > 0:
 
 # Networking
 allNet = c.Win32_NetworkAdapter()
+allIPs = c.Win32_NetworkAdapterConfiguration()
 nics = []
-for n in allNet:
-    if n.PhysicalAdapter:
-        nics.append(n)
+ips = []
+equalNics = (len(allNet) == len(allIPs))
+
+for n in range(len(allNet)):
+    if allNet[n].PhysicalAdapter:
+        nics.append(allNet[n])
+        if equalNics:
+            ips.append(allIPs[n])
 
 if len(nics) > 0:
     print "Network"
-    for nic in nics:
+    for n in range(len(nics)):
         print "\t Interface-"
 
-        nicName = nic.Name
-        nicMac = nic.MACAddress
-        nicType = nic.AdapterType
+        nicName = nics[n].Name
+        nicMac = nics[n].MACAddress
+        nicType = nic[s].AdapterType
+        ip = None
+        if equalNics:
+            ip = string(ips[n].IPAddress)
 
         print "\t\t Name: %s" % nicName
         print "\t\t Mac: %s" % nicMac
-        print "\t\t IP4:"
+        print "\t\t IP4: %s" % ip
         print "\t\t Type: %s" % nicType
