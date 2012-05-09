@@ -80,3 +80,24 @@ if len(mem) > 0:
     print "\t DimmSlots: %s" % dimmSlots
 
 # Storage
+
+# Networking
+allNet = c.Win32_NetworkAdapter()
+nics = []
+for n in allNet:
+    if n.PhysicalAdapter:
+        nics.append(n)
+        
+if len(nics) > 0:
+    print "Network"
+    for nic in nics:
+        print "\t Interface-"
+        
+        nicName = nic.Name
+        nicMac = nic.MACAddress
+        nicType = nic.AdapterType
+        
+        print "\t\t Name: %s" % nicName
+        print "\t\t Mac: %s" % nicMac
+        print "\t\t IP4:"
+        print "\t\t Type: %s" % nicType
