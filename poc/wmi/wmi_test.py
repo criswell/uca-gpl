@@ -108,7 +108,8 @@ if len(nics) > 0:
         nicType = nics[n].AdapterType
         ip = None
         if equalNics:
-            ip = ips[n].IPAddress
+            ip = ips[n].IPAddress[0]
+            print ip
 
         print "\t\t Name: %s" % nicName
         print "\t\t Mac: %s" % nicMac
