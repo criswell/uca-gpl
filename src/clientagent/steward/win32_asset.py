@@ -54,7 +54,7 @@ class Win32_Asset(EILAsset):
                 self.asset['Common']['HostName'] = NTDomain.Caption
                 self.asset['Common']['DomainName'] =  NTDomain.DomainName
                 joinedToDomain = False
-                if domain:
+                if NTDomain.DomainName:
                     joinedToDomain = True
                 self.asset['Common']['JoinedToDomain'] = joinedToDomain
 
