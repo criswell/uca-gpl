@@ -46,13 +46,12 @@ class Win32_Asset(EILAsset):
         '''
 
         # Put all non WMI items up here, so we can ensure something shows up
-        self.asset['Common']['HostName'] = os.uname()[1]
 
         if WMI_ENABLED:
             # General stuff
             NTDomain = self._hasResult(self.__wmi.Win32_NTDomain())
             if NTDomain:
-                hostname = NTDomain.Caption
+                self.asset['Common']['HostName'] = NTDomain.Caption
                 self.asset['Common']['DomainName'] =  NTDomain.DomainName
                 joinedToDomain = False
                 if domain:
