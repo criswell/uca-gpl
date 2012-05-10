@@ -104,40 +104,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         for line in output:
             servicemanager.LogInfoMsg(line.rstrip())
 
-    # *BOGUS* Remaining methods are not used anywhere.
-
-    def ctrlHandler(ctrlType):
-        '''
-        The signal handler for the Update service always returns True.
-        '''
-        return True
-
-    def main(self):
-        servicemanager.LogInfoMsg('*** Inside UpdateService - def(main)')
-        self.running = True
-        while self.running:
-            self.run()
-
-    def run(self):
-        '''
-        You should override this method when you subclass Daemon.
-        It will be called after the process has been daemonized by start() or
-        restart().
-        '''
-        raise exceptions.NotImplementedError()
-
-    def local_init(self):
-        '''
-        Override this method for additional items to be initialized during
-        daemonization, after the fork but before the main .run(..) call.
-        '''
-        raise exceptions.NotImplementedError()
-
-    def local_shutdown(self):
-        '''
-        Override this method for any functionality you need executed during
-        shutdown of this daemon or service.
-        '''
-        raise exceptions.NotImplementedError()
+if __name__ == "__main__":
+    win32serviceutil.HandleCommandLine(StewardHandler)
 
 # vim:set ai et sts=4 sw=4 tw=80:
