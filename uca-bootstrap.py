@@ -20,9 +20,11 @@ else:
     IS_LINUX = True
 
 PRODUCTION_IP = '172.16.3.10'
+TESTING_IP = '172.16.3.8'
 STAGING_IP = '10.4.0.66'
 
-IS_PRODUCTION = False
+# Set the IP here
+SET_IP = TESTING_IP
 
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
@@ -89,9 +91,7 @@ else:
         if USERZIPFILE:
             filename = USERZIPFILE
         else:
-            url = 'http://%s/EILUCA/uca.zip' % STAGING_IP
-            if IS_PRODUCTION:
-                url = 'http://%s/EILUCA/uca.zip' % PRODUCTION_IP
+            url = 'http://%s/EILUCA/uca.zip' % SET_IP
             logger.info('Pulling UCA zipfile: %s' % url)
             (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
@@ -104,7 +104,7 @@ else:
         logger.info('Executing the installer...')
 
         installer = os.path.join(tempDir, 'uca', 'uca-installer.py')
-        command = 'python %s %s' % (installer, tempDir)
+        command = 'python %s %s %s' % (installer, tempDir, SET_IP)
 
         logger.info(command)
 

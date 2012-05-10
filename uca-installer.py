@@ -20,11 +20,15 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
+CCMS_IP = '172.16.3.10'
+if len(sys.argv) === 3:
+    CCMS_IP = sys.argv[2]
+
 ''' The host file definitions '''
 HOSTS = {
-        'eilportal' :  { '172.16.3.10' : ['eilportal.eil-infra.com', 'eilportal'] },
-        'rmssrvr01' : { '172.16.3.10' : ['rmssrvr01.eil-infra.com', 'rmssvr01'] },
-        'eilauto01' : { '172.16.3.10' : ['eilauto01.eil-infra.com', 'eilauto01'] },
+        'eilportal' :  { CCMS_IP : ['eilportal.eil-infra.com', 'eilportal'] },
+        'rmssrvr01' : { CCMS_IP : ['rmssrvr01.eil-infra.com', 'rmssvr01'] },
+        'eilauto01' : { CCMS_IP : ['eilauto01.eil-infra.com', 'eilauto01'] },
         'nmsa01' : { '10.4.0.123' : ['nmsa01.eil-infra.com', 'nmsa01'] }
     }
 
@@ -437,7 +441,7 @@ def precompilePy(srcDir):
                         logger.critical(line)
 
 '''Main installation sequence'''
-if len(sys.argv) == 2:
+if len(sys.argv) >= 2:
     srcDir = sys.argv[1]
     # PRECOMPILE ALL THE THINGS!
     precompilePy(srcDir)
