@@ -27,7 +27,6 @@ platformId = PlatformID()
 if platformId.IS_WINDOWS:
     import win32serviceutil
     from clientagent.steward.libdaemon.windows_service import Service as Daemon
-    from clientagent.steward.libdaemon.update_service import UpdateService as Daemon
     from clientagent.steward.win32_asset import Win32_Asset as EILAsset
 else:
     # Linux
