@@ -26,6 +26,9 @@ STAGING_IP = '10.4.0.66'
 # Set the IP here
 SET_IP = TESTING_IP
 
+# Set whether we are running a testing release URL or normal release URL
+IS_TESTING = True
+
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
 # of the zipfile
@@ -91,7 +94,10 @@ else:
         if USERZIPFILE:
             filename = USERZIPFILE
         else:
-            url = 'http://%s/EILUCA/uca.zip' % SET_IP
+            ucaPath = "EILUCA"
+            if IS_TESTING:
+                ucaPath = "EILUCA-testing"
+            url = 'http://%s/%s/uca.zip' % (SET_IP, ucaPath)
             logger.info('Pulling UCA zipfile: %s' % url)
             (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
