@@ -21,7 +21,7 @@ else:
     IS_LINUX = True
 
 CCMS_IP = '172.16.3.10'
-if len(sys.argv) === 3:
+if len(sys.argv) == 3:
     CCMS_IP = sys.argv[2]
 
 ''' The host file definitions '''
