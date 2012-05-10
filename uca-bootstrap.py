@@ -23,8 +23,11 @@ PRODUCTION_IP = '172.16.3.10'
 TESTING_IP = '172.16.3.8'
 STAGING_IP = '10.4.0.66'
 
-# Set the IP here
-SET_IP = TESTING_IP
+# Set the CCMS IP here
+CCMS_IP = TESTING_IP
+
+# Set the IP for pulling the UCA from here
+UCA_IP = PRODUCTION_IP
 
 # Set whether we are running a testing release URL or normal release URL
 IS_TESTING = True
@@ -97,7 +100,7 @@ else:
             ucaPath = "EILUCA"
             if IS_TESTING:
                 ucaPath = "EILUCA-testing"
-            url = 'http://%s/%s/uca.zip' % (SET_IP, ucaPath)
+            url = 'http://%s/%s/uca.zip' % (UCA_IP, ucaPath)
             logger.info('Pulling UCA zipfile: %s' % url)
             (filename, headers) = urllib.urlretrieve(url)
         logger.info('Stored in "%s"...' % filename)
@@ -110,7 +113,7 @@ else:
         logger.info('Executing the installer...')
 
         installer = os.path.join(tempDir, 'uca', 'uca-installer.py')
-        command = 'python %s %s %s' % (installer, tempDir, SET_IP)
+        command = 'python %s %s %s' % (installer, tempDir, CCMS_IP)
 
         logger.info(command)
 
