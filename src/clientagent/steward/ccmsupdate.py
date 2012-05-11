@@ -308,13 +308,19 @@ class CCMS_Update(Atom):
                         # Yeah, this is confusing due to how SUDS interprets
                         # results from CCMS
                         self.logger.info('CCMS updated with asset information')
+                        if self.IS_ACIMAGE:
+                            self.dispatcher.reboot(30)
                     else:
                         self.logger.info('CCMS reported error when asset information was sent')
+                        if self.IS_ACIMAGE:
+                            self.assetTimer = self.ASSET_TIMEDELTA + 1
                 except WebFault as e:
                     traceback_lines = traceback.format_exc().splitlines()
                     for line in traceback_lines:
                         self.logger.critical(line)
                     self.logger.critical(str(e))
+                    if self.IS_ACIMAGE:
+                        self.assetTimer = self.ASSET_TIMEDELTA + 1
                 except:
                     # TODO this will be the catch-all once we've identified the ones
                     # we want to handle
@@ -322,8 +328,8 @@ class CCMS_Update(Atom):
                     traceback_lines = traceback.format_exc().splitlines()
                     for line in traceback_lines:
                         self.logger.critical(line)
-                if self.IS_ACIMAGE:
-                    self.dispatcher.reboot()
+                    if self.IS_ACIMAGE:
+                        self.assetTimer = self.ASSET_TIMEDELTA + 1
 
             if timeDelta >= self.TARGET_TIMEDELTA and not self.IS_ACIMAGE:
                 txID = self.newMessageID()
