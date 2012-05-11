@@ -3,9 +3,9 @@ update_service.py
 -----------------
 This is intended to run only on Windows environments.
 
-Wait for the uca 'C:\EIL\lib\VERSION' file to be created and remember its
-contents. Then, once a minute, open the VERSION file again and compare its
-current and previous contents. If they are different, run uca-bootstrap.py.
+Compare local VERSION file to the VERSION.txt file on the LAN,
+about once per minute. If they are different, run uca-bootstrap.py
+to re-install the UCA.
 '''
 
 import pythoncom
@@ -17,36 +17,53 @@ import servicemanager
 import socket
 from clientagent import ClientAgentState
 import subprocess
+import urllib
 
 class UpdateService(win32serviceutil.ServiceFramework):
     '''
-    Generic Windows Service class with the same framework as the Linux
-    daemon class.
+    Windows Service class to re-install UCA when VERSION file has changed.
     '''
-    _svc_name_         = ClientAgentState.SRV_NAME
-    _svc_display_name_ = ClientAgentState.SRV_DISPLAY_NAME
-    _svc_description_  = ClientAgentState.SRV_DESCRIPTION
-    _svc_version_file_path_ = 'C:\\EIL\\lib\\VERSION'
-    _svc_bootstrapper_path_ = 'C:\\EIL\\lib\\uca-bootstrap.py'
+    _svc_name_               = ClientAgentState.SRV_NAME
+    _svc_display_name_       = ClientAgentState.SRV_DISPLAY_NAME
+    _svc_description_        = ClientAgentState.SRV_DESCRIPTION
+    # I copied these IPs from uca-bootstrap.py (changed _TEST_IP_),
+    # but they should probably come from a common location.
+    _PROD_IP_                = '172.16.3.10' # ???
+    _TEST_IP_                = '10.4.8.23'   # UCA-DEV01
+    _STAG_IP_                = '10.4.0.66'   # UbuntuDev
+    _svc_version_file_url_   = 'http://' + _STAG_IP_ + '/EILUCA/VERSION.txt'
+    _svc_version_file_local_ = 'C:\\EIL\\lib\\VERSION'
+    _svc_bootstrapper_path_  = 'C:\\EIL\\lib\\uca-bootstrap.py'
 
     servicemanager.LogInfoMsg('*** Inside UpdateService - Beginning')
 
     def __init__(self, args):
         '''
-        Wait for VERSION file to be created and remember VERSION file contents.
+        Initialize parent. Create 'stop' event. Compare VERSION files
+        once per minute. Do preliminary read of local VERSION file.
         '''
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None,0,0,None)
-        self.running = False  # Do we need this flag?
-        self.timeout = 60  # Check VERSION file every minute.
-        self.previousVersion = ''
+        self.timeout = 60  # Compare VERSION files every minute.
+        self.localVersion = ReadVersionFile(False)
 
-    def ReadVersionFile():
-        f = open(_svc_version_file_path_)
+    def ReadVersionFile(remote):
+        '''
+        Read the VERSION file. If remote==True, read remote VERSION.txt file
+        over the LAN. Otherwise, remote==False, so read local VERSION file.
+        '''
         versionFileContents = ''
-        while f:
-            versionFileContents += f.read()
-        f.close()
+        try:
+            if remote:
+                f = urllib.urlopen(_svc_version_file_url_)
+            else:
+                f = open(_svc_version_file_local_)
+            # Get first non-blank line & remove all white space.
+            while versionFileContents == '':
+                versionFileContents += ''.join(f.read().split())
+            f.close()
+        except IOError:
+            pass # VERSION file doesn't exist - ignore for now.
         return versionFileContents
 
     def SvcDoRun(self):
@@ -61,34 +78,21 @@ class UpdateService(win32serviceutil.ServiceFramework):
         # Loop until self.hWaitStop has happened (stop signal is encountered).
         while win32event.WaitForSingleObject(self.hWaitStop, self.timeout) != \
                 win32event.WAIT_OBJECT_0:
-            # Initialize previous contents of VERSION file.
-            # Loop until there IS a VERSION file.
-            # Should we add a timestamp to quit looping after (say) an hour?
-            while self.previousVersion == '':
-                try:
-                    self.previousVersion = self.ReadVersionFile()
-                    break  # Break - previous version initialized.
-                except IOError:
-                    pass # VERSION file not found - keep looping.
-            # Check current contents of VERSION file.
-            try:
-                tmpVersion = self.ReadVersionFile()
-                if tmpVersion != self.previousVersion:
-                    # Changed VERSION file encountered - invoke bootstrapper.
-                    command = 'python %s' % _svc_bootstrapper_path_
-                    msg = 'Executing the bootstrapper:   %s' % command
-                    servicemanager.LogInfoMsg(msg)
-                    self.exec_command(command)  # Block until done.
-                    self.previousVersion = tmpVersion
-            except IOError:
-                pass # VERSION file doesn't exist - ignore for now.
+            # Compare local and network VERSION files.
+            if self.localVersion != self.ReadVersionFile(True):
+                # Files are different - invoke bootstrapper.
+                command = 'python %s' % _svc_bootstrapper_path_
+                msg = 'Executing the bootstrapper:   %s' % command
+                servicemanager.LogInfoMsg(msg)
+                self.exec_command(command)  # Block until done.
+                # We should now have a new, local VERSION file - get it.
+                self.localVersion = ReadVersionFile(False)
         servicemanager.LogInfoMsg('UpdateService has Stopped')
 
     def SvcStop(self):
         '''
         Stop the Update service gracefully.
         '''
-        self.running = False  # Not needed?
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
@@ -105,6 +109,6 @@ class UpdateService(win32serviceutil.ServiceFramework):
             servicemanager.LogInfoMsg(line.rstrip())
 
 if __name__ == "__main__":
-    win32serviceutil.HandleCommandLine(StewardHandler)
+    win32serviceutil.HandleCommandLine(UpdateService)
 
 # vim:set ai et sts=4 sw=4 tw=80:
