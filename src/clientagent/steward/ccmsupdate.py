@@ -64,6 +64,10 @@ class CCMS_Update(Atom):
         self.CCMS_IP = self.ALL_CCMS_IPS[0]
         self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
 
+        self.IS_ACIMAGE = False
+        if self.config.C.has_option('main', 'ac_image'):
+            self.IS_ACIMAGE = self.config.C.get('main', 'ac_image')
+
         self.setUp()
 
     def setUp(self):
@@ -318,8 +322,10 @@ class CCMS_Update(Atom):
                     traceback_lines = traceback.format_exc().splitlines()
                     for line in traceback_lines:
                         self.logger.critical(line)
+                if self.IS_ACIMAGE:
+                    self.dispatcher.reboot()
 
-            if timeDelta >= self.TARGET_TIMEDELTA:
+            if timeDelta >= self.TARGET_TIMEDELTA and not self.IS_ACIMAGE:
                 txID = self.newMessageID()
                 self.client = self.setHeaders(self.client, txID)
                 ctx = self.generateContext(self.client, self.MY_HOST, self.MY_HWADDR)
