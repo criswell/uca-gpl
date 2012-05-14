@@ -13,7 +13,7 @@ import win32serviceutil
 #import win32api
 import win32event
 #import servicemanager
-import socket
+#import socket
 import subprocess
 import urllib
 
