@@ -131,7 +131,7 @@ class Win32_Asset(EILAsset):
                     self.asset['Common']['Memory'] = memory
 
                 # Storage
-                discs = c.Win32_LogicalDisk()
+                discs = self.__wmi.Win32_LogicalDisk()
                 if len(discs) > 0:
                     storage = []
 
