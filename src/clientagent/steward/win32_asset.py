@@ -140,8 +140,8 @@ class Win32_Asset(EILAsset):
                             d = OD([
                                 ( 'HardDrive', OD([
                                     ('Name', drive.Name),
-                                    ('Capacity', '%sMB' % int(drive.Size) / 1048576),
-                                    ('FreeSpace', '%sMB' % int(drive.FreeSpace) / 1048576),
+                                    ('Capacity', '%sMB' % (int(drive.Size) / 1048576)),
+                                    ('FreeSpace', '%sMB' % (int(drive.FreeSpace) / 1048576)),
                                 ]),
                             ), ])
 
