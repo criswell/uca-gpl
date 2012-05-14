@@ -399,15 +399,15 @@ def setupHosts(hostsFile):
 
         # Now, add missing entries
         if len(HOSTS) > 0:
-            hosts = open(hostsFile, 'w')
-
             for alias in HOSTS.keys():
                 for ip in HOSTS[alias].keys():
                     aliases = ' '.join(HOSTS[alias][ip])
                     newHosts.append('%s    %s\n' % (ip, aliases))
 
-            hosts.writelines(newHosts)
-            hosts.close()
+        hosts = open(hostsFile, 'w')
+        print newHosts
+        hosts.writelines(newHosts)
+        hosts.close()
 
         return True
     else:
