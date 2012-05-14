@@ -384,11 +384,16 @@ def setupHosts(hostsFile):
             if '#' in line:
                 line = line[:line.index('#')]
 
+            append_yes = True
+
             if line:
                 destination, aliases = re.split(r'\s', line, 1)
 
                 if not destination in ALL_IPS_TO_EDIT:
-                    newHosts.append(line)
+                    append_yes = False
+
+            if append_yes:
+                newHosts.append(line)
 
         hosts.close()
 
