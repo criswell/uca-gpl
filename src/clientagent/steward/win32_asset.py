@@ -131,8 +131,24 @@ class Win32_Asset(EILAsset):
                     self.asset['Common']['Memory'] = memory
 
                 # Storage
-                # FIXME - Just like Linux, this is a harder problem than on
-                # first blush
+                discs = c.Win32_LogicalDisk()
+                if len(discs) > 0:
+                    storage = []
+
+                    for drive in discs:
+                        if drive.Size:
+                            d = OD([
+                                ( 'HardDrive'. OD([
+                                    ('Name', drive.Name),
+                                    ('Capacity', int(drive.Size) / 1048576),
+                                    ('FreeSpace', int(drive.FreeSpace) / 1048576),
+                                ]),
+                            ), ])
+
+                            storage.append(d)
+
+                    if len(storage) > 0:
+                        self.asset['Common']['Storage'] = storage
 
                 # Networking
                 totalNICs = []

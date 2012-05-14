@@ -85,6 +85,16 @@ if len(mem) > 0:
     print "\t DimmSlots: %s" % dimmSlots
 
 # Storage
+discs = c.Win32_LogicalDisk()
+if len(discs) > 0:
+    print "Storage"
+
+    for drive in discs:
+        if drive.Size:
+            print "\t Hard Drive"
+            print "\t\t Name: %s" % drive.Name
+            print "\t\t Capacity: %s" % int(drive.Size) / 1048576
+            print "\t\t FreeSpace: %s" % int(drive.FreeSpace) / 1048576
 
 # Networking
 allNet = c.Win32_NetworkAdapter()
