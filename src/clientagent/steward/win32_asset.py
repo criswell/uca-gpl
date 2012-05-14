@@ -119,7 +119,9 @@ class Win32_Asset(EILAsset):
                 mem = self.__wmi.Win32_PhysicalMemory()
                 if len(mem) > 0:
                     # Let's put this in M
-                    ramTotal = int(mem[0].Capacity) / 1048576 # * 0.000001
+                    ramTotal = 0
+                    for m in mem:
+                        ramTotal += int(mem[0].Capacity) / 1048576
                     dimmSlots = len(mem)
 
                     memory = OD([
