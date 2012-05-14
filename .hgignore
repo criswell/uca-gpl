@@ -9,3 +9,4 @@ syntax: glob
 tags
 *.pyc
 docs/build/
+.directory

@@ -27,7 +27,10 @@ class Win32_Asset(EILAsset):
         '''
 
         if WMI_ENABLED:
+            self.logger.info('WMI Enabled for Windows Asset Update')
             self.__wmi = WMI()
+        else:
+            self.logger.critial('WMU disabled for Windows asset update!')
 
     def _hasResult(self, someObject):
         '''
