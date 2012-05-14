@@ -32,6 +32,7 @@ HOSTS_START = '## EIL START'
 HOSTS_END = '## EIL END'
 
 CCMS_IP = '172.16.3.10'
+CCMS_STAGING_IP = '172.16.3.8'
 if len(sys.argv) == 3:
     CCMS_IP = sys.argv[2]
 
@@ -40,6 +41,7 @@ HOSTS = {
         'eilportal' :  { CCMS_IP : ['eilportal.eil-infra.com', 'eilportal'] },
         'rmssrvr01' : { CCMS_IP : ['rmssrvr01.eil-infra.com', 'rmssvr01'] },
         'eilauto01' : { CCMS_IP : ['eilauto01.eil-infra.com', 'eilauto01'] },
+        'eilportalstg' : { CCMS_STAGING_IP : ['eilportalstg.eil-infra.com', 'eilportalstg'] },
         'nmsa01' : { '10.4.0.123' : ['nmsa01.eil-infra.com', 'nmsa01'] }
     }
 
