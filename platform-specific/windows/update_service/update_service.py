@@ -32,7 +32,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
     _STAG_IP_                = '10.4.0.66'   # UbuntuDev
     _svc_version_file_url_   = 'http://' + _STAG_IP_ + '/EILUCA/VERSION.txt'
     _svc_version_file_local_ = 'C:\\EIL\\lib\\VERSION'
-    _svc_bootstrapper_path_  = 'C:\\EIL\\lib\\uca-bootstrap.py'
+    _svc_bootstrapper_path_  = 'C:\\EIL\\scripts\\uca-bootstrap.py'
 
     servicemanager.LogInfoMsg('*** Inside UpdateService - Beginning')
 
