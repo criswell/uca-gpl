@@ -99,7 +99,7 @@ class Win32_Asset(EILAsset):
                 allProcs = self.__wmi.Win32_Processor()
                 if len(allProcs) > 0:
                     cpuCount = len(allProcs)
-                    cpuModel = allProcs[0].Caption
+                    cpuModel = allProcs[0].Name
                     coresPerCpu = allProcs[0].NumberOfCores
 
                     processor = OD([
