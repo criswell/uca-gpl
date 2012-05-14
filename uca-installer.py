@@ -378,7 +378,7 @@ def setupHosts(hostsFile):
     UCA use. Will return True on success, or False on failure.
     '''
     if os.path.isfile(hostsFile):
-        logger.info('Trying to edit hosts file: %s' hostsFile)
+        logger.info('Trying to edit hosts file: %s' % hostsFile)
         hosts = open(hostsFile, 'rU')
 
         newHosts = []
