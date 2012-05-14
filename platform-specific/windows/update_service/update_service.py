@@ -15,7 +15,6 @@ import win32api
 import win32event
 import servicemanager
 import socket
-from clientagent import ClientAgentState
 import subprocess
 import urllib
 
@@ -23,9 +22,9 @@ class UpdateService(win32serviceutil.ServiceFramework):
     '''
     Windows Service class to re-install UCA when VERSION file has changed.
     '''
-    _svc_name_               = ClientAgentState.SRV_NAME
-    _svc_display_name_       = ClientAgentState.SRV_DISPLAY_NAME
-    _svc_description_        = ClientAgentState.SRV_DESCRIPTION
+    _svc_name_               = 'UpdateService'
+    _svc_display_name_       = 'Update Service'
+    _svc_description_        = 'Re-installs UCA when VERSION changes.'
     # I copied these IPs from uca-bootstrap.py (changed _TEST_IP_),
     # but they should probably come from a common location.
     _PROD_IP_                = '172.16.3.10' # ???
