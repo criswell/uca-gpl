@@ -20,6 +20,14 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
+''' The following list of IPs which represent systems we want to remove from
+    the HOSTS file. '''
+ALL_IPS_TO_EDIT = [
+    '172.16.3.10',
+    '172.16.3.8',
+    '10.4.0.123'
+]
+
 HOSTS_START = '## EIL START'
 HOSTS_END = '## EIL END'
 
@@ -370,6 +378,7 @@ def setupHosts(hostsFile):
     UCA use. Will return True on success, or False on failure.
     '''
     if os.path.isfile(hostsFile):
+        logger.info('Trying to edit hosts file: %s' hostsFile)
         hosts = open(hostsFile, 'rU')
 
         newHosts = []
@@ -385,8 +394,12 @@ def setupHosts(hostsFile):
                 if line == HOSTS_START:
                     inside_stanza = True
                 else:
-                    newHosts.append(line)
-
+                    p = line.split()
+                    if len(p) > 0:
+                        if p[0] in ALL_IPS_TO_EDIT:
+                            logger.info('Found "%s", removing' % p[0])
+                        else:
+                            newHosts.append(line)
         hosts.close()
 
         # Now, add missing entries
