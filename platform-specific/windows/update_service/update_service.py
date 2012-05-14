@@ -21,17 +21,17 @@ class UpdateService(win32serviceutil.ServiceFramework):
     '''
     Windows Service class to re-install UCA when VERSION file has changed.
     '''
-    _svc_name_               = 'UpdateService'
-    _svc_display_name_       = 'Update Service'
-    _svc_description_        = 'Re-installs UCA when VERSION changes.'
+    _svc_name_           = 'UpdateService'
+    _svc_display_name_   = 'Update Service'
+    _svc_description_    = 'Re-installs UCA when VERSION changes.'
     # I copied these IPs from uca-bootstrap.py (changed _TEST_IP_),
     # but they should probably come from a common location.
-    _PROD_IP_                = '172.16.3.10' # ???
-    _TEST_IP_                = '10.4.8.23'   # UCA-DEV01
-    _STAG_IP_                = '10.4.0.66'   # UbuntuDev
-    _svc_version_file_url_   = 'http://' + _STAG_IP_ + '/EILUCA/VERSION.txt'
-    _svc_version_file_local_ = 'C:\\EIL\\lib\\VERSION'
-    _svc_bootstrapper_path_  = 'C:\\EIL\\scripts\\uca-bootstrap.py'
+    _PROD_IP_            = '172.16.3.10' # ???
+    _TEST_IP_            = '10.4.8.23'   # UCA-DEV01
+    _STAG_IP_            = '10.4.0.66'   # UbuntuDev
+    _version_file_remote = 'http://' + _STAG_IP_ + '/EILUCA/VERSION.txt'
+    _version_file_local  = 'C:\\EIL\\lib\\VERSION'
+    _bootstrapper_path   = 'C:\\EIL\\scripts\\uca-bootstrap.py'
 
     #servicemanager.LogInfoMsg('*** Inside UpdateService - Beginning')
 
@@ -55,9 +55,9 @@ class UpdateService(win32serviceutil.ServiceFramework):
         versionFileContents = ''
         try:
             if remote:
-                f = urllib.urlopen(_svc_version_file_url_)
+                f = urllib.urlopen(_version_file_remote)
             else:
-                f = open(_svc_version_file_local_, 'r')
+                f = open(_version_file_local, 'r')
             # Get first non-blank line & remove all white space.
             while versionFileContents == '':
                 versionFileContents += ''.join(f.read().split())
@@ -83,7 +83,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
             if self.localVersion != self.ReadVersionFile(True):
                 self.log.write('UpdateService: VERSION changed - Re-installing UCA\n')
                 # Files are different - invoke bootstrapper.
-                command = 'python %s' % _svc_bootstrapper_path_
+                command = 'python %s' % _bootstrapper_path
                 msg = 'Executing the bootstrapper:   %s' % command
                 #servicemanager.LogInfoMsg(msg)
                 self.log.write(msg, '\n')
@@ -104,7 +104,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         '''
         Given a command, this will execute it in the parent environment.
         '''
-        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, \
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = p.stdout.readlines()
         p.stdin.close()
