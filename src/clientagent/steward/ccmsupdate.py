@@ -144,10 +144,10 @@ class CCMS_Update(Atom):
                     self.logger.critical('Bailing on CCMS operations!')
                     self.ACTIVE = False
                 else:
-                    self.logger.critical('Error connecting CCMS, assuming we have a concurrency problem')
+                    self.logger.critical('Error connecting CCMS at "%s", assuming we have a concurrency problem' % self.CCMS_IP)
                     self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
                     delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
-                    self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...')
+                    self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...', delay)
                     time.sleep(delay)
 
     def newMessageID(self):
