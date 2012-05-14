@@ -20,13 +20,8 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
-''' The following list of IPs which represent systems we want to remove from
-    the HOSTS file. '''
-ALL_IPS_TO_EDIT = [
-    '172.16.3.10',
-    '172.16.3.8',
-    '10.4.0.123'
-]
+HOSTS_START = '## EIL START'
+HOSTS_END = '## EIL END'
 
 CCMS_IP = '172.16.3.10'
 if len(sys.argv) == 3:
@@ -379,34 +374,33 @@ def setupHosts(hostsFile):
 
         newHosts = []
 
+        inside_stanza = False
         for rawline in hosts:
             line = rawline.strip()
-            if '#' in line:
-                line = line[:line.index('#')]
 
-            append_yes = True
-
-            if line:
-                destination, aliases = re.split(r'\s', line, 1)
-
-                if not destination in ALL_IPS_TO_EDIT:
-                    append_yes = False
-
-            if append_yes:
-                newHosts.append(line)
+            if inside_stanza:
+                if line == HOSTS_END:
+                    inside_stanza = False
+            else:
+                if line == HOSTS_START:
+                    inside_stanza = True
+                else:
+                    newHosts.append(line)
 
         hosts.close()
 
         # Now, add missing entries
         if len(HOSTS) > 0:
+            newHosts.append(HOSTS_START)
             for alias in HOSTS.keys():
                 for ip in HOSTS[alias].keys():
                     aliases = ' '.join(HOSTS[alias][ip])
                     newHosts.append('%s    %s\n' % (ip, aliases))
+            newHosts.append(HOSTS_END)
 
         hosts = open(hostsFile, 'w')
-        print newHosts
-        hosts.writelines(newHosts)
+        for line in newHosts:
+            hosts.write('%s\n' % line)
         hosts.close()
 
         return True
