@@ -20,6 +20,14 @@ else:
     IS_WINDOWS = False
     IS_LINUX = True
 
+''' The following list of IPs which represent systems we want to remove from
+    the HOSTS file. '''
+ALL_IPS_TO_EDIT = [
+    '172.16.3.10',
+    '172.16.3.8',
+    '10.4.0.123'
+]
+
 CCMS_IP = '172.16.3.10'
 if len(sys.argv) == 3:
     CCMS_IP = sys.argv[2]
@@ -369,6 +377,8 @@ def setupHosts(hostsFile):
     if os.path.isfile(hostsFile):
         hosts = open(hostsFile, 'rU')
 
+        newHosts = []
+
         for rawline in hosts:
             line = rawline.strip()
             if '#' in line:
@@ -377,28 +387,21 @@ def setupHosts(hostsFile):
             if line:
                 destination, aliases = re.split(r'\s', line, 1)
 
-                # NOTE: This is pretty blunt- we check that the IP is there,
-                # but not whether or not it is aliased correctly. May want to
-                # reapproach this later on and see if this is sufficient.
-                # TODO
-                for alias in aliases:
-                    if alias in HOSTS.keys():
-                        # dummy is throw-away, we just want it out of the dict
-                        dummy = HOSTS.pop(alias)
+                if not destination in ALL_IPS_TO_EDIT:
+                    newHosts.append(line)
 
         hosts.close()
 
         # Now, add missing entries
         if len(HOSTS) > 0:
-            hosts = open(hostsFile, 'a')
+            hosts = open(hostsFile, 'w')
 
-            hostAliases = []
             for alias in HOSTS.keys():
                 for ip in HOSTS[alias].keys():
                     aliases = ' '.join(HOSTS[alias][ip])
-                    hostAliases.append('%s    %s\n' % (ip, aliases))
+                    newHosts.append('%s    %s\n' % (ip, aliases))
 
-            hosts.writelines(hostAliases)
+            hosts.writelines(newHosts)
             hosts.close()
 
         return True
