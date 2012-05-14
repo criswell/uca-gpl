@@ -61,11 +61,11 @@ class Win32_Asset(EILAsset):
                     joinedToDomain = True
                 self.asset['Common']['JoinedToDomain'] = joinedToDomain
 
-            productID = self._hasResult(c.Win32_ComputerSystemProduct())
+            productID = self._hasResult(self.__wmi.Win32_ComputerSystemProduct())
             if productID:
                 self.asset['Common']['UUID'] = productID.UUID
 
-            OS = self._hasResult(c.Win32_OperatingSystem())
+            OS = self._hasResult(self.__wmi.Win32_OperatingSystem())
             if OS:
                 self.asset['Common']['OS'] = OS.Caption
                 self.asset['Common']['OSVersion'] = OS.Version
@@ -75,13 +75,13 @@ class Win32_Asset(EILAsset):
                 self.asset['Common']['OSArchitecture'] = OS.OSArchitecture
 
                 biosVersion = None
-                BIOS = self._hasResult(c.Win32_BIOS())
+                BIOS = self._hasResult(self.__wmi.Win32_BIOS())
                 if BIOS:
                     biosVersion = BIOS.Version
                 self.asset['Common']['BiosVersion'] = biosVersion
 
                 # Motherboard
-                mobo = self._hasResult(c.Win32_BaseBoard())
+                mobo = self._hasResult(self.__wmi.Win32_BaseBoard())
                 if mobo:
                     manufacturer = mobo.Manufacturer
                     model = mobo.Model
@@ -96,7 +96,7 @@ class Win32_Asset(EILAsset):
                     self.asset['Common']['Motherboard'] = moboOrd
 
                 # Processor
-                allProcs = c.Win32_Processor()
+                allProcs = self.__wmi.Win32_Processor()
                 if len(allProcs) > 0:
                     cpuCount = len(allProcs)
                     cpuModel = allProcs[0].Caption
@@ -116,7 +116,7 @@ class Win32_Asset(EILAsset):
                     self.asset['Common']['Processor'] = processor
 
                 # Memory
-                mem = c.Win32_PhysicalMemory()
+                mem = self.__wmi.Win32_PhysicalMemory()
                 if len(mem) > 0:
                     # Let's put this in M
                     ramTotal = int(mem[0].Capacity) / 1048576 # * 0.000001
@@ -134,8 +134,8 @@ class Win32_Asset(EILAsset):
 
                 # Networking
                 totalNICs = []
-                allNet = c.Win32_NetworkAdapter()
-                allIPs = c.Win32_NetworkAdapterConfiguration()
+                allNet = self.__wmi.Win32_NetworkAdapter()
+                allIPs = self.__wmi.Win32_NetworkAdapterConfiguration()
                 nics = []
                 ips = []
                 equalNics = (len(allNet) == len(allIPs))
