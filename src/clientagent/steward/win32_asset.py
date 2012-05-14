@@ -125,7 +125,7 @@ class Win32_Asset(EILAsset):
                     dimmSlots = len(mem)
 
                     memory = OD([
-                        ('RamTotal' , ramTotal),
+                        ('RamTotal' , '%sMB' % ramTotal),
                         ('DimmSlots' , dimmSlots),
                     ])
                     self.asset['Common']['Memory'] = memory
@@ -140,8 +140,8 @@ class Win32_Asset(EILAsset):
                             d = OD([
                                 ( 'HardDrive', OD([
                                     ('Name', drive.Name),
-                                    ('Capacity', int(drive.Size) / 1048576),
-                                    ('FreeSpace', int(drive.FreeSpace) / 1048576),
+                                    ('Capacity', '%sMB' % int(drive.Size) / 1048576),
+                                    ('FreeSpace', '%sMB' % int(drive.FreeSpace) / 1048576),
                                 ]),
                             ), ])
 
