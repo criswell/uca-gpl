@@ -138,7 +138,7 @@ class Win32_Asset(EILAsset):
                     for drive in discs:
                         if drive.Size:
                             d = OD([
-                                ( 'HardDrive'. OD([
+                                ( 'HardDrive', OD([
                                     ('Name', drive.Name),
                                     ('Capacity', int(drive.Size) / 1048576),
                                     ('FreeSpace', int(drive.FreeSpace) / 1048576),
