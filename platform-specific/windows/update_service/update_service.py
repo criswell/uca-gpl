@@ -43,7 +43,6 @@ class UpdateService(win32serviceutil.ServiceFramework):
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.timeout = 60000  # Compare VERSION files every minute.
-        self.localVersion = self.ReadVersionFile(False)
         self.log = open('C:\\EIL\\UCA-Reinstall.log', 'w')
         self.log.write('UpdateService has started\n')
         self.log.flush()
@@ -82,17 +81,21 @@ class UpdateService(win32serviceutil.ServiceFramework):
         # Loop until self.hWaitStop has happened (stop signal is encountered).
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
-            # Compare local and network VERSION files.
-            if self.localVersion != self.ReadVersionFile(True):
+            # Compare local and remote VERSION files.
+            localVersion  = self.ReadVersionFile(False)
+            remoteVersion = self.ReadVersionFile(True)
+            #self.log.write('localVersion: %s; remoteVersion: %s\n' \
+            #    % (localVersion, remoteVersion))
+            #self.log.flush()
+            if localVersion != remoteVersion:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
-                msg = 'UpdateService: VERSION changed - Re-installing UCA: %s\n' % command
+                msg = 'UpdateService: VERSION changed - Re-installing UCA: %s\n' \
+                    % command
                 #servicemanager.LogInfoMsg(msg)
                 self.log.write(msg)
                 self.log.flush()
                 self.ExecCommand(command)  # Block until done.
-                # We should now have a new, local VERSION file - get it.
-                self.localVersion = self.ReadVersionFile(False)
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.log.write('UpdateService has stopped\n')
