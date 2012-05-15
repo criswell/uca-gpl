@@ -53,6 +53,7 @@ class Win32_Asset(EILAsset):
         if WMI_ENABLED:
             # General stuff
             NTDomain = self._hasResult(self.__wmi.Win32_NTDomain())
+            XPOS = self.hasResults(self.__wmi.Win32_ComputerSystem())
             if NTDomain:
                 self.asset['Common']['HostName'] = NTDomain.Caption
                 self.asset['Common']['DomainName'] =  NTDomain.DomainName
@@ -60,6 +61,8 @@ class Win32_Asset(EILAsset):
                 if NTDomain.DomainName:
                     joinedToDomain = True
                 self.asset['Common']['JoinedToDomain'] = joinedToDomain
+                if XPOS:
+                    self.asset['Common']['JoinedToDomain'] = XPOS.PartOfDomain
 
             productID = self._hasResult(self.__wmi.Win32_ComputerSystemProduct())
             if productID:
@@ -72,7 +75,11 @@ class Win32_Asset(EILAsset):
                 mjv = OS.ServicePackMajorVersion
                 mjm = OS.ServicePackMinorVersion
                 self.asset['Common']['OSServicePack'] = "%s.%s" % (mjv, mjm)
-                self.asset['Common']['OSArchitecture'] = OS.OSArchitecture
+                try:
+                    self.asset['Common']['OSArchitecture'] = OS.OSArchitecture
+                except:
+                    if XPOS:
+                        self.asset['Common']['OSArchitecture'] = XPOS.SystemType
 
                 biosVersion = None
                 BIOS = self._hasResult(self.__wmi.Win32_BIOS())
