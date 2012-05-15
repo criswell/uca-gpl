@@ -100,7 +100,8 @@ class UpdateService(win32serviceutil.ServiceFramework):
                 #servicemanager.LogInfoMsg(msg)
                 self.LogFile(msg)
                 self.ExecCommand(command)  # Block until done.
-                self.LogFile('UCA has been re-installed.\n')
+                ver  = self.ReadVersionFile(False)
+                self.LogFile('UCA (version: $s)has been re-installed.\n' % ver)
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.LogFile('UpdateService has Stopped\n')
