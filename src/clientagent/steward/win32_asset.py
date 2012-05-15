@@ -166,10 +166,13 @@ class Win32_Asset(EILAsset):
                 equalNics = (len(allNet) == len(allIPs))
 
                 for n in range(len(allNet)):
-                    if allNet[n].PhysicalAdapter:
-                        nics.append(allNet[n])
-                        if equalNics:
-                            ips.append(allIPs[n])
+                    try:
+                        if allNet[n].PhysicalAdapter:
+                            nics.append(allNet[n])
+                            if equalNics:
+                                ips.append(allIPs[n])
+                    except:
+                        pass
 
                 if len(nics) > 0:
                     for n in range(len(nics)):
