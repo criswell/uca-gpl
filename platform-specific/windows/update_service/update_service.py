@@ -90,8 +90,9 @@ class UpdateService(win32serviceutil.ServiceFramework):
             if localVersion != remoteVersion:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
-                msg = 'UpdateService: VERSION changed - Re-installing UCA: %s\n' \
-                    % command
+                msg = 'UpdateService: VERSION changed from %s to %s- ' +
+                    'Re-installing UCA: %s\n' \
+                    % (localVersion, remoteVersion, command)
                 #servicemanager.LogInfoMsg(msg)
                 self.log.write(msg)
                 self.log.flush()
