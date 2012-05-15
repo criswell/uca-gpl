@@ -81,7 +81,7 @@ class CCMS_Update(Atom):
             self.logger.info('Obtaining HWADDR and HOSTNAME')
             (self.MY_HWADDR, self.MY_HOST) = getIfInfo()
             if self.MY_HOST == 'localhost':
-	        self.MY_HOST = None
+                self.MY_HOST = None
             self.logger.info('HWADDR: %s' % self.MY_HWADDR)
             self.logger.info('HOSTNAME: %s' % self.MY_HOST)
         except RuntimeError:
