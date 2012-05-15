@@ -84,15 +84,12 @@ class UpdateService(win32serviceutil.ServiceFramework):
             # Compare local and remote VERSION files.
             localVersion  = self.ReadVersionFile(False)
             remoteVersion = self.ReadVersionFile(True)
-            #self.log.write('localVersion: %s; remoteVersion: %s\n' \
-            #    % (localVersion, remoteVersion))
-            #self.log.flush()
+            self.log.write('localVersion: %s; remoteVersion: %s\n' % (localVersion, remoteVersion))
+            self.log.flush()
             if localVersion != remoteVersion:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
-                msg = 'UpdateService: VERSION changed from %s to %s - ' + \
-                    'Re-installing UCA: %s\n' \
-                    % (localVersion, remoteVersion, command)
+                msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA: %s\n' % (localVersion, remoteVersion, command)
                 #servicemanager.LogInfoMsg(msg)
                 self.log.write(msg)
                 self.log.flush()
@@ -113,8 +110,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         '''
         Given a command, this will execute it in the parent environment.
         '''
-        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, \
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = p.stdout.readlines()
         p.stdin.close()
         p.stdout.close()
