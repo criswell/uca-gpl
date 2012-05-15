@@ -172,14 +172,21 @@ class Win32_Asset(EILAsset):
                             if equalNics:
                                 ips.append(allIPs[n])
                     except:
-                        pass
+                        # On XP, this is a bit wonky
+                        nics.append(allNet[n])
+                        if equalNics:
+                            ips.append(allIPs[n])
 
                 if len(nics) > 0:
                     for n in range(len(nics)):
 
                         nicName = nics[n].Name
                         nicMac = nics[n].MACAddress
-                        nicType = nics[n].AdapterType
+                        try:
+                            nicType = nics[n].AdapterType
+                        except:
+                            # XP is Wonky
+                            pass
                         ip = None
                         if equalNics:
                             try:
