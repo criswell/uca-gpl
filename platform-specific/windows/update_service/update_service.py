@@ -16,7 +16,7 @@ import win32event
 #import socket
 import subprocess
 import urllib
-import time; from time import strftime
+import time
 
 class UpdateService(win32serviceutil.ServiceFramework):
     '''
@@ -52,7 +52,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         '''
         Write messages to the UpdateService log file. See open() above.
         '''
-        msgToWrite = strftime('%m/%d/%Y %H:%M:%S: ') + msg
+        msgToWrite = time.strftime('%m/%d/%Y %H:%M:%S: ') + msg
         self.log.write(msgToWrite)
         self.log.flush()
 
@@ -100,7 +100,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
                 #servicemanager.LogInfoMsg(msg)
                 self.LogFile(msg)
                 self.ExecCommand(command)  # Block until done.
-                self.LogFile('UCA has been re-installed.')
+                self.LogFile('UCA has been re-installed.\n')
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.LogFile('UpdateService has Stopped\n')
