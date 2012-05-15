@@ -173,7 +173,7 @@ class Win32_Asset(EILAsset):
                                 ips.append(allIPs[n])
                     except:
                         # On XP, this is a bit wonky
-                        if allNet[n].Manufacturer != 'Microsoft':
+                        if allNet[n].Manufacturer != 'Microsoft' and allNet[n].MACAddress:
                             nics.append(allNet[n])
                             if equalNics:
                                 ips.append(allIPs[n])
