@@ -53,7 +53,7 @@ class Win32_Asset(EILAsset):
         if WMI_ENABLED:
             # General stuff
             NTDomain = self._hasResult(self.__wmi.Win32_NTDomain())
-            XPOS = self.hasResults(self.__wmi.Win32_ComputerSystem())
+            XPOS = self._hasResults(self.__wmi.Win32_ComputerSystem())
             if NTDomain:
                 self.asset['Common']['HostName'] = NTDomain.Caption
                 self.asset['Common']['DomainName'] =  NTDomain.DomainName
