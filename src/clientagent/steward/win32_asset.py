@@ -173,9 +173,10 @@ class Win32_Asset(EILAsset):
                                 ips.append(allIPs[n])
                     except:
                         # On XP, this is a bit wonky
-                        nics.append(allNet[n])
-                        if equalNics:
-                            ips.append(allIPs[n])
+                        if allNet[n].Manufacturer != 'Microsoft':
+                            nics.append(allNet[n])
+                            if equalNics:
+                                ips.append(allIPs[n])
 
                 if len(nics) > 0:
                     for n in range(len(nics)):
