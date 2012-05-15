@@ -24,14 +24,6 @@ class UpdateService(win32serviceutil.ServiceFramework):
     _svc_name_           = 'UpdateService'
     _svc_display_name_   = 'Update Service'
     _svc_description_    = 'Re-installs UCA when VERSION changes.'
-    # I copied these IPs from uca-bootstrap.py (changed _TEST_IP_),
-    # but they should probably come from a common location.
-    _PROD_IP_            = '172.16.3.10' # ???
-    _TEST_IP_            = '10.4.8.23'   # UCA-DEV01
-    _STAG_IP_            = '10.4.0.66'   # UbuntuDev
-    _version_file_remote = 'http://' + _STAG_IP_ + '/EILUCA/VERSION.txt'
-    _version_file_local  = 'C:\\EIL\\lib\\VERSION'
-    _bootstrapper_path   = 'C:\\EIL\\scripts\\uca-bootstrap.py'
 
     #servicemanager.LogInfoMsg('*** Inside UpdateService - Beginning')
 
@@ -40,10 +32,18 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Initialize parent. Create 'stop' event. Compare VERSION files
         once per minute. Do preliminary read of local VERSION file.
         '''
+        # I copied these IPs from uca-bootstrap.py (changed self.testIP),
+        # but they should probably come from a common location.
+        self.prodIP            = '172.16.3.10' # ???
+        self.testIP            = '10.4.8.23'   # UCA-DEV01
+        self.stagIP            = '10.4.0.66'   # UbuntuDev
+        self.versionFileRemote = 'http://' + self.stagIP + '/EILUCA/VERSION.txt'
+        self.versionFileLocal  = 'C:\\EIL\\lib\\VERSION'
+        self.bootstrapperPath  = 'C:\\EIL\\scripts\\uca-bootstrap.py'
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None,0,0,None)
         self.timeout = 60000  # Compare VERSION files every minute.
-        self.localVersion = ReadVersionFile(False)
+        self.localVersion = self.ReadVersionFile(False)
         self.log = open('c:\\UCA-Reinstall.log', 'w')
         self.log.write('UpdateService has started\n')
 
@@ -52,13 +52,13 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Read the VERSION file. If remote==True, read remote VERSION.txt file
         over the LAN. Otherwise, remote==False, so read local VERSION file.
         '''
-        versionFileContents = ''
         try:
             if remote:
-                f = urllib.urlopen(_version_file_remote)
+                f = urllib.urlopen(self.versionFileRemote)
             else:
-                f = open(_version_file_local, 'r')
+                f = open(self.versionFileLocal, 'r')
             # Get first non-blank line & remove all white space.
+            versionFileContents = ''
             while versionFileContents == '':
                 versionFileContents += ''.join(f.read().split())
             f.close()
@@ -83,13 +83,13 @@ class UpdateService(win32serviceutil.ServiceFramework):
             if self.localVersion != self.ReadVersionFile(True):
                 self.log.write('UpdateService: VERSION changed - Re-installing UCA\n')
                 # Files are different - invoke bootstrapper.
-                command = 'python %s' % _bootstrapper_path
+                command = 'python %s' % self.bootstrapperPath
                 msg = 'Executing the bootstrapper:   %s' % command
                 #servicemanager.LogInfoMsg(msg)
                 self.log.write(msg, '\n')
                 self.exec_command(command)  # Block until done.
                 # We should now have a new, local VERSION file - get it.
-                self.localVersion = ReadVersionFile(False)
+                self.localVersion = self.ReadVersionFile(False)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.log.write('UpdateService has stopped\n')
 
