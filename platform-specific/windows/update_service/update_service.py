@@ -41,10 +41,10 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.versionFileLocal  = 'C:\\EIL\\lib\\VERSION'
         self.bootstrapperPath  = 'C:\\EIL\\scripts\\uca-bootstrap.py'
         win32serviceutil.ServiceFramework.__init__(self, args)
-        self.hWaitStop = win32event.CreateEvent(None,0,0,None)
+        self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.timeout = 60000  # Compare VERSION files every minute.
         self.localVersion = self.ReadVersionFile(False)
-        self.log = open('c:\\UCA-Reinstall.log', 'w')
+        self.log = open('C:\\UCA-Reinstall.log', 'w')
         self.log.write('UpdateService has started\n')
 
     def ReadVersionFile(remote):
@@ -71,25 +71,27 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Compare the previous and current contents of the VERSION.txt file.
         When they are different, run uca-bootstrap.py.
         '''
+        import servicemanager
         #servicemanager.LogInfoMsg('*** Inside UpdateService - def(SvcDoRun)')
         #servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
         #                      servicemanager.PYS_SERVICE_STARTED,
         #                      (self._svc_name_, ''))
         self.log.write('UpdateService: Beginning SvcDoRun()\n')
         # Loop until self.hWaitStop has happened (stop signal is encountered).
-        while win32event.WaitForSingleObject(self.hWaitStop, self.timeout) != \
-                win32event.WAIT_OBJECT_0:
+        rc = None
+        while rc != win32event.WAIT_OBJECT_0:
             # Compare local and network VERSION files.
             if self.localVersion != self.ReadVersionFile(True):
-                self.log.write('UpdateService: VERSION changed - Re-installing UCA\n')
                 # Files are different - invoke bootstrapper.
+                self.log.write('UpdateService: VERSION changed - Re-installing UCA\n')
                 command = 'python %s' % self.bootstrapperPath
                 msg = 'Executing the bootstrapper:   %s' % command
                 #servicemanager.LogInfoMsg(msg)
-                self.log.write(msg, '\n')
-                self.exec_command(command)  # Block until done.
+                self.log.write(msg + '\n')
+                self.ExecCommand(command)  # Block until done.
                 # We should now have a new, local VERSION file - get it.
                 self.localVersion = self.ReadVersionFile(False)
+            rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.log.write('UpdateService has stopped\n')
 
@@ -100,7 +102,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
-    def exec_command(cmd):
+    def ExecCommand(cmd):
         '''
         Given a command, this will execute it in the parent environment.
         '''
@@ -111,7 +113,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         p.stdout.close()
         for line in output:
             #servicemanager.LogInfoMsg(line.rstrip())
-            self.log.write(line.rstrip(), '\n')
+            self.log.write(line.rstrip() + '\n')
 
 if __name__ == "__main__":
     win32serviceutil.HandleCommandLine(UpdateService)
