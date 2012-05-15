@@ -47,7 +47,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.log = open('C:\\UCA-Reinstall.log', 'w')
         self.log.write('UpdateService has started\n')
 
-    def ReadVersionFile(remote):
+    def ReadVersionFile(self, remote):
         '''
         Read the VERSION file. If remote==True, read remote VERSION.txt file
         over the LAN. Otherwise, remote==False, so read local VERSION file.
@@ -102,7 +102,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
-    def ExecCommand(cmd):
+    def ExecCommand(self, cmd):
         '''
         Given a command, this will execute it in the parent environment.
         '''
