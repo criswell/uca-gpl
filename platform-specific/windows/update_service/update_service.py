@@ -71,7 +71,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Compare the previous and current contents of the VERSION.txt file.
         When they are different, run uca-bootstrap.py.
         '''
-        import servicemanager
+        #import servicemanager
         #servicemanager.LogInfoMsg('*** Inside UpdateService - def(SvcDoRun)')
         #servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
         #                      servicemanager.PYS_SERVICE_STARTED,
