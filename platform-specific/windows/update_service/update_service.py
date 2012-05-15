@@ -44,8 +44,9 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.timeout = 60000  # Compare VERSION files every minute.
         self.localVersion = self.ReadVersionFile(False)
-        self.log = open('C:\\UCA-Reinstall.log', 'w')
+        self.log = open('C:\\EIL\\UCA-Reinstall.log', 'w')
         self.log.write('UpdateService has started\n')
+        self.log.flush()
 
     def ReadVersionFile(self, remote):
         '''
@@ -77,23 +78,25 @@ class UpdateService(win32serviceutil.ServiceFramework):
         #                      servicemanager.PYS_SERVICE_STARTED,
         #                      (self._svc_name_, ''))
         self.log.write('UpdateService: Beginning SvcDoRun()\n')
+        self.log.flush()
         # Loop until self.hWaitStop has happened (stop signal is encountered).
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             # Compare local and network VERSION files.
             if self.localVersion != self.ReadVersionFile(True):
                 # Files are different - invoke bootstrapper.
-                self.log.write('UpdateService: VERSION changed - Re-installing UCA\n')
-                command = 'python %s' % self.bootstrapperPath
-                msg = 'Executing the bootstrapper:   %s' % command
+                command = 'python.exe %s' % self.bootstrapperPath
+                msg = 'UpdateService: VERSION changed - Re-installing UCA: %s\n' % command)
                 #servicemanager.LogInfoMsg(msg)
-                self.log.write(msg + '\n')
+                self.log.write(msg)
+                self.log.flush()
                 self.ExecCommand(command)  # Block until done.
                 # We should now have a new, local VERSION file - get it.
                 self.localVersion = self.ReadVersionFile(False)
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
         #servicemanager.LogInfoMsg('UpdateService has Stopped')
         self.log.write('UpdateService has stopped\n')
+        self.log.flush()
 
     def SvcStop(self):
         '''
@@ -114,6 +117,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         for line in output:
             #servicemanager.LogInfoMsg(line.rstrip())
             self.log.write(line.rstrip() + '\n')
+        self.log.flush()
 
 if __name__ == "__main__":
     win32serviceutil.HandleCommandLine(UpdateService)
