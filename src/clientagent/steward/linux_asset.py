@@ -298,10 +298,11 @@ class Linux_Asset(EILAsset):
             ramTotal = self._getCommandOutput("dmidecode | grep \"Memory Array\" -A 6 | grep Range | awk '{print $3$4}' | tail -n 1", 1)
 
             dimSlots = self._getCommandOutput('dmidecode | grep "Memory Device" | wc -l', 1)
-            dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
+            #dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
 
             dimSizes = self._getCommandOutput("dmidecode | grep \"Memory Device\" -A 17 | grep \"Size\" | grep -v \"No Module\" | grep -v \"Range\" | awk '{print $2$3}'", None)
             allDims = []
+            dimPop = len(dimSizes)
             for d in dimSizes:
                 allDims.append(OD([
                     ('DimSize', d.strip())
