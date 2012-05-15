@@ -8,6 +8,7 @@ import exceptions
 from clientagent.steward.asset import EILAsset
 from clientagent.common.ordereddict import OrderedDict as OD
 import os
+from clientagent.common.utility import getIfInfo
 
 WMI_ENABLED = True
 try:
@@ -49,13 +50,14 @@ class Win32_Asset(EILAsset):
         '''
 
         # Put all non WMI items up here, so we can ensure something shows up
+        (MY_HWADDR, MY_HOST) = getIfInfo()
+        self.asset['Common']['HostName'] = MY_HOST
 
         if WMI_ENABLED:
             # General stuff
             NTDomain = self._hasResult(self.__wmi.Win32_NTDomain())
             XPOS = self._hasResult(self.__wmi.Win32_ComputerSystem())
             if NTDomain:
-                self.asset['Common']['HostName'] = NTDomain.Caption
                 self.asset['Common']['DomainName'] =  NTDomain.DomainName
                 joinedToDomain = False
                 if NTDomain.DomainName:

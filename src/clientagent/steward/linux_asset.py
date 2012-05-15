@@ -295,9 +295,19 @@ class Linux_Asset(EILAsset):
 
         # Next up, MEMORY!!!!111!!oneeleventeen
         if self._locateInPath(['grep', 'awk', 'dmidecode', 'tail']):
-            ramTotal = self._getCommandOutput("dmidecode | grep \"Memory Array\" -A 6 | grep Range | awk '{print $3$4}' | tail -n 1", 1)
+            ramTotal = None
+            try:
+                p = open("/proc/meminfo", "r")
+                k = p.readlines()
+                p.close()
+                for i in k:
+                    d = i.strip().split()
+                    if d[0] == 'MemTotal:':
+                        ramTotal = " ".join(d[1:])
+            except:
+                ramTotal = self._getCommandOutput("dmidecode | grep \"Memory Array\" -A 6 | grep Range | awk '{print $3$4}' | tail -n 1", 1)
 
-            dimSlots = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep -v "Range Size" | grep "Size:" | grep -v "No Module Installed" | wc -l', 1)
+            dimSlots = self._getCommandOutput('dmidecode | grep "Memory Device" | wc -l', 1)
             #dimPop = self._getCommandOutput('dmidecode | grep "Memory Device" -A 17 | grep "Size" | grep -v "No Module Installed" | wc -l', 1)
 
             dimSizes = self._getCommandOutput("dmidecode | grep \"Memory Device\" -A 17 | grep \"Size\" | grep -v \"No Module\" | grep -v \"Range\" | awk '{print $2$3}'", None)
