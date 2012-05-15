@@ -59,6 +59,6 @@ PID_FILE="${HOME_DIR}/client-agent.pid"
 COMMAND_DIR="${HOME_DIR}/commands"
 
 # The URL for the release directory
-URL_RELEASE="http://eilstaging/EILUCA/"
+URL_RELEASE="http://eilauto01/EILUCA/"
 
 # vim:set ai et sts=4 sw=4 tw=80:
