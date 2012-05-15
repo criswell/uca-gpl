@@ -84,8 +84,8 @@ class UpdateService(win32serviceutil.ServiceFramework):
             # Compare local and remote VERSION files.
             localVersion  = self.ReadVersionFile(False)
             remoteVersion = self.ReadVersionFile(True)
-            self.log.write('localVersion: %s; remoteVersion: %s\n' % (localVersion, remoteVersion))
-            self.log.flush()
+            #self.log.write('localVersion: %s; remoteVersion: %s\n' % (localVersion, remoteVersion))
+            #self.log.flush()
             if localVersion != remoteVersion:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
