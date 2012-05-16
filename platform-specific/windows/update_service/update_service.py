@@ -47,7 +47,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         if not os.path.isdir(self.eilPath):
             os.mkdir(self.eilPath)
         # If log file exists, rename it to '_OLD', which removes existing file.
-        if os.path.path(self.logFile):
+        if os.path.exists(self.logFile):
             os.rename(self.logFile, self.logFile_OLD)
         self.log = open(self.logFile, 'w')
         self.LogFileMsg('UpdateService: __init__()\n')
