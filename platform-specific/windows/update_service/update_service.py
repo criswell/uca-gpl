@@ -8,12 +8,10 @@ about once per minute. If they are different, run uca-bootstrap.py
 to re-install the UCA.
 '''
 
+import os
 import win32service
 import win32serviceutil
-#import win32api
 import win32event
-#import servicemanager
-#import socket
 import subprocess
 import urllib
 import time
@@ -26,8 +24,6 @@ class UpdateService(win32serviceutil.ServiceFramework):
     _svc_display_name_   = 'Update Service'
     _svc_description_    = 'Re-installs UCA when VERSION changes.'
 
-    #servicemanager.LogInfoMsg('UpdateService: Beginning')
-
     def __init__(self, args):
         '''
         Initialize parent. Create 'stop' event. Compare VERSION files
@@ -39,20 +35,28 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.testIP            = '10.4.8.23'   # UCA-DEV01
         self.stagIP            = '10.4.0.66'   # UbuntuDev
         self.versionFileRemote = 'http://' + self.stagIP + '/EILUCA/VERSION.txt'
-        self.versionFileLocal  = 'C:\\EIL\\lib\\VERSION'
-        self.bootstrapperPath  = 'C:\\EIL\\scripts\\uca-bootstrap.py'
+        self.eilPath           = 'C:\\EIL\\'
+        self.versionFileLocal  = self.eilPath + 'lib\\VERSION'
+        self.bootstrapperPath  = self.eilPath + 'scripts\\uca-bootstrap.py'
+        self.logFile           = self.eilPath + 'UCA-Reinstall.log'
+        self.logFile_OLD       = self.eilPath + 'UCA-Reinstall_OLD.log'
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-        self.timeout = 60000  # Compare VERSION files every minute.
-        #servicemanager.LogInfoMsg('UpdateService: __init__()')
-        self.log = open('C:\\EIL\\UCA-Reinstall.log', 'w')
-        self.LogFile('UpdateService: __init__()\n')
+        self.timeout = 60 * 1000  # Compare VERSION files every minute.
+        # If 'c:\EIL\' doesn't already exist, then create it.
+        if not os.path.isdir(self.eilPath):
+            os.mkdir(self.eilPath)
+        # If log file exists, rename it to '_OLD', which removes existing file.
+        if os.path.path(self.logFile):
+            os.rename(self.logFile, self.logFile_OLD)
+        self.log = open(self.logFile, 'w')
+        self.LogFileMsg('UpdateService: __init__()\n')
 
-    def LogFile(self, msg):
+    def LogFileMsg(self, msg):
         '''
         Write messages to the UpdateService log file. See open() above.
         '''
-        msgToWrite = time.strftime('%m/%d/%Y %H:%M:%S: ') + msg
+        msgToWrite = time.strftime('%m/%d/%Y(%H:%M:%S): ') + msg
         self.log.write(msgToWrite)
         self.log.flush()
 
@@ -80,9 +84,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Compare the previous and current contents of the VERSION.txt file.
         When they are different, run uca-bootstrap.py.
         '''
-        #servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTED, (self._svc_name_, ''))
-        #servicemanager.LogInfoMsg('UpdateService: Beginning SvcDoRun()')
-        self.LogFile('UpdateService: Beginning SvcDoRun()\n')
+        self.LogFileMsg('UpdateService: Beginning SvcDoRun()\n')
         # Loop until self.hWaitStop has happened (stop signal is encountered).
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
@@ -91,20 +93,17 @@ class UpdateService(win32serviceutil.ServiceFramework):
             remoteVersion = self.ReadVersionFile(True)
             # Debugging message:
             #msg = 'SvcDoRun: localVersion: %s; remoteVersion: %s\n' % (localVersion, remoteVersion)
-            #servicemanager.LogInfoMsg(msg)
-            #self.LogFile(msg)
+            #self.LogFileMsg(msg)
             if localVersion != remoteVersion:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
                 msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA: %s\n' % (localVersion, remoteVersion, command)
-                #servicemanager.LogInfoMsg(msg)
-                self.LogFile(msg)
+                self.LogFileMsg(msg)
                 self.ExecCommand(command)  # Block until done.
                 msg = 'UCA has been re-installed (new version: %s).\n' % self.ReadVersionFile(False)
-                self.LogFile(msg)
+                self.LogFileMsg(msg)
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
-        #servicemanager.LogInfoMsg('UpdateService has Stopped')
-        self.LogFile('UpdateService has Stopped\n')
+        self.LogFileMsg('UpdateService has Stopped\n')
 
     def SvcStop(self):
         '''
@@ -122,7 +121,6 @@ class UpdateService(win32serviceutil.ServiceFramework):
         p.stdin.close()
         p.stdout.close()
         for line in output:
-            #servicemanager.LogInfoMsg(line.rstrip())
             self.log.write(line.rstrip() + '\n')
         self.log.flush()
 
