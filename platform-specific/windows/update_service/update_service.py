@@ -46,8 +46,10 @@ class UpdateService(win32serviceutil.ServiceFramework):
         # If 'c:\EIL\' doesn't already exist, then create it.
         if not os.path.isdir(self.eilPath):
             os.mkdir(self.eilPath)
-        # If log file exists, rename it to '_OLD', which removes existing file.
+        # If log file exists, rename it to '_OLD' (removing '_OLD' if exist).
         if os.path.exists(self.logFile):
+            if os.path.exists(self.logFile_OLD):
+                os.remove(self.logFile_OLD)
             os.rename(self.logFile, self.logFile_OLD)
         self.log = open(self.logFile, 'w')
         self.LogFileMsg('UpdateService: __init__()\n')
