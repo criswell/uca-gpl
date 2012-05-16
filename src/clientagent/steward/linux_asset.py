@@ -315,7 +315,7 @@ class Linux_Asset(EILAsset):
             dimPop = len(dimSizes)
             for d in dimSizes:
                 allDims.append(OD([
-                    ('DimSize', d.strip())
+                    ('DimmSize', d.strip())
                     ]))
             memory = OD([
                 ('RamTotal' , ramTotal),

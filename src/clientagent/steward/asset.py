@@ -66,7 +66,7 @@ class EILAsset:
                         ('DimmSlots' , None),                 # Integer
                         ('DimmPopulated' , None),             # Integer
                         ('Dimm' , [                     # Array of dim sizes
-                            { 'DimSize' : None },
+                            { 'DimmSize' : None },
                             # Other elements as needed
                             ],
                         ),

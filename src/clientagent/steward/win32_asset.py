@@ -57,11 +57,12 @@ class Win32_Asset(EILAsset):
             # General stuff
             NTDomain = self._hasResult(self.__wmi.Win32_NTDomain())
             XPOS = self._hasResult(self.__wmi.Win32_ComputerSystem())
-            if NTDomain:
-                self.asset['Common']['DomainName'] =  NTDomain.DomainName
+            if XPOS:
+                self.asset['Common']['DomainName'] =  XPOS.Domain
                 joinedToDomain = False
-                if NTDomain.DomainName:
-                    joinedToDomain = True
+                if NTDomain:
+                    if NTDomain.DomainName:
+                        joinedToDomain = True
                 self.asset['Common']['JoinedToDomain'] = joinedToDomain
                 if XPOS:
                     self.asset['Common']['JoinedToDomain'] = XPOS.PartOfDomain
