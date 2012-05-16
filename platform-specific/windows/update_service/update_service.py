@@ -38,8 +38,8 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.eilPath           = 'C:\\EIL\\'
         self.versionFileLocal  = self.eilPath + 'lib\\VERSION'
         self.bootstrapperPath  = self.eilPath + 'scripts\\uca-bootstrap.py'
-        self.logFile           = self.eilPath + 'UCA-Reinstall.log'
-        self.logFile_OLD       = self.eilPath + 'UCA-Reinstall_OLD.log'
+        self.logFile           = self.eilPath + 'UCA_Reinstall.log'
+        self.logFile_OLD       = self.eilPath + 'UCA_Reinstall_OLD.log'
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.timeout = 60 * 1000  # Compare VERSION files every minute.
