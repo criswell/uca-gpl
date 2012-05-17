@@ -45,7 +45,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.testPath          = 'EILUCA-testing'
         self.eilPath           = 'C:\\EIL\\'
         self.versionFileLocal  = self.eilPath + 'lib\\VERSION'
-        self.bootstrapperPath  = self.eilPath + 'scripts\\uca-bootstrap.py'
+        self.bootstrapperPath  = self.eilPath + 'tools\\uca-bootstrap.py'
         self.tmpBootstrapPath  = 'C:\\bootstrap.py'
         self.logFile           = 'C:\\UCA_Reinstall.log'
         self.logFile_OLD       = 'C:\\UCA_Reinstall_OLD.log'
