@@ -99,7 +99,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
             if remote:
                 localRemote = 'remote'
             msg = 'WARNING: There is no %s VERSION file.\n' % localRemote
-            LogFileMsg(msg)
+            self.LogFileMsg(msg)
         return versionFileContents
 
     def SvcDoRun(self):
