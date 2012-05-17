@@ -1,11 +1,18 @@
 '''
 update_service.py
 -----------------
-This is intended to run only on Windows environments.
+This is intended to run *ONLY* on Windows environments.
 
 Compare local VERSION file to the VERSION.txt file on the LAN,
 about once per minute. If they are different, run uca-bootstrap.py
 to re-install the UCA.
+
+This is how to use this Windows service:
+
+Installing: > python update_service.py install
+Starging:   > net start UpdateService
+Stopping:   > net stop UpdateService
+Deleting:   > sc delete UpdateService
 '''
 
 import os
