@@ -31,15 +31,22 @@ class UpdateService(win32serviceutil.ServiceFramework):
         '''
         # I copied these IPs from uca-bootstrap.py (changed self.testIP),
         # but they should probably come from a common location.
-        self.prodIP            = '172.16.3.10' # ???
-        self.testIP            = '10.4.8.23'   # UCA-DEV01
-        self.stagIP            = '10.4.0.66'   # UbuntuDev
-        self.versionFileRemote = 'http://' + self.stagIP + '/EILUCA/VERSION.txt'
+        self.is_Production     = False
+        self.CCMS_ADDR         = 'eilauto01'
+        self.prodPath          = 'EILUCA'
+        self.testPath          = 'EILUCA-testing'
         self.eilPath           = 'C:\\EIL\\'
         self.versionFileLocal  = self.eilPath + 'lib\\VERSION'
         self.bootstrapperPath  = self.eilPath + 'scripts\\uca-bootstrap.py'
         self.logFile           = 'C:\\UCA_Reinstall.log'
         self.logFile_OLD       = 'C:\\UCA_Reinstall_OLD.log'
+
+        # Determine which path to use
+        self.urlPath = self.testPath
+        if self.is_Production:
+            self.urlPath = self.prodPath
+        self.versionFileRemote = 'http://%s/%s/VERSION.txt' % (self.CCMS_ADDR, self.urlPath)
+
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.timeout = 60 * 1000  # Compare VERSION files every minute.
