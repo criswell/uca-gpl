@@ -35,7 +35,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
     def __init__(self, args):
         '''
         Initialize parent. Create 'stop' event. Compare VERSION files
-        once per minute. Do preliminary read of local VERSION file.
+        once per hour. Do preliminary read of local VERSION file.
         '''
         # I copied these IPs from uca-bootstrap.py (changed self.testIP),
         # but they should probably come from a common location.
@@ -58,7 +58,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
 
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-        self.timeout = 60 * 1000  # Compare VERSION files every minute.
+        self.timeout = 60 * 1000 * 60 # Compare VERSION files every hour.
         # If 'c:\EIL\' doesn't already exist, then create it.
         if not os.path.isdir(self.eilPath):
             os.mkdir(self.eilPath)

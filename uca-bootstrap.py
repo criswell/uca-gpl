@@ -24,13 +24,13 @@ TESTING_IP = '172.16.3.8'
 STAGING_IP = '10.4.0.66'
 
 # Set the CCMS IP here
-CCMS_IP = TESTING_IP
+CCMS_IP = PRODUCTION_IP
 
 # Set the IP for pulling the UCA from here
 UCA_IP = PRODUCTION_IP
 
 # Set whether we are running a testing release URL or normal release URL
-IS_TESTING = True
+IS_TESTING = False
 
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
