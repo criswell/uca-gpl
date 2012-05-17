@@ -180,7 +180,20 @@ def win32_installTools(rootDir, srcDir):
         logger.info('Update service not found, installing...')
         try:
             shutil.copy_tree(os.path.join(srcDir, 'windows', 'update_service'), UPDATE_SERVICE_PATH)
-            # Start the service here FIXME
+            # Try to stop and clean up any previous ones
+            exec_command('net stop UpdateService')
+            exec_command('sc delete UpdateService')
+            # Start and add
+            logger.info('Installing update service...')
+            exec_command('python %s\\update_service\\update_service.py --username localsystem --startup auto install' % UPDATE_SERVICE_PATH)
+            exec_command('sc failure UpdateService reset= 30 actions= restart/5000')
+            exec_command('sc start UpdateService')
+            exec_command('sc queryex UpdateService')
+        except:
+            traceback_lines = traceback.format_exc().splitlines()
+            for line in traceback_lines:
+                logger.info(line)
+            logger.critical('Problem installing update service!')
 
 def win32_startService():
     '''
