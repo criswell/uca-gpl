@@ -22,6 +22,7 @@ import win32event
 import subprocess
 import urllib
 import time
+import shutil
 
 class UpdateService(win32serviceutil.ServiceFramework):
     '''
@@ -45,6 +46,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         self.eilPath           = 'C:\\EIL\\'
         self.versionFileLocal  = self.eilPath + 'lib\\VERSION'
         self.bootstrapperPath  = self.eilPath + 'scripts\\uca-bootstrap.py'
+        self.tmpBootstrapPath  = 'C:\\bootstrap.py'
         self.logFile           = 'C:\\UCA_Reinstall.log'
         self.logFile_OLD       = 'C:\\UCA_Reinstall_OLD.log'
 
@@ -118,10 +120,12 @@ class UpdateService(win32serviceutil.ServiceFramework):
             #self.LogFileMsg(msg)
             if localVer != '' and remoteVer != '' and localVer != remoteVer:
                 # Files are different - invoke bootstrapper.
-                command = 'python.exe %s' % self.bootstrapperPath
-                msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA: %s\n' % (localVer, remoteVer, command)
+                shutil.copy(self.bootstrapperPath, self.tmpBootstrapPath)
+                command = 'python.exe %s' % self.tmpBootstrapPath
+                msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA:  %s\n' % (localVer, remoteVer, command)
                 self.LogFileMsg(msg)
                 self.ExecCommand(command)  # Block until done.
+                os.remove(self.tmpBootstrapPath)
                 msg = 'UCA has been re-installed (new version: %s).\n' % self.ReadVersionFile(False)
                 self.LogFileMsg(msg)
             rc = win32event.WaitForSingleObject(self.hWaitStop, self.timeout)
