@@ -179,7 +179,9 @@ def win32_installTools(rootDir, srcDir):
     if not os.path.isdir(UPDATE_SERVICE_PATH):
         logger.info('Update service not found, installing...')
         try:
-            shutil.copy_tree(os.path.join(srcDir, 'windows', 'update_service'), UPDATE_SERVICE_PATH)
+            updateSrcPath = os.path.join(srcDir, 'windows', 'update_service')
+            logger.info('Copying from %s to %s' % (updateSrcPath, UPDATE_SERVICE_PATH))
+            shutil.copy_tree(updateSrcPath, UPDATE_SERVICE_PATH)
             # Try to stop and clean up any previous ones
             exec_command('net stop UpdateService')
             exec_command('sc delete UpdateService')
