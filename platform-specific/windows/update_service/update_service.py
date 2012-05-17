@@ -83,13 +83,13 @@ class UpdateService(win32serviceutil.ServiceFramework):
         Read the VERSION file. If remote==True, read remote VERSION.txt file
         over the LAN. Otherwise, remote==False, so read local VERSION file.
         '''
+        versionFileContents = ''
         try:
             if remote:
                 f = urllib.urlopen(self.versionFileRemote)
             else:
                 f = open(self.versionFileLocal, 'r')
             # Get first non-blank line & remove all white space.
-            versionFileContents = ''
             while versionFileContents == '':
                 versionFileContents += ''.join(f.read().split())
             f.close()
