@@ -39,7 +39,7 @@ class UpdateService(win32serviceutil.ServiceFramework):
         '''
         # I copied these IPs from uca-bootstrap.py (changed self.testIP),
         # but they should probably come from a common location.
-        self.is_Production     = False
+        self.is_Production     = True
         self.CCMS_ADDR         = 'eilauto01'
         self.prodPath          = 'EILUCA'
         self.testPath          = 'EILUCA-testing'
