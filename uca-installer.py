@@ -56,6 +56,8 @@ DIRS = [ 'bin', 'lib', 'doc', 'tools', 'home', 'scripts', 'postinst' ]
 PRECOMPILE_EXCEPTIONS = [
     'eil_steward.py',
     'uca-installer.py',
+    'uca-bootstrap.py',
+    'update_service.py',
     'nmsa_handler.py',
     'nmsa_daemon.py',
     'nmsa_conf.py',

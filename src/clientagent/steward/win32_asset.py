@@ -131,7 +131,7 @@ class Win32_Asset(EILAsset):
                     # Let's put this in M
                     ramTotal = 0
                     for m in mem:
-                        ramTotal += int(mem[0].Capacity) / 1048576
+                        ramTotal += int(m.Capacity) / 1048576
                     dimmSlots = len(mem)
 
                     memory = OD([
