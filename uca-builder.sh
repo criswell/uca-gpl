@@ -54,7 +54,7 @@ build()
     make
     cp ${TMP_REPO}/platform-specific/linux/elevate_script/elevate_script ${TMP_WORKSPACE}/uca/bin/.
 
-    # FIXME currently no platform-specifics on Windows
+    cp -fr ${TMP_REPO}/platform-specific/windows/update_service ${TMP_WORKSPACE}/uca/windows/.
 
     cd ${TMP_WORKSPACE}
     zip -r uca.zip uca/

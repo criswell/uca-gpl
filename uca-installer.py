@@ -64,6 +64,8 @@ PRECOMPILE_EXCEPTIONS = [
     'nmsa_main.py',
     ]
 
+UPDATE_SERVICE_PATH = 'C:\\eil_updater'
+
 logger = logging.getLogger('uca-installer')
 logger.setLevel(logging.DEBUG)
 if IS_WINDOWS:
@@ -153,7 +155,7 @@ def win32_setupHosts():
     else:
         logger.critical('Could not find appropriate environment variable for where the system files are. Could not set up hosts file as a result.')
 
-def win32_installTools(rootDir):
+def win32_installTools(rootDir, srcDir):
     '''
     Given the rootDir, will install the Windows-specific tools.
     '''
@@ -172,6 +174,13 @@ def win32_installTools(rootDir):
             traceback_lines = traceback.format_exc().splitlines()
             for line in traceback_lines:
                 logger.info(line)
+
+    logger.info('Checking for update service...')
+    if not os.path.isdir(UPDATE_SERVICE_PATH):
+        logger.info('Update service not found, installing...')
+        try:
+            shutil.copy_tree(os.path.join(srcDir, 'windows', 'update_service'), UPDATE_SERVICE_PATH)
+            # Start the service here FIXME
 
 def win32_startService():
     '''
@@ -504,7 +513,7 @@ if len(sys.argv) >= 2:
         # Now install
         installAt('C:\\eil', srcDir)
         # Any Windows-specific install items
-        win32_installTools('C:\\eil')
+        win32_installTools('C:\\eil', srcDir)
         # Restore home
         copyHome(tempdir, 'C:\\eil')
         # Restore windows backups
