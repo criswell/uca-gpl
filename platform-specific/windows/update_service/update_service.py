@@ -95,11 +95,10 @@ class UpdateService(win32serviceutil.ServiceFramework):
             f.close()
         except IOError:
             # VERSION file doesn't exist - log WARNING and ignore for now.
+            localRemote = 'local'
             if remote:
                 localRemote = 'remote'
-            else:
-                localRemote = 'local'
-            msg = 'WARNING: There is no ' + localRemote + ' VERSION file.'
+            msg = 'WARNING: There is no %s VERSION file.\n' % localRemote
             LogFileMsg(msg)
         return versionFileContents
 
