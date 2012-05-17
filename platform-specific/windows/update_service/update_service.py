@@ -111,15 +111,15 @@ class UpdateService(win32serviceutil.ServiceFramework):
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             # Compare local and remote VERSION files.
-            localVersion  = self.ReadVersionFile(False)
-            remoteVersion = self.ReadVersionFile(True)
+            localVer  = self.ReadVersionFile(False)
+            remoteVer = self.ReadVersionFile(True)
             # Debugging message:
-            #msg = 'SvcDoRun: localVersion: %s; remoteVersion: %s\n' % (localVersion, remoteVersion)
+            #msg = 'SvcDoRun: localVer: %s; remoteVer: %s\n' % (localVer, remoteVer)
             #self.LogFileMsg(msg)
-            if localVersion != remoteVersion:
+            if localVer != '' and remoteVer != '' and localVer != remoteVer:
                 # Files are different - invoke bootstrapper.
                 command = 'python.exe %s' % self.bootstrapperPath
-                msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA: %s\n' % (localVersion, remoteVersion, command)
+                msg = 'UpdateService: VERSION changed from %s to %s - Re-installing UCA: %s\n' % (localVer, remoteVer, command)
                 self.LogFileMsg(msg)
                 self.ExecCommand(command)  # Block until done.
                 msg = 'UCA has been re-installed (new version: %s).\n' % self.ReadVersionFile(False)
