@@ -30,7 +30,7 @@ CCMS_IP = PRODUCTION_IP
 UCA_IP = PRODUCTION_IP
 
 # Set whether we are running a testing release URL or normal release URL
-IS_TESTING = False
+IS_TESTING = True
 
 USERZIPFILE = None
 # If called with a parameter, it is assumed that parameter is the local location
