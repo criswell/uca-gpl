@@ -117,38 +117,42 @@ class CCMS_Update(Atom):
         headers = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/GetCommandToExecute"'}
         ACKheaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateCommandStatus"'}
         assetHeaders = {'Content-Type': 'application/soap+xml; charset=utf-8; action="http://tempuri.org/IEILClientOperations/UpdateAssetInformation"'}
-        try:
-            self.client = Client(self.CCMS_WSDL, headers=headers)
-            self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
-            self.assetClient = Client(self.CCMS_WSDL, headers=assetHeaders)
-            self.SUDS_ONLINE = True
-        except:
-            traceback_lines = traceback.format_exc().splitlines()
-            for line in traceback_lines:
-                self.logger.critical(line)
-                # FIXME we will need better error checking here, but for now,
-                # we use a catch-all
-            self.SUDS_ONLINE = False
-            self.IP_INDEX += 1
-            if self.IP_INDEX < len(self.ALL_CCMS_IPS):
-                self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
-                self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
-                self.logger.info("Failed to contact CCMS for WSDL scan. Trying a different IP: '%s'" % self.CCMS_IP)
-            else:
-                self.IP_INDEX = 0
-                self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
-                self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
-                self.RETRY += 1
-                if self.RETRY > self.MAX_RETRIES:
-                    self.logger.critical('Unknown error trying to contact CCMS!')
-                    self.logger.critical('Bailing on CCMS operations!')
-                    self.ACTIVE = False
+        while True:
+            try:
+                self.client = Client(self.CCMS_WSDL, headers=headers)
+                self.ACKclient = Client(self.CCMS_WSDL, headers=ACKheaders)
+                self.assetClient = Client(self.CCMS_WSDL, headers=assetHeaders)
+                self.SUDS_ONLINE = True
+                break
+            except:
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
+                    # FIXME we will need better error checking here, but for now,
+                    # we use a catch-all
+                self.SUDS_ONLINE = False
+                self.IP_INDEX += 1
+                if self.IP_INDEX < len(self.ALL_CCMS_IPS):
+                    self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
+                    self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
+                    self.logger.info("Failed to contact CCMS for WSDL scan. Trying a different IP: '%s'" % self.CCMS_IP)
+                    break
                 else:
-                    self.logger.critical('Error connecting CCMS at "%s", assuming we have a concurrency problem' % self.CCMS_IP)
-                    self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
-                    delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
-                    self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...', delay)
-                    time.sleep(delay)
+                    self.IP_INDEX = 0
+                    self.CCMS_IP = self.ALL_CCMS_IPS[self.IP_INDEX]
+                    self.CCMS_WSDL = 'http://%s/CCMS/EILClientOperationsService.svc?wsdl' % self.CCMS_IP
+                    self.RETRY += 1
+                    if self.RETRY > self.MAX_RETRIES:
+                        self.logger.critical('Unknown error trying to contact CCMS!')
+                        self.logger.critical('Bailing on CCMS operations!')
+                        self.ACTIVE = False
+                        break
+                    else:
+                        self.logger.critical('Error connecting CCMS at "%s", assuming we have a concurrency problem' % self.CCMS_IP)
+                        self.logger.critical('Current retry attempts: %s/%s' % (self.RETRY, self.MAX_RETRIES))
+                        delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
+                        self.logger.critical('Waiting for "%s" seconds to solve for potential concurrency problem...', delay)
+                        time.sleep(delay)
 
     def newMessageID(self):
         '''
