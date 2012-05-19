@@ -43,10 +43,10 @@ class CCMS_Update(Atom):
         self.SUDS_ONLINE = False
         self.HOST_KNOWN = False
         self.RETRY = 0
-        self.MAX_RETRIES = 999999
+        self.MAX_RETRIES = 9999999
         self.IP_INDEX = 0
-        self.MIN_DELAY = 30
-        self.MAX_DELAY = 220
+        self.MIN_DELAY = 1
+        self.MAX_DELAY = 5
         self.TARGET_TIMEDELTA = 30
         self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
         self.assetTimer = self.ASSET_TIMEDELTA + 1 # Force a first time update
