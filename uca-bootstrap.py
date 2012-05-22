@@ -9,7 +9,7 @@ will want to refine it considerably.
 '''
 
 import urllib, zipfile, os, tempfile, shutil, sys, logging, traceback
-import subprocess
+import subprocess, time
 
 # Platform determination
 if os.name == 'nt':
@@ -37,6 +37,12 @@ USERZIPFILE = None
 # of the zipfile
 if len(sys.argv) == 2:
     USERZIPFILE = sys.argv[1]
+
+# The number of times we will retry pulling the zip file on failure
+NUMBER_RETRIES = 10
+CURRENT_RETRY = 0
+# Timeout on retry, in seconds
+TIMEOUT = 10
 
 ROOT_DIR = 'C:\\eil'
 if IS_LINUX:
@@ -102,7 +108,22 @@ else:
                 ucaPath = "EILUCA-testing"
             url = 'http://%s/%s/uca.zip' % (UCA_IP, ucaPath)
             logger.info('Pulling UCA zipfile: %s' % url)
-            (filename, headers) = urllib.urlretrieve(url)
+            while True:
+                try:
+                    (filename, headers) = urllib.urlretrieve(url)
+                    break
+                except:
+                    traceback_lines = traceback.format_exc().splitlines()
+                    for line in traceback_lines:
+                        logger.info(line)
+                    logger.info('Trouble retrieving zip file!')
+                    CURRENT_RETRY += 1
+                    if CURRENT_RETRY <= NUMBER_RETRIES:
+                        logger.info('Retry %s/%s... sleeping %s' % (CURRENT_RETRY, NUMBER_RETRIES, TIMEOUT))
+                        time.sleep(TIMEOUT)
+                    else:
+                        logger.critical('Max retries expired! Giving up...')
+                        sys.exit(-1)
         logger.info('Stored in "%s"...' % filename)
 
         tempDir = tempfile.mkdtemp()
