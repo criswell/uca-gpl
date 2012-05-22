@@ -5,16 +5,8 @@
   overwhelm (DoS) the CCMS server with our requests. There is a way to turn on
   caching in SUDS, but we do not yet have that enabled.
 
-* Need to check for localhost test (see Linux Client Agent,
-  steward/eil_steward.ccp, line 288). This is absolutely vital for proper new
-  asset collection functionality.
-
 * Need to restore non-priv user security restrictions under Linux again. See
   FIXME in platform-specific/linux/dispatcher/lib/dispatcher.sh on line 9.
-
-* Finish installer/updated on Linux-side (currently stubbed).
-
-* Some sort of fallback for IP address changes for CCMS.
 
 * Do something less "frightening looking" with uca-bootstrap when normal/
   expected things (like home not being there when we do a fresh install)

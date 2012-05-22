@@ -47,7 +47,7 @@ def handleReboot(ccmsUpdate, ctx, result, txID):
     rOID = result.OperationID
     rmt= result.SetMachineType
     cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, commandName, rstat, rsuc, rresult, rerr,  rOID, rmt)
-    ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+    ACKresult = ccmsUpdate.updateCommandStatus(ctx, cACK)
     rebcode = ccmsUpdate.dispatcher.reboot('CCMS Reboot', 10)
 
 def handleJoin(ccmsUpdate, ctx, result, txID):
@@ -157,7 +157,7 @@ def handleJoin(ccmsUpdate, ctx, result, txID):
     # All return codes will now reply back to CCMS via function
     # below using their own web request - not the original
     # getcommand request  RC - NOV 2011
-    ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+    ACKresult = ccmsUpdate.updateCommandStatus(ctx, cACK)
 
     ccmsUpdate.logger.debug('domain join> CCMS return Comand Status Update Result: %s' % ACKresult)
 
@@ -207,6 +207,6 @@ def handleUnJoin(ccmsUpdate, ctx, result, txID):
         rmt= result.SetMachineType
         cACK = ccmsUpdate.generateCommand(ccmsUpdate.ACKclient, cmdName, rstat, rsuc, rresult, rerr, rOID, rmt)
 
-    ACKresult = ccmsUpdate.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+    ACKresult = ccmsUpdate.updateCommandStatus(ctx, cACK)
 
 # vim:set ai et sts=4 sw=4 tw=80:

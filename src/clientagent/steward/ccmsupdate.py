@@ -51,6 +51,7 @@ class CCMS_Update(Atom):
         self.ASSET_TIMEDELTA = 60 * 60 # 60 seconds X 60 minutes
         self.assetTimer = self.ASSET_TIMEDELTA + 1 # Force a first time update
         self.MAX_JOIN_RETRIES = 2
+        self.CCMS_RETRY_SLEEP = 1
 
         # Our various CCMS command interactions
         self.CCMS_COMMANDS = {
@@ -287,6 +288,29 @@ class CCMS_Update(Atom):
         ack.SetMachineType = machineType
 
         return ack
+
+    def updateCommandStatus(self, ctx, cACK):
+        '''
+        Will update the command status. In many regards, this is a terrible
+        hack- we absolutely have to update the command status when a command
+        has been executed. The problem is, there are situations where the IIS
+        server managing CCMS flakes out and our connection dies mid-stream.
+        Thus, we wind up having to infinitely retry until it fixes itself.
+        FIXME - Honestly, someone will want to return to this later once
+        IIS has been fixed to not flake out.
+        '''
+        retval = None
+        while True:
+            try:
+                retval = self.ACKclient.service.UpdateCommandStatus(ctx, cACK)
+                break
+            except:
+                traceback_lines = traceback.format_exc().splitlines()
+                for line in traceback_lines:
+                    self.logger.critical(line)
+                self.logger.critical('Problem reaching CCMS, trying again after small sleep...')
+                time.sleep(self.CCMS_RETRY_SLEEP)
+        return retval
 
     def shutdown(self):
         pass
