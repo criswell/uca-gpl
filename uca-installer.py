@@ -290,10 +290,13 @@ def linux_startDaemon():
     '''
     Starts the daemon under Linux once it has been installed.
     '''
-    logger.info('Starting new client agent...')
-    exec_command('chmod a+x /opt/intel/eil/clientagent/bin/eil_steward.py')
-    #exec_command('chmod a+x /opt/intel/eil/clientagent/bin/elevate_script')
-    exec_command('/etc/init.d/eil_steward.sh start')
+    if os.path.isfile('/etc/ca_toggles/no_init'):
+        logger.info('/etc/ca_toggles/no_init detected, not starting agent...')
+    else:
+        logger.info('Starting new client agent...')
+        exec_command('chmod a+x /opt/intel/eil/clientagent/bin/eil_steward.py')
+        #exec_command('chmod a+x /opt/intel/eil/clientagent/bin/elevate_script')
+        exec_command('/etc/init.d/eil_steward.sh start')
 
 # Generic functions
 def recursive_delete(dirname):
