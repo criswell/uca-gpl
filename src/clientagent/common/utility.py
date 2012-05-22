@@ -37,11 +37,17 @@ def getIfInfo():
     @returns: A tuple containing the (HW_ADDRESS, HOSTNAME)
     '''
     if _platformId.IS_LINUX:
-        ifnum = 0
-        ifname = "eth%s" % ifnum
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        hwinfo = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', ifname[:15]))
-        return (''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1], os.uname()[1])
+        #ifnum = 0
+        for ifnum in range(15):
+            try:
+                ifname = "eth%s" % ifnum
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                hwinfo = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', ifname[:15]))
+                return (''.join(['%02x:' % ord(char) for char in hwinfo[18:24]])[:-1], os.uname()[1])
+            except:
+                # Since we're looking for first non-failure, we pass here
+                pass
+        raise RuntimeError, "Could not find HW ADDRESS!"
     else:
         ncb = NCB()
         ncb.Command = NCBENUM
