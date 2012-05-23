@@ -32,6 +32,7 @@ while True:
         throwaway = f.readlines()
         f.close()
         logger.info('Success, read %s lines' % len(throwaway))
+        logger.info(throwaway)
     except:
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
