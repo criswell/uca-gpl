@@ -61,4 +61,4 @@ while True:
                     logger.info(line)
                 logger.info('Failure reading Google News...')
                 break
-    time.sleep(random.randint(2, 15)
+    time.sleep(random.randint(2, 15))
