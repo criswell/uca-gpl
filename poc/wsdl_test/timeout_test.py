@@ -31,6 +31,7 @@ while True:
         f = urllib2.urlopen(address)
         throwaway = f.readlines()
         f.close()
+        logger.info('Success, read %s lines' % len(throwaway))
     except:
         traceback_lines = traceback.format_exc().splitlines()
         for line in traceback_lines:
@@ -42,6 +43,7 @@ while True:
             f = urllib2.urlopen(address)
             throwaway = f.readlines()
             f.close()
+            logger.info('Success, read %s lines' % len(throwaway))
             logger.info('Success reading by IP!!!!!!!!!!!!!!!!!!!')
         except:
             traceback_lines = traceback.format_exc().splitlines()
@@ -53,6 +55,7 @@ while True:
                 f = urllib2.urlopen(address)
                 throwaway = f.readlines()
                 f.close()
+                logger.info('Success, read %s lines' % len(throwaway))
                 logger.info('Success reading Google News!!!!!!!!!!!!!!!')
                 break
             except:
@@ -61,4 +64,6 @@ while True:
                     logger.info(line)
                 logger.info('Failure reading Google News...')
                 break
-    time.sleep(random.randint(2, 15))
+    timeout = random.randint(2, 15)
+    logger.info('Sleeping %s' % timeout)
+    time.sleep(timeout)
