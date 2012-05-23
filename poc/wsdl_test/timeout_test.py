@@ -2,8 +2,7 @@
 
 CCMS_IP = '172.16.3.10'
 CCMS_ADDR = 'eilauto01.eil-infra.com'
-CCMS_WSDL =
-    [
+CCMS_WSDL = [
         'http://%s/CCMS/EILClientOperationsService.svc?wsdl',
         'http://%s/CCMS/EILClientOperationsService.svc?xsd=xsd0',
         'http://%s/CCMS/EILClientOperationsService.svc?xsd=xsd1',
