@@ -26,7 +26,7 @@ logger.info('This script will run until terminated or until we have a situation 
 f = open('html_output.txt', 'w')
 
 def try_address(address):
-    exit_code = subprocess.call(['wget', '-q', '-O', '-t', '1', '-T', '0.05', '-', address], stdout=f, stderr=f)
+    exit_code = subprocess.call(['wget', '-q', '-O', '-t', '1', '-T', '0.02', '-', address], stdout=f, stderr=f)
     if exit_code == 1:
         logger.info('ERROR: 1   Generic error code.')
         raise Exception()
