@@ -48,6 +48,15 @@ class Dispatcher:
 
         return rbrtncode
 
+    def asset_rebboot(self):
+        '''
+        Asset reboot wrapper
+        '''
+        if self.platformID.IS_WINDOWS:
+            self.logger.critical('Asset reboot requested in Windows, not supported...')
+        else:
+            self.__LinuxAssetReboot()
+
     def join(self, domain):
         '''
         Generic domain join wrapper
@@ -184,5 +193,8 @@ class Dispatcher:
 
     def __LinuxTcpDiag(self):
         throwAwayResult = linux_ExecuteCommand('tcp_diag')
+
+    def __LinuxAssetReboot(self):
+        throwAwayResult = linux_ExecuteCommand('asset_done_reboot')
 
 # vim:set ai et sts=4 sw=4 tw=80:

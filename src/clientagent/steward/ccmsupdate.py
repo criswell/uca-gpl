@@ -337,7 +337,7 @@ class CCMS_Update(Atom):
                         # results from CCMS
                         self.logger.info('CCMS updated with asset information')
                         if self.IS_ACIMAGE:
-                            self.dispatcher.reboot(30)
+                            self.dispatcher.asset_reboot()
                     else:
                         self.logger.info('CCMS reported error when asset information was sent')
                         if self.IS_ACIMAGE:
