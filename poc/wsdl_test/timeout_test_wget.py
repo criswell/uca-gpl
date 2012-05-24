@@ -10,8 +10,8 @@ CCMS_WSDL = [
     'http://%s/CCMS/EILClientOperationsService.svc?xsd=xsd1',
     ]
 
-    # Google news is a meatier page
-    GOOGLE = 'http://news.google.com'
+# Google news is a meatier page
+GOOGLE = 'http://news.google.com'
 
 import logging, time, random, traceback, sys, subprocess
 
