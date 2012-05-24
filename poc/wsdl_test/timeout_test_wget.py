@@ -17,7 +17,7 @@ import logging, time, random, traceback, sys, subprocess
 
 logger = logging.getLogger('timeout_test_wget')
 logger.setLevel(logging.DEBUG)
-logging.basicConfig(filename='timeout_test_wget-%s.log' % time.ctime(),
+logging.basicConfig(filename='timeout_test_wget-%s.log' % time.mktime(time.localtime()),
 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger.addHandler(logging.StreamHandler())
 
