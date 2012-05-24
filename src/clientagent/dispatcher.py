@@ -48,7 +48,7 @@ class Dispatcher:
 
         return rbrtncode
 
-    def asset_rebboot(self):
+    def asset_reboot(self):
         '''
         Asset reboot wrapper
         '''
