@@ -23,8 +23,10 @@ logger.addHandler(logging.StreamHandler())
 
 logger.info('This script will run until terminated or until we have a situation where CCMS cannot be reached...')
 
+f = open('html_output.txt', 'w')
+
 def try_address(address):
-    exit_code = subprocess.call(['wget', '-q', '-O', '-', address], stdout=foo, stderr=bar)
+    exit_code = subprocess.call(['wget', '-q', '-O', '-', address], stdout=f, stderr=f)
     if exit_code == 1:
         logger.info('ERROR: 1   Generic error code.')
         raise Exception()
@@ -82,3 +84,6 @@ while True:
                 except:
                     logger.info('Failre on Google News (unless we said there was success previously')
                     sys.exit(0)
+    timeout = random.randint(2, 15)
+    logger.info('Sleeping %s' % timeout)
+    time.sleep(timeout)
