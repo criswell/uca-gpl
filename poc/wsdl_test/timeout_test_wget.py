@@ -24,7 +24,7 @@ logger.addHandler(logging.StreamHandler())
 logger.info('This script will run until terminated or until we have a situation where CCMS cannot be reached...')
 
 def try_address(address):
-    exit_code = subprocess.call(['wget', '-q', '-O', '-', address])
+    exit_code = subprocess.call(['wget', '-q', '-O', '-', address], stdout=foo, stderr=bar)
     if exit_code == 1:
         logger.info('ERROR: 1   Generic error code.')
         raise Exception()
