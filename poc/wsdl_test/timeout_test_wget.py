@@ -73,6 +73,7 @@ while True:
                 address = GOOGLE
                 logger.info('Using %s, %s' % (index, address))
                 try_address(address)
+		sys.exit(0)
             except:
                 logger.info('Failure on IP, trying Google News..')
                 try:
