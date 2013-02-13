@@ -1,1 +1,0 @@
-['\r\n', 'Windows IP Configuration\r\n', '\r\n', '\r\n', 'Ethernet adapter Local Area Connection:\r\n', '\r\n', '   Connection-specific DNS Suffix  . : IntelEIL.com\r\n', '   IP Address. . . . . . . . . . . . : 10.4.0.41\r\n', '   Subnet Mask . . . . . . . . . . . : 255.255.248.0\r\n', '   Default Gateway . . . . . . . . . : 10.4.0.1\r\n']
