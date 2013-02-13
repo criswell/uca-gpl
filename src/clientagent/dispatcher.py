@@ -102,7 +102,7 @@ class Dispatcher:
         Windows-specific domain join
         '''
         jresult = 0
-        jcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call JoinDomainOrWorkgroup FJoinOptions=35 Name=\"" + domain + "\" Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
+        jcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call JoinDomainOrWorkgroup FJoinOptions=35 Name=\"" + domain + "\" "
 
         self.logger.info('Join command is:')
         self.logger.info(jcmd)
@@ -126,7 +126,7 @@ class Dispatcher:
         Windows-specific domain unjoin
         '''
         ujresult = 0
-        ujcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call UnJoinDomainOrWorkgroup FUnJoinOptions=0 Password=\"P@ssw0rd\" UserName=\"administrator@inteleil.com\" "
+        ujcmd = "wmic.exe /interactive:off ComputerSystem Where \"name = \'%computername%\'\" call UnJoinDomainOrWorkgroup FUnJoinOptions=0"
 
         self.logger.info('Unjoin command is:')
         self.logger.info(ujcmd)

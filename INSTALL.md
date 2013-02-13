@@ -246,7 +246,7 @@ In order to use them, you need to have the release directory mounted locally.
 For example, if this is a production release and I were working under Linux
 I might have the following entry in my fstab file:
 
-    //172.16.3.10/EILuca /mnt/EILuca      smbfs   username=shart2x,password=myPass,uid=sam,gid=sam 0 0
+    //172.16.3.10/EILuca /mnt/EILuca      smbfs   username=myUser,password=myPass,uid=myUser,gid=myGroup 0 0
 
 which would mount the EILuca directory under "/mnt/EILuca".
 
